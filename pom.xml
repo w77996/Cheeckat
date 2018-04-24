@@ -1,17 +1,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  
-  	<modelVersion>4.0.0</modelVersion>
-  
-  	<groupId>com.cyh</groupId>
-  	<artifactId>SSM-Demo</artifactId>
-  	<packaging>war</packaging>
-  	<version>1.0.0.0</version>
-  
-  	<name>LOTTERY</name>
-  	<url>http://maven.apache.org</url>
-  	
-  	<properties>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.cyh</groupId>
+	<artifactId>SSM-Demo</artifactId>
+	<packaging>war</packaging>
+	<version>1.0.0.0</version>
+
+	<name>LOTTERY</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- libs -->
 		<junit.version>4.11</junit.version>
@@ -32,28 +32,23 @@
 		<gson.version>2.3.1</gson.version>
 		<commons-lang.version>3.1</commons-lang.version>
 		<httpclient.version>4.2.5</httpclient.version>
-		<!--  
-		
-		<commons-io.version>2.5</commons-io.version>
-		<jdom.version>2.0.2</jdom.version>
-		<activeMQ.version>5.11.4</activeMQ.version>
-		<javassist.version>3.12.1.GA</javassist.version>
-		<transaction.version>1.1</transaction.version>
-		-->
+		<!-- <commons-io.version>2.5</commons-io.version> <jdom.version>2.0.2</jdom.version> 
+			<activeMQ.version>5.11.4</activeMQ.version> <javassist.version>3.12.1.GA</javassist.version> 
+			<transaction.version>1.1</transaction.version> -->
 	</properties>
-  
-    <!-- 依赖包集合 -->  
-    <dependencies>  
-        <!-- 1. junit 依赖 begin junit3.0使用编程方式运行,junit4.0使用注解方式运行  -->  
-        <dependency>  
-            <groupId>junit</groupId>  
-            <artifactId>junit</artifactId>  
-            <version>${junit.version}</version>  
-        </dependency>  
-        <!-- junit 依赖 end  -->  
-        
-        <!-- 2. Servlet web相关依赖 begin-->  
-        <dependency>
+
+	<!-- 依赖包集合 -->
+	<dependencies>
+		<!-- 1. junit 依赖 begin junit3.0使用编程方式运行,junit4.0使用注解方式运行 -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+		</dependency>
+		<!-- junit 依赖 end -->
+
+		<!-- 2. Servlet web相关依赖 begin -->
+		<dependency>
 			<groupId>javax</groupId>
 			<artifactId>javaee-api</artifactId>
 			<version>${javaee-api.version}</version>
@@ -64,216 +59,218 @@
 			<artifactId>jstl</artifactId>
 			<version>${jstl.version}</version>
 		</dependency>
-		<!--  
-		<dependency>
-			<groupId>cglib</groupId>
-			<artifactId>cglib</artifactId>
-			<version>${cglib.version}</version>
-		</dependency>
-		-->
-		<!-- Servlet web相关依赖 end-->  
-        
-        <!-- 3. aspectjweaver 依赖 begin -->
+		<!-- <dependency> <groupId>cglib</groupId> <artifactId>cglib</artifactId> 
+			<version>${cglib.version}</version> </dependency> -->
+		<!-- Servlet web相关依赖 end -->
+
+		<!-- 3. aspectjweaver 依赖 begin -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjweaver</artifactId>
 			<version>${aspectjweaver.version}</version>
 		</dependency>
 		<!-- aspectjweaver 依赖 end -->
-		
-        <!-- 4. spring依赖  begin-->  
-        <!-- spring核心依赖-->  
-        <dependency>  
-            <groupId>org.springframework</groupId>  
-            <artifactId>spring-core</artifactId>  
-            <version>${spring.version}</version>  
-        </dependency>  
-        
-        <!-- spring ioc依赖 -->  
-        <dependency>  
-            <groupId>org.springframework</groupId>  
-            <artifactId>spring-beans</artifactId>  
-            <version>${spring.version}</version>  
-        </dependency>  
-        
-        <!-- spring aop依赖 -->  
+
+		<!-- 4. spring依赖 begin -->
+		<!-- spring核心依赖 -->
 		<dependency>
-		    <groupId>org.springframework</groupId>
-		    <artifactId>spring-aop</artifactId>
-		    <version>${spring.version}</version>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
 		</dependency>
-        
-        <!-- spring 扩展依赖 -->  
-        <dependency>  
-            <groupId>org.springframework</groupId>  
-            <artifactId>spring-context</artifactId>  
-            <version>${spring.version}</version>  
-        </dependency>  
-        
-        <!--spring dao层依赖-->  
-        <dependency>  
-            <groupId>org.springframework</groupId>  
-            <artifactId>spring-jdbc</artifactId>  
-            <version>${spring.version}</version>  
-        </dependency>  
-        <dependency>  
-            <groupId>org.springframework</groupId>  
-            <artifactId>spring-tx</artifactId>  
-            <version>${spring.version}</version>  
-        </dependency>  
-        
-        <!-- spring web相关依赖 -->  
-        <dependency>  
-            <groupId>org.springframework</groupId>  
-            <artifactId>spring-web</artifactId>  
-            <version>${spring.version}</version>  
-        </dependency>  
-        <dependency>  
-            <groupId>org.springframework</groupId>  
-            <artifactId>spring-webmvc</artifactId>  
-            <version>${spring.version}</version>  
-        </dependency>  
-        
-        <!-- spring test相关依赖 -->  
-        <dependency>  
-            <groupId>org.springframework</groupId>  
-            <artifactId>spring-test</artifactId>  
-            <version>${spring.version}</version>  
-        </dependency> 
-        <!-- spring依赖  end-->   
-        
-        <!-- 5. mybatis依赖  begin-->  
-        <dependency>  
-            <groupId>org.mybatis</groupId>  
-            <artifactId>mybatis</artifactId>  
-            <version>${mybatis.version}</version>  
-        </dependency>  
-        
-        <dependency>  
-            <groupId>org.mybatis</groupId>  
-            <artifactId>mybatis-spring</artifactId>  
-            <version>${mybatis-spring.version}</version>  
-        </dependency>  
-        <!-- mybatis依赖  end--> 
-        
-        <!-- 6. 数据库相关依赖  begin-->  
-        <dependency>  
-            <groupId>mysql</groupId>  
-            <artifactId>mysql-connector-java</artifactId>  
-            <version>${mysql.version}</version>  
-            <scope>runtime</scope>  
-        </dependency>  
-        
-        <dependency>  
-            <groupId>com.alibaba</groupId>  
-            <artifactId>druid</artifactId>  
-            <version>${druid.version}</version>  
-        </dependency>
-        <!-- 数据库相关依赖  end-->   
-		
-		<!-- 7. log日志依赖 begin-->  
+
+		<!-- spring ioc依赖 -->
 		<dependency>
-		    <groupId>log4j</groupId>
-		    <artifactId>log4j</artifactId>
-		    <version>${log4j.version}</version>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${spring.version}</version>
 		</dependency>
-		
+
+		<!-- spring aop依赖 -->
 		<dependency>
-		    <groupId>org.slf4j</groupId>
-		    <artifactId>slf4j-log4j12</artifactId>
-		    <version>${slf4j.version}</version>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+			<version>${spring.version}</version>
 		</dependency>
-		
+
+		<!-- spring 扩展依赖 -->
 		<dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-nop</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        
-        <dependency>
-           <groupId>org.slf4j</groupId>
-           <artifactId>slf4j-api</artifactId>
-           <version>${slf4j.version}</version>
-           <type>jar</type>
-       </dependency>
-       <dependency>
-           <groupId>org.slf4j</groupId>
-           <artifactId>slf4j-simple</artifactId>
-           <version>${slf4j.version}</version>
-       </dependency>
-		<!--log日志依赖 end-->  
-		 
-        <!-- 10. 其他依赖 begin -->
-        <dependency>
-		    <groupId>com.alibaba</groupId>
-		    <artifactId>fastjson</artifactId>
-		    <version>${fastjson.version}</version>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
 		</dependency>
-		
+
+		<!--spring dao层依赖 -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<!-- spring web相关依赖 -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<!-- spring test相关依赖 -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<!-- spring依赖 end -->
+
+		<!-- 5. mybatis依赖 begin -->
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>${mybatis.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>${mybatis-spring.version}</version>
+		</dependency>
+		<!-- mybatis依赖 end -->
+
+		<!-- 6. 数据库相关依赖 begin -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+			<version>${druid.version}</version>
+		</dependency>
+		<!-- 数据库相关依赖 end -->
+
+		<!-- 7. log日志依赖 begin -->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-nop</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<!--log日志依赖 end -->
+
+		<!-- 10. 其他依赖 begin -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>${fastjson.version}</version>
+		</dependency>
+
 		<!-- fileupload 文件上传 -->
-        <dependency>  
-            <groupId>commons-fileupload</groupId>  
-            <artifactId>commons-fileupload</artifactId>  
-            <version>${fileupload.version}</version>  
-        </dependency>  
-        
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>${fileupload.version}</version>
+		</dependency>
+
 		<!-- POI 相关依赖 -->
 		<dependency>
-		    <groupId>org.apache.poi</groupId>
-		    <artifactId>poi</artifactId>
-		    <version>3.10-FINAL</version>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.10-FINAL</version>
 		</dependency>
-		
+
 		<!-- 二维码依赖 -->
 		<dependency>
-		    <groupId>com.google.zxing</groupId>
-		    <artifactId>core</artifactId>
-		    <version>3.3.0</version>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>core</artifactId>
+			<version>3.3.0</version>
 		</dependency>
-		
+
 		<!-- gson依赖 -->
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>${gson.version}</version>
 		</dependency>
-		
+
 		<dependency>
-		    <groupId>org.json</groupId>
-		    <artifactId>json</artifactId>
-		    <version>20160212</version>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20160212</version>
 		</dependency>
-		
+
 		<!-- 其他依赖 begin -->
-		
-		 <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang.version}</version>
-        </dependency>
-        
-         <dependency> 
-         <groupId>org.apache.httpcomponents</groupId> 
-          <artifactId>httpclient</artifactId> 
-         <version>${httpclient.version}</version>         
-        </dependency> 
-        <dependency> 
-         <groupId>org.apache.httpcomponents</groupId> 
-          <artifactId>httpclient-cache</artifactId> 
-         <version>${httpclient.version}</version>         
-        </dependency> 
-        <dependency> 
-         <groupId>org.apache.httpcomponents</groupId> 
-          <artifactId>httpmime</artifactId> 
-         <version>${httpclient.version}</version>         
-  </dependency>
-		
-    </dependencies>
-    
-    <build>
-    	<finalName>LOTTERY</finalName>
-    	<!--  -->
-    	<plugins>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commons-lang.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>${httpclient.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient-cache</artifactId>
+			<version>${httpclient.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>${httpclient.version}</version>
+			
+		</dependency>
+			<!-- https://mvnrepository.com/artifact/jdom/jdom -->
+<dependency>
+    <groupId>jdom</groupId>
+    <artifactId>jdom</artifactId>
+    <version>1.1</version>
+</dependency>
+
+	</dependencies>
+
+	<build>
+		<finalName>LOTTERY</finalName>
+		<!-- -->
+		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-deploy-plugin</artifactId>
@@ -315,7 +312,7 @@
 				</executions>
 			</plugin>
 		</plugins>
-		
-    </build>
-    
+
+	</build>
+
 </project>
