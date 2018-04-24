@@ -1,5 +1,10 @@
 package com.award.core.util;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Properties;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
@@ -8,6 +13,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
@@ -22,7 +28,15 @@ public class ImUtils {
 	private static String getToken() {	
 		    String token = "";
 		    HttpPost post = null;
+		    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		    Properties properties =  new PropertiesUtil().getProperites("im.properties");
+		    String expiresDate = properties.getProperty("expires_in", "");
+		    String access_token = properties.getProperty("access_token", "");
 		    try {
+		    if(!StringUtils.isBlank(expiresDate) && sdf.parse(expiresDate).getTime() > new Date().getTime()) {
+		    	token = access_token;
+		    }else {
+		   
 		        HttpClient httpClient = new DefaultHttpClient();
 
 		        // 设置超时时间
@@ -51,9 +65,17 @@ public class ImUtils {
 		        	String strResult = EntityUtils.toString(response.getEntity());
 		        	JSONObject jo = JSON.parseObject(strResult);
 		        	token = jo.getString("access_token");
+		        	String expires_in = jo.getString("expires_in");
+		        	String application = jo.getString("application");
+		        	Calendar calendar = Calendar.getInstance();
+		        	calendar.add(Calendar.SECOND, Integer.parseInt(expires_in));   //2小时之后的时间
+		        	String expires_date = sdf.format(calendar.getTime());
+		        	PropertiesUtil.setImValue("im.properties", expires_date, token, application);
 		        }else{		        	
 
 		        }
+		  
+	}
 		    } catch (Exception e) {
 		        e.printStackTrace();
 		    }finally{

@@ -47,6 +47,7 @@ public class MissionOpenController {
 		String count = request.getParameter("count");
 		String returnStr = JsonUtils.writeJson(0, 0, "参数为空");
 		if(!StringUtils.isBlank(start) && !StringUtils.isBlank(count)) {
+			missionService.updateExpired();
 			List<Map<String,Object>> list = missionService.getAllMissionLimit(Integer.parseInt(start), Integer.parseInt(count));
 			returnStr = JsonUtils.writeJson(1, "获取成功", list, "object");
 		}

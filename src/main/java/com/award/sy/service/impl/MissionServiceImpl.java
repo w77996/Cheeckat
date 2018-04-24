@@ -1,5 +1,7 @@
 package com.award.sy.service.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +54,12 @@ public class MissionServiceImpl implements MissionService{
 		WherePrams where = new WherePrams();
 		where.and("mission_id", C.EQ, mission.getMission_id());
 		return missionDao.updateLocal(mission,where);
+	}
+	
+	public int updateExpired() {
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return missionDao.excuse("update tb_mission set status = 4 where start_time < "+sdf.format(date)+"and status <> 4");
 	}
 	
 	public int removeMission(long missionId){
