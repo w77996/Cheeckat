@@ -129,4 +129,26 @@ public class Constants {
 	// LOGO高度
 	public static final int QRCODE_HEIGHT = 60;
 	
+	/**
+     * 微信支付相关信息
+     */
+     public static final  String APPID = "";//服务号的应用号
+     public static final  String MCH_ID = "";//商户号
+     public static final  String API_KEY = "";//API密钥
+     public static final  String SIGN_TYPE = "MD5";//签名加密方式
+
+     //微信统一下单连接
+     public static final String UNIFIED_ORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+     
+     public static final int ORDER_TYPE_TRADE = 1;//交易类型：充值
+     public static final int ORDER_TYPE_WITHDRAWLS = 2;//交易类型：提现
+     public static final int ORDER_TYPE_REDPACKET = 3;//交易类型：红包
+     public static final int ORDER_TYPE_TASK = 4;//交易类型：任务
+     public static final int ORDER_TYPE_BACK = 5;//交易类型：退款
+     
+     public static final int PAY_TYPE_WAIT = 0;
+     public static final int PAY_TYPE_SUCCESS = 1;
+     public static final int PAY_TYPE_FAIL = -1;
+
+	
 }
