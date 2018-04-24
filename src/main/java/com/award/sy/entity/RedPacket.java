@@ -1,0 +1,119 @@
+package com.award.sy.entity;
+
+import java.math.BigDecimal;
+
+import com.award.core.annotation.ID;
+import com.award.core.annotation.TableName;
+import com.award.core.annotation.TempField;
+import com.award.core.beans.Po;
+
+@TableName(name="tb_red_packet")
+public class RedPacket extends Po{
+	
+
+	@ID
+	private Long   redpacket_id;					//任务ID
+	
+	@TempField
+	private String redpacketIdStr;				
+		
+    private Integer type;				//任务类型
+	
+	private BigDecimal money;                 //任务金额
+	
+	private Long publish_id;               //任务发布者
+	
+	private String create_time;   //任务发布时间
+	
+	
+	private Long accept_id;     //任务接收者，可以为空
+	
+	private Integer  status;    //任务状态，0是待领取，1是进行中，2是接受者确认完成，等待对方确认，3是已完成，4是已失效
+	
+	private String accept_time;
+
+	public Long getRedpacket_id() {
+		return redpacket_id;
+	}
+
+	public void setRedpacket_id(Long redpacket_id) {
+		this.redpacket_id = redpacket_id;
+	}
+
+	public String getRedpacketIdStr() {
+		return redpacketIdStr;
+	}
+
+	public void setRedpacketIdStr(String redpacketIdStr) {
+		this.redpacketIdStr = redpacketIdStr;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
+	public BigDecimal getMoney() {
+		return money;
+	}
+
+	public void setMoney(BigDecimal money) {
+		this.money = money;
+	}
+
+	public Long getPublish_id() {
+		return publish_id;
+	}
+
+	public void setPublish_id(Long publish_id) {
+		this.publish_id = publish_id;
+	}
+
+	public String getCreate_time() {
+		return create_time;
+	}
+
+	public void setCreate_time(String create_time) {
+		this.create_time = create_time;
+	}
+
+	public Long getAccept_id() {
+		return accept_id;
+	}
+
+	public void setAccept_id(Long accept_id) {
+		this.accept_id = accept_id;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public String getAccept_time() {
+		return accept_time;
+	}
+
+	public void setAccept_time(String accept_time) {
+		this.accept_time = accept_time;
+	}
+
+	@Override
+	public String toString() {
+		return "RedPacket [redpacket_id=" + redpacket_id + ", redpacketIdStr="
+				+ redpacketIdStr + ", type=" + type + ", money=" + money
+				+ ", publish_id=" + publish_id + ", create_time=" + create_time
+				+ ", accept_id=" + accept_id + ", status=" + status
+				+ ", accept_time=" + accept_time + "]";
+	}
+	
+	
+	
+
+}

@@ -122,11 +122,10 @@ public class WxPayController {
 			parameterMap2.put("prepayid", map.get("prepay_id"));
 			parameterMap2.put("package", "Sign=WXPay");
 			parameterMap2.put("noncestr", PayCommonUtil.CreateNoncestr());
-			// 本来生成的时间戳是13位，但是ios必须是10位，所以截取了一下
 			parameterMap2.put(
 					"timestamp",
 					Long.parseLong(String.valueOf(System.currentTimeMillis())
-							.toString().substring(0, 10)));
+							.toString()));
 			String sign2 = PayCommonUtil.createSign("UTF-8", parameterMap2);
 			parameterMap2.put("sign", sign2);
 			/*resultMap.put("code", "200");
@@ -141,6 +140,14 @@ public class WxPayController {
 
 	/**
 	 * 微信异步通知
+	 * @Title:           wxNotify
+	 * @Description:     TODO
+	 * @param:           @param request
+	 * @param:           @param response
+	 * @param:           @throws IOException
+	 * @param:           @throws JDOMException   
+	 * @return:          void   
+	 * @throws
 	 */
 	@RequestMapping("/wxNotify")
 	@ResponseBody
@@ -198,10 +205,7 @@ public class WxPayController {
 				int pay_status =  walletRecord.getPay_status();
 				int type = walletRecord.getType();
 				long from_uid = walletRecord.getFrom_uid();
-				// GoodsTrade gt = new GoodsTrade();
-				// gt.setTid(out_trade_no);
-				// 查询订单 根据订单号查询订单 GoodsTrade -订单实体类
-				// GoodsTrade trade = 订单查询;
+	
 				
 				if (!Constants.MCH_ID.equals(mch_id)
 						|| walletRecord == null

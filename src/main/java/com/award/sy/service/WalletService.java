@@ -9,4 +9,5 @@ public interface WalletService {
 	int editUserWalletBalance();
 	
 	Wallet getWalletByUserId(long u_id);
+	
 }
