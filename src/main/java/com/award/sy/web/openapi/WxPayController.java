@@ -27,9 +27,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.award.core.util.JsonUtils;
 import com.award.sy.common.Constants;
+import com.award.sy.common.DateUtil;
 import com.award.sy.common.PayCommonUtil;
 import com.award.sy.common.XMLUtil;
 import com.award.sy.entity.WalletRecord;
+import com.award.sy.service.RedPacketService;
 import com.award.sy.service.WalletRecordService;
 import com.award.sy.service.WalletService;
 import com.sun.tools.javac.code.Attribute.Constant;
@@ -44,6 +46,10 @@ public class WxPayController {
 	
 	@Autowired
 	private WalletService walletService;
+	
+	@Autowired
+	private RedPacketService redPacketService;
+	
 	/**
 	 * 微信下单统一接口
 	 * 
@@ -210,17 +216,25 @@ public class WxPayController {
 				if (!Constants.MCH_ID.equals(mch_id)
 						|| walletRecord == null
 						|| new BigDecimal(total_fee)
-								.compareTo(money
-										.multiply(new BigDecimal(100))) != 0) {
+								.compareTo(money.multiply(new BigDecimal(100))) != 0) {
 					logger.info("支付失败,错误信息：" + "参数错误");
 					resXml = "<xml>"
 							+ "<return_code><![CDATA[FAIL]]></return_code>"
 							+ "<return_msg><![CDATA[参数错误]]></return_msg>"
 							+ "</xml> ";
 				} else {
-					if (Constants.PAY_TYPE_WAIT == pay_status) {// 支付的价格
+					if (Constants.PAY_STATUS_WAIT == pay_status) {// 支付的价格
 						// 订单状态的修改。根据实际业务逻辑执行
 						if(Constants.ORDER_TYPE_TRADE == type){
+							
+						}else if(Constants.ORDER_TYPE_REDPACKET == type){
+							/*walletRecord.setPay_status(Constants.PAY_STATUS_SUCCESS);
+							walletRecord.setPay_time(DateUtil.getNowTime());
+							walletRecord.setPay_type(Constants.PAY_TYPE_WECHAT);
+							walletRecord.setMoney(money);
+							walletRecordService.editWalletOrder(walletRecord);*/
+							
+							redPacketService.editRedPacketSendMessage(out_trade_no,Constants.PAY_STATUS_SUCCESS);
 							
 						}
 
@@ -244,6 +258,7 @@ public class WxPayController {
 						+ "<return_code><![CDATA[FAIL]]></return_code>"
 						+ "<return_msg><![CDATA[报文为空]]></return_msg>"
 						+ "</xml> ";
+				//redPacketService.editRedPacketSendMessage("",Constants.PAY_STATUS_FAIL);
 			}
 
 		} else {

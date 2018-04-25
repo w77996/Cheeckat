@@ -15,20 +15,22 @@ public class RedPacket extends Po{
 	private Long   redpacket_id;					//任务ID
 	
 	@TempField
-	private String redpacketIdStr;				
+	private String redpacketIdStr;		
+	
+	private String record_sn;//流水订单号
 		
     private Integer type;				//任务类型
 	
-	private BigDecimal money;                 //任务金额
+	private BigDecimal money;                 //金额
 	
-	private Long publish_id;               //任务发布者
+	private Long publish_id;               //发布者
 	
-	private String create_time;   //任务发布时间
+	private String create_time;   //发布时间
 	
 	
 	private Long accept_id;     //任务接收者，可以为空
 	
-	private Integer  status;    //任务状态，0是待领取，1是进行中，2是接受者确认完成，等待对方确认，3是已完成，4是已失效
+	private Integer  status;    //任务状态，0是待领取，1已领取，
 	
 	private String accept_time;
 
@@ -46,6 +48,14 @@ public class RedPacket extends Po{
 
 	public void setRedpacketIdStr(String redpacketIdStr) {
 		this.redpacketIdStr = redpacketIdStr;
+	}
+
+	public String getRecord_sn() {
+		return record_sn;
+	}
+
+	public void setRecord_sn(String record_sn) {
+		this.record_sn = record_sn;
 	}
 
 	public Integer getType() {
@@ -107,11 +117,13 @@ public class RedPacket extends Po{
 	@Override
 	public String toString() {
 		return "RedPacket [redpacket_id=" + redpacket_id + ", redpacketIdStr="
-				+ redpacketIdStr + ", type=" + type + ", money=" + money
-				+ ", publish_id=" + publish_id + ", create_time=" + create_time
-				+ ", accept_id=" + accept_id + ", status=" + status
-				+ ", accept_time=" + accept_time + "]";
+				+ redpacketIdStr + ", record_sn=" + record_sn + ", type="
+				+ type + ", money=" + money + ", publish_id=" + publish_id
+				+ ", create_time=" + create_time + ", accept_id=" + accept_id
+				+ ", status=" + status + ", accept_time=" + accept_time + "]";
 	}
+
+
 	
 	
 	

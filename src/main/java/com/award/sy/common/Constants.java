@@ -146,9 +146,21 @@ public class Constants {
      public static final int ORDER_TYPE_TASK = 4;//交易类型：任务
      public static final int ORDER_TYPE_BACK = 5;//交易类型：退款
      
-     public static final int PAY_TYPE_WAIT = 0;
-     public static final int PAY_TYPE_SUCCESS = 1;
-     public static final int PAY_TYPE_FAIL = -1;
+     public static final int PAY_STATUS_WAIT = 0;//等待支付
+     public static final int PAY_STATUS_SUCCESS = 1;//支付成功
+     public static final int PAY_STATUS_FAIL = -1;//支付失败
+     
+     public static final int FETCH_WAIT = 0;//未领取
+     public static final int FETCH_SUCCESS = 1;//领取成功
+     
+     public static final int PAY_TYPE_BALANCE = 1;//余额支付
+     public static final int PAY_TYPE_WECHAT = 0;//微信支付
+     
+     public static final String APP_NAME = "奇卡-";
+     public static final String REDPACKET = "红包";
+     public static final String TASK = "任务";
+     public static final String RECHARGE = "充值";
+     
 
 	
 }

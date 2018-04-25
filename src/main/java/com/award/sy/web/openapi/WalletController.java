@@ -87,8 +87,8 @@ public class WalletController {
 		}else{
 			 return JsonUtils.writeJson(0, 0, "参数错误");
 		}
-		int i = walletRecordService.addWalletOrder(Long.parseLong(user_id), record_sn, orderType);
-		logger.info("genOrder生成订单 "+i);
+		 walletRecordService.addWalletRecordOrder(Long.parseLong(user_id), record_sn, orderType);
+		logger.info("genOrder生成订单 ");
 		
 		return JsonUtils.writeJson("订单生成成功",1);
 	}

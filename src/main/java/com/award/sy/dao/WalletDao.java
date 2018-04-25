@@ -13,5 +13,10 @@ import com.award.sy.entity.Wallet;
  */
 @Repository("walletDao")
 public class WalletDao extends DaoImpl<Wallet, Long>{
+	
+	
+	/*public Wallet findWalletByUserId(long userId){
+		
+	}*/
 
 }
