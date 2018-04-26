@@ -56,5 +56,16 @@ public interface WalletService {
 	 * @throws
 	 */
 	String addRechargeOrderRecord(long userId, String money, int payType);
+	/**
+	 * 提现申请
+	 * @Title:           withdrawMoney
+	 * @Description:     TODO
+	 * @param:           @param userId
+	 * @param:           @param price
+	 * @param:           @return   
+	 * @return:          boolean   
+	 * @throws
+	 */
+	boolean withdrawMoney(long userId, BigDecimal price,Wallet wallet);
 	
 }

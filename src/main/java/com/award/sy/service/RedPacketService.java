@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.award.sy.entity.RedPacket;
+import com.award.sy.entity.Wallet;
 /**
  * 红包service接口
  * @ClassName:       RedPacketService
@@ -61,5 +62,16 @@ public interface RedPacketService {
 	  * @throws
 	  */
 	 String addRedPacketOrderRecord(long userId,String money,int pay_type);
+	 /**
+	  * 使用余额发送红包
+	  * @Title:           addRedPacketPyByBalanceRecord
+	  * @Description:     TODO
+	  * @param:           @param userId
+	  * @param:           @param money
+	  * @param:           @param payType   
+	  * @return:          void   
+	  * @throws
+	  */
+	 boolean addRedPacketPayByBalanceRecord(long userId, String money, int payType,Wallet wallet);
 
 }

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.award.core.beans.WherePrams;
 import com.award.core.sql.where.C;
@@ -88,8 +89,12 @@ public class WalletServiceImpl implements WalletService{
 		walletRecord.setType(Constants.ORDER_TYPE_REDPACKET);
 		walletRecord.setPay_type(payType);
 		walletRecord.setMoney(new BigDecimal(money));
-		walletRecordDao.addLocal(walletRecord);
+		int i = walletRecordDao.addLocal(walletRecord);
 		
+		
+		if(i < 0){
+			return null;
+		}
 		//walletRecordDao.excuse("insert tb_wallet_record (from_uid,record_sn,type,pay_type) values ("+userId+","+record_sn+","+Constants.ORDER_TYPE_REDPACKET+","+pay_type+")");
 		//生成红包记录
 		/*RedPacket redPacket = new RedPacket();
@@ -100,6 +105,37 @@ public class WalletServiceImpl implements WalletService{
 		redPacketDao.addLocal(redPacket);*/
 		
 		return record_sn;
+	}
+	/**
+	 * 申请提现
+	 * Title: withdrawMoney
+	 * Description: 
+	 * @param userId
+	 * @param price
+	 * @return
+	 * @see com.award.sy.service.WalletRecordService#withdrawMoney(long, java.math.BigDecimal)
+	 */
+	@Transactional
+	@Override
+	public boolean withdrawMoney(long userId, BigDecimal price,Wallet wallet) {
+		// TODO Auto-generated method stub
+		//生成订单编号
+		String record_sn = PayCommonUtil.CreateNoncestr();
+		//生成订单记录
+		WalletRecord walletRecord = new WalletRecord();
+		walletRecord.setFrom_uid(0L);
+		walletRecord.setTo_uid(userId);
+		walletRecord.setRecord_sn(record_sn);
+		walletRecord.setType(Constants.ORDER_TYPE_WITHDRAWLS);
+		walletRecord.setMoney(price);
+		int i = walletRecordDao.addLocal(walletRecord);
+		
+		BigDecimal result = null;
+		result = wallet.getMoney().subtract(price);
+		WherePrams where = new WherePrams();
+		where.and("user_id", C.EQ, userId);
+		int j = walletDao.update(wallet, where);
+		return 0 < j;
 	}
 
 }

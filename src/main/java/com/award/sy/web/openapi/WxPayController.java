@@ -222,19 +222,24 @@ public class WxPayController {
 							+ "<return_code><![CDATA[FAIL]]></return_code>"
 							+ "<return_msg><![CDATA[参数错误]]></return_msg>"
 							+ "</xml> ";
+					walletRecord.setPay_status(Constants.PAY_STATUS_FAIL);
+					walletRecordService.editWalletOrder(walletRecord);
 				} else {
 					if (Constants.PAY_STATUS_WAIT == pay_status) {// 支付的价格
 						// 订单状态的修改。根据实际业务逻辑执行
 						if(Constants.ORDER_TYPE_TRADE == type){
-							
+							//充值成功，修改余额
+							walletService.editUserWalletBalance(from_uid, money);
 						}else if(Constants.ORDER_TYPE_REDPACKET == type){
 							/*walletRecord.setPay_status(Constants.PAY_STATUS_SUCCESS);
 							walletRecord.setPay_time(DateUtil.getNowTime());
 							walletRecord.setPay_type(Constants.PAY_TYPE_WECHAT);
 							walletRecord.setMoney(money);
 							walletRecordService.editWalletOrder(walletRecord);*/
-							
+							//发送成功
 							redPacketService.editRedPacketSendMessage(out_trade_no,Constants.PAY_STATUS_SUCCESS);
+							
+						}else if(Constants.ORDER_TYPE_TASK == type){
 							
 						}
 

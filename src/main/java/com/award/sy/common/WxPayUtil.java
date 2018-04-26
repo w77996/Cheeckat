@@ -35,7 +35,7 @@ public class WxPayUtil {
 			parameters.put("appid", Constants.APPID);
 			parameters.put("mch_id", Constants.MCH_ID);
 			parameters.put("nonce_str", PayCommonUtil.CreateNoncestr());
-			parameters.put("body", "购买测试");
+			parameters.put("body", body);
 			parameters.put("out_trade_no", record_sn); // 订单id
 			parameters.put("fee_type", "CNY");
 			parameters.put("total_fee", String.valueOf(price100));

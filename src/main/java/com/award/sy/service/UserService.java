@@ -53,5 +53,43 @@ public interface UserService{
 	 * @return int
 	 */
 	public int removeUser(long userId);
+	/**
+	 * 用户登录，新增用户
+	 * @Title:           addNewUserInfo
+	 * @Description:     TODO
+	 * @param:           @param phone   
+	 * @return:          int   
+	 * @throws
+	 */
+	public int addNewUserInfo(String id,int type);
+	/**
+	 * 通过手机号登录
+	 * @Title:           getUserByPhone
+	 * @Description:     TODO
+	 * @param:           @param phone
+	 * @param:           @return   
+	 * @return:          User   
+	 * @throws
+	 */
+	public User getUserByPhone(String phone);
+	/**
+	 * 通过微信openId获取用户
+	 * @Title:           getUserByWxOpenId
+	 * @Description:     TODO
+	 * @param:           @param phone
+	 * @param:           @return   
+	 * @return:          User   
+	 * @throws
+	 */
+	public User getUserByWxOpenId(String phone);
+	/**
+	 * 通过手机注册新的用户
+	 * @Title:           addNewUserInfoFromPhone
+	 * @Description:     TODO
+	 * @param:           @param phone   
+	 * @return:          void   
+	 * @throws
+	 */
+	public void addNewUserInfoFromPhone(String phone);
 	
 }

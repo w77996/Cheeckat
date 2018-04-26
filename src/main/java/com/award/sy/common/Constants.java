@@ -160,6 +160,9 @@ public class Constants {
      public static final String REDPACKET = "红包";
      public static final String TASK = "任务";
      public static final String RECHARGE = "充值";
+
+	public static final int LOGIN_TYPE_PHONE = 1;//手机登录
+	public static final int LOGIN_TYPE_WECHAT = 2;//微信登录
      
 
 	

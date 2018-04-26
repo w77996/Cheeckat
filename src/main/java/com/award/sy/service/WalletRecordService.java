@@ -1,5 +1,6 @@
 package com.award.sy.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -48,8 +49,9 @@ public interface WalletRecordService {
 	 * @throws
 	 */
 	boolean editWalletOrder(WalletRecord walletRecord);
-
+	
 	boolean addLocalWalletRecord(WalletRecord walletRecord);
+
 
 	
 	

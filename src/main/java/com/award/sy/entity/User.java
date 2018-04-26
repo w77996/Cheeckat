@@ -39,6 +39,10 @@ public class User extends Po {
     private String im_user_name; //环信username
     
     private Integer height;
+    
+    private String phone;
+    
+    private String open_id;
 	
 	public User() {
 		super();
@@ -164,6 +168,27 @@ public class User extends Po {
 	public void setIm_user_name(String im_user_name) {
 		this.im_user_name = im_user_name;
 	}
+
+	
+	public String getPhone() {
+		return phone;
+	}
+
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+
+	public String getOpen_id() {
+		return open_id;
+	}
+
+
+	public void setOpen_id(String open_id) {
+		this.open_id = open_id;
+	}
+
 
 	@Override
 	public String toString() {

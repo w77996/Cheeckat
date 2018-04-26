@@ -16,9 +16,11 @@ import com.award.core.util.JsonUtils;
 import com.award.sy.common.Constants;
 import com.award.sy.common.PayCommonUtil;
 import com.award.sy.common.WxPayUtil;
+import com.award.sy.entity.User;
 import com.award.sy.entity.Wallet;
 import com.award.sy.entity.WalletRecord;
 import com.award.sy.service.RedPacketService;
+import com.award.sy.service.UserService;
 import com.award.sy.service.WalletRecordService;
 import com.award.sy.service.WalletService;
 /**
@@ -41,6 +43,8 @@ public class PayOpenController {
 	@Autowired
 	private WalletService walletService;
 	
+	@Autowired
+	private UserService userService;
 	
 	/**
 	 * 统一生成订单
@@ -144,7 +148,7 @@ public class PayOpenController {
 		return JsonUtils.writeJson(0, 0, "参数错误");
 	}*/
 
-	@RequestMapping(value="/open/payByWX")
+	/*@RequestMapping(value="/open/payByWX")
 	@ResponseBody
 	public String payByWX(@RequestParam String user_id,@RequestParam String pay_type,@RequestParam String money,@RequestParam String type,HttpServletRequest request){
 		if(StringUtils.isBlank(user_id)||StringUtils.isBlank(pay_type)||StringUtils.isBlank(money)||StringUtils.isBlank(type)){
@@ -155,12 +159,19 @@ public class PayOpenController {
 		int taskType = Integer.parseInt(type); 
 		long userId = Long.parseLong(user_id);
 		double price = Double.parseDouble(money);
+		User user = userService.getUserById(userId);
+		if(null == user){
+			return JsonUtils.writeJson(0, 8, "任务不存在");
+		}
 		//微信支付
 		if(Constants.PAY_TYPE_WECHAT == payType){
 			
 			if(Constants.ORDER_TYPE_REDPACKET == taskType){
 				//微信支付发红包
 				String record_sn = redPacketService.addRedPacketOrderRecord(userId,money,payType);
+				if(null == record_sn){
+					return JsonUtils.writeJson(0, 19, "订单生成失败");
+				}
 				SortedMap<Object, Object> map =  WxPayUtil.getPreperIdFromWX(record_sn, PayCommonUtil.getIpAddress(request),Constants.APP_NAME+Constants.REDPACKET, price);
 				if(null == map){
 					return JsonUtils.writeJson(0, 19, "订单生成失败");
@@ -172,6 +183,14 @@ public class PayOpenController {
 			}else if(Constants.ORDER_TYPE_TRADE == taskType){
 				//微信支付充值
 				String record_sn = walletService.addRechargeOrderRecord(userId,money,payType);
+				if(null == record_sn){
+					return JsonUtils.writeJson(0, 19, "订单生成失败");
+				}
+				SortedMap<Object, Object> map =  WxPayUtil.getPreperIdFromWX(record_sn, PayCommonUtil.getIpAddress(request),Constants.APP_NAME+Constants.RECHARGE, price);
+				if(null == map){
+					return JsonUtils.writeJson(0, 19, "订单生成失败");
+				}
+				return  JsonUtils.writeJson(1, "请求成功", map, "object");
 			}else {
 				return JsonUtils.writeJson(0, 0, "参数错误");
 			}
@@ -180,15 +199,16 @@ public class PayOpenController {
 			
 			if(Constants.ORDER_TYPE_REDPACKET == taskType){
 				//余额支付发红包
-				result = redPacketService.addRedPacketOrderRecord(userId,money,payType);
-				return  JsonUtils.writeJson(1, "请求成功", result, "object");
+				//redPacketService.addRedPacketPayByBalanceRecord(userId,money,payType);
+				//  JsonUtils.writeJson(1, "请求成功", result, "object");
+				
 			}else if(Constants.ORDER_TYPE_TASK == taskType){ 
 				//余额支付发任务
 			}else {
 				return result;
 			}
 			
-		}
+		}*/
 		
 		
 		/*long userId = Long.parseLong(user_id);
@@ -223,6 +243,6 @@ public class PayOpenController {
 			return  JsonUtils.writeJson(1, "请求成功", result, "object");
 			
 		}*/
-		return result;
-	}
+		/*return result;
+	}*/
 }
