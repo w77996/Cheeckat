@@ -81,8 +81,7 @@ public class FriendServiceImpl implements FriendService {
 	public List<Map<String, Object>> getUserFriends(long userId) {
 		// TODO Auto-generated method stub
 		List<Map<String, Object>> list = friendDao.listBySql(
-				"select f.user_id_fr2,u.head_img,u.user_name,u.sex from tb_friend f LEFT OUTER JOIN tb_user u on  u.user_id = f.user_id_fr1 where f.status =2 and u.user_id ="
-						+ userId);
+				"select u.head_img,u.user_name,u.sex from (select f.user_id_fr2 from tb_friend f LEFT OUTER JOIN tb_user u on  u.user_id = f.user_id_fr1 where f.status =2 and u.user_id ="+userId+") c,tb_user u where c.user_id_fr2 = u.user_id");
 		return list;
 	}
 
