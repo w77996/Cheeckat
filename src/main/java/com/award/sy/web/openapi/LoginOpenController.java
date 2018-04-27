@@ -54,6 +54,7 @@ public class LoginOpenController {
 			if(null == user){
 				map.put("isFirst", true);
 				userService.addNewUserInfo(phone, Integer.parseInt(type));
+				//ImUtils.authRegister(name, password, nickName);
 				user = userService.getUserByPhone(phone);
 			}
 			map.put("user", user);
