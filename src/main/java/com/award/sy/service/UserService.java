@@ -92,4 +92,6 @@ public interface UserService{
 	 */
 	public void addNewUserInfoFromPhone(String phone);
 	
+	public List<User> getUserByIds(String[] ids);
+	
 }

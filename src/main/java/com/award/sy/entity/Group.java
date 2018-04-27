@@ -18,6 +18,10 @@ public class Group extends Po {
 	
 	private String group_name;
 	
+	private String im_group_id;
+	
+	private Long admin_id;
+	
 	public Group() {
 		super();
 	}
@@ -53,11 +57,30 @@ public class Group extends Po {
 
 	public void setGroup_name(String group_name) {
 		this.group_name = group_name;
+	}	
+	
+
+	public String getIm_group_id() {
+		return im_group_id;
+	}
+
+	public void setIm_group_id(String im_group_id) {
+		this.im_group_id = im_group_id;
+	}	
+	
+
+	public Long getAdmin_id() {
+		return admin_id;
+	}
+
+	public void setAdmin_id(Long admin_id) {
+		this.admin_id = admin_id;
 	}
 
 	@Override
 	public String toString() {
 		return "Group [group_id=" + group_id + ", groupIdStr=" + groupIdStr + ", create_time=" + create_time + ", group_name=" + group_name
+				+ ", im_group_id=" + im_group_id + ", admin_id=" + admin_id
 				+ "]";
 	}
 
