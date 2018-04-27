@@ -37,7 +37,7 @@ public class FriendServiceImpl implements FriendService {
 	}
 	
 	public List<Map<String,Object>> getFriendByTwoId(Long userId,Long userId2) {
-		return friendDao.listBySql("select * from tb_friend where (user_id_fr1 = " + userId + "and user_id_fr2 = "+userId2+") or (user_id_fr1 = "+userId2+" and user_id_fr2 = "+userId+")" );
+		return friendDao.listBySql("select * from tb_friend where (user_id_fr1 = " + userId + " and user_id_fr2 = "+userId2+") or (user_id_fr1 = "+userId2+" and user_id_fr2 = "+userId+")" );
 	}
 	
 	public List<Friend> getAllFriend(){
@@ -81,7 +81,8 @@ public class FriendServiceImpl implements FriendService {
 	public List<Map<String, Object>> getUserFriends(long userId) {
 		// TODO Auto-generated method stub
 		List<Map<String, Object>> list = friendDao.listBySql(
-				"select u.head_img,u.user_name,u.sex from (select f.user_id_fr2 from tb_friend f LEFT OUTER JOIN tb_user u on  u.user_id = f.user_id_fr1 where f.status =2 and u.user_id ="+userId+") c,tb_user u where c.user_id_fr2 = u.user_id");
+				"select u.user_id,u.head_img,u.user_name,u.sex from (select f.user_id_fr2 from tb_friend f LEFT OUTER JOIN tb_user u on  u.user_id = f.user_id_fr1 where f.status =2 and u.user_id ="+userId+") c,tb_user u where c.user_id_fr2 = u.user_id");
+		
 		return list;
 	}
 

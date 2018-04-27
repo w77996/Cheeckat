@@ -1,5 +1,6 @@
 package com.award.sy.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -24,11 +25,35 @@ public interface WalletRecordService {
 	 * @return:          int   
 	 * @throws
 	 */
-	int addWalletOrder(long from_uid,String record_sn,int type);
+	boolean addWalletRecordOrder(long from_uid,String record_sn,int type);
 	
 	//int editWalletOrder(long )
-	
+	/**
+	 * 通过SN查找记录
+	 * @Title:           findWallerOrderByRecordSN
+	 * @Description:     TODO
+	 * @param:           @param record_sn
+	 * @param:           @return   
+	 * @return:          WalletRecord   
+	 * @throws
+	 */
 	WalletRecord findWallerOrderByRecordSN(String record_sn);
+	
+	/**
+	 * 修改记录表的状态
+	 * @Title:           editWalletOrder
+	 * @Description:     TODO
+	 * @param:           @param walletRecord
+	 * @param:           @return   
+	 * @return:          boolean   
+	 * @throws
+	 */
+	boolean editWalletOrder(WalletRecord walletRecord);
+	
+	boolean addLocalWalletRecord(WalletRecord walletRecord);
+
+
+	
 	
 	
 
