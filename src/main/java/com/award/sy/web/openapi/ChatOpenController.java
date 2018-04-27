@@ -49,7 +49,7 @@ public class ChatOpenController {
 	 */
 	@RequestMapping(value = "/open/addGroup", produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String getAllMission(HttpServletRequest request) {
+	public String addGroup(HttpServletRequest request) {
 		String groupName = request.getParameter("groupName");
 		String userId = request.getParameter("userId");
 		String members = request.getParameter("members");
@@ -119,6 +119,35 @@ public class ChatOpenController {
 				}
 			}else {
 				returnStr = JsonUtils.writeJson(0, 13, "群主ID不存在");
+			}
+		}
+		return returnStr;
+	}
+	
+	@RequestMapping(value = "/open/updateGroup", produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String updateGroup(HttpServletRequest request) {
+		String groupName = request.getParameter("groupName");
+		String userId = request.getParameter("userId");
+		String groupId = request.getParameter("groupId");
+		String returnStr = JsonUtils.writeJson(0, 0, "参数为空");
+		if(!StringUtils.isBlank(userId) && !StringUtils.isBlank(groupId) && !StringUtils.isBlank(groupName)) {
+			Group group = groupService.getGroupById(Long.parseLong(groupId));
+			if(group != null) {
+				GroupDetails gd = groupDetailsService.getGroupDetailsByGroupIdAndUserId(Long.parseLong(groupId), Long.parseLong(userId));
+				if(gd != null) {
+					if(gd.getIs_admin() == 1) {
+						group.setGroup_name(groupName);
+						groupService.editGroup(group);
+						returnStr = JsonUtils.writeJson("修改成功",1);
+					}else {
+						returnStr = JsonUtils.writeJson(0, 14, "无权限修改");
+					}
+				}else {
+					returnStr = JsonUtils.writeJson(0, 13, "群ID不存在");
+				}
+			}else {
+				returnStr = JsonUtils.writeJson(0, 25, "群ID不存在");
 			}
 		}
 		return returnStr;
