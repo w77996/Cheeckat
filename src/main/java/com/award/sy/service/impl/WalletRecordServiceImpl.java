@@ -1,5 +1,6 @@
 package com.award.sy.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.award.core.beans.WherePrams;
 import com.award.core.sql.where.C;
+import com.award.sy.common.Constants;
+import com.award.sy.common.PayCommonUtil;
 import com.award.sy.dao.WalletLogDao;
 import com.award.sy.dao.WalletRecordDao;
 import com.award.sy.entity.WalletLog;
@@ -29,22 +32,63 @@ public class WalletRecordServiceImpl implements WalletRecordService{
 	 * @param record_sn
 	 * @param type
 	 * @return
-	 * @see com.award.sy.service.WalletRecordService#addWalletOrder(long, java.lang.String, int)
+	 * @see com.award.sy.service.WalletRecordService#addWalletRecordOrder(long, java.lang.String, int)
 	 */
 	@Override
-	public int addWalletOrder(long from_uid, String record_sn, int type) {
+	public boolean addWalletRecordOrder(long from_uid, String record_sn, int type) {
 		// TODO Auto-generated method stub
-		int result = walletRecordDao.excuse("insert tb_wallet_record (from_uid,record_sn,type) values ("+from_uid+","+record_sn+","+type+")");
-		return result;
+		int i = walletRecordDao.excuse("insert tb_wallet_record (from_uid,record_sn,type) values ("+from_uid+","+record_sn+","+type+")");
+		return 1 < i;
 	}
+	/**
+	 * 通过record_sn查找订单
+	 * Title: findWallerOrderByRecordSN
+	 * Description: 
+	 * @param record_sn
+	 * @return
+	 * @see com.award.sy.service.WalletRecordService#findWallerOrderByRecordSN(java.lang.String)
+	 */
 	@Override
 	public WalletRecord findWallerOrderByRecordSN(String record_sn) {
 		// TODO Auto-generated method stub
 		WherePrams where = new WherePrams();
 		where.and("record_sn", C.EQ, record_sn);
-		WalletRecord  result= walletRecordDao.get(where);
-		return result;
+		WalletRecord  walletRecord= walletRecordDao.get(where);
+		return walletRecord;
 	}
+	/**
+	 * 修改记录信息
+	 * Title: editWalletOrder
+	 * Description: 
+	 * @param walletRecord
+	 * @return
+	 * @see com.award.sy.service.WalletRecordService#editWalletOrder(com.award.sy.entity.WalletRecord)
+	 */
+	@Override
+	public boolean editWalletOrder(WalletRecord walletRecord) {
+		// TODO Auto-generated method stub
+		WherePrams where = new WherePrams();
+		where.and("record_sn", C.EQ, walletRecord.getRecord_sn());
+		int i = walletRecordDao.update(walletRecord,where);
+		return 0 < i ;
+	}
+	/**
+	 * 修改
+	 * Title: addLocalWalletRecord
+	 * Description: 
+	 * @param walletRecord
+	 * @return
+	 * @see com.award.sy.service.WalletRecordService#addLocalWalletRecord(com.award.sy.entity.WalletRecord)
+	 */
+	@Override
+	public boolean addLocalWalletRecord(WalletRecord walletRecord) {
+		// TODO Auto-generated method stub
+		WherePrams where = new WherePrams();
+		where.and("record_sn", C.EQ, walletRecord.getRecord_sn());
+		int i = walletRecordDao.add(walletRecord);
+		return 0 < i;
+	}
+	
 	
 	
 

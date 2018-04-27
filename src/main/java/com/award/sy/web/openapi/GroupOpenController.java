@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.award.core.util.JsonUtils;
+import com.award.sy.entity.User;
 import com.award.sy.service.GroupDetailsService;
 import com.award.sy.service.GroupService;
+import com.award.sy.service.UserService;
 
 @Controller
 public class GroupOpenController {
@@ -25,6 +27,9 @@ public class GroupOpenController {
 	@Autowired
 	private GroupService groupService;
 	
+	@Autowired
+	private UserService userService;
+	
 	/**
 	 * 获取用户群聊列表
 	 * <p>Title: getUserGroup</p>  
@@ -34,13 +39,14 @@ public class GroupOpenController {
 	 */
 	@RequestMapping(value="/open/getGroupList",produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String getUserGroup(@RequestParam long userId){
+	public String getUserGroup(@RequestParam String userId){
 		String returnStr = JsonUtils.writeJson(0, 0, "参数为空");
-		if(StringUtils.isBlank(userId+"")){
+		if(StringUtils.isBlank(userId)){
 			return returnStr;
 		}
+		long user_id = Long.parseLong(userId);
 		//获取User下的群组
-		List<Map<String,Object>> list = groupService.getUserGroup(userId);
+		List<Map<String,Object>> list = groupService.getUserGroup(user_id);
 		if(null == list || 0 == list.size()){
 			return  JsonUtils.writeJson(1, "获取成功,无群组", null, "object");
 		}
@@ -112,6 +118,37 @@ public class GroupOpenController {
 		}
 		
 		return JsonUtils.writeJson(0, 0, "未知错误");
+	}
+	/**
+	 * 获取群聊中成员信息
+	 * @Title:           getGroupDetailInfo
+	 * @Description:     TODO
+	 * @param:           @param userId
+	 * @param:           @param groupId
+	 * @param:           @return   
+	 * @return:          String   
+	 * @throws
+	 */
+	@RequestMapping(value="/open/getGroupDetailInfo",produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String getGroupDetailInfo(@RequestParam String userId,@RequestParam String groupId){
+		if(StringUtils.isBlank(userId)||StringUtils.isBlank(groupId)){
+			return JsonUtils.writeJson(0, 0, "参数为空");
+		}
+		
+		long user_id = Long.parseLong(userId);
+		long group_id = Long.parseLong(groupId);
+		
+		User user = userService.getUserById(user_id);
+		if(null == user){
+			return JsonUtils.writeJson(0, 4, "用户不存在");	
+		}
+		Map<String,Object> result = new HashMap<String,Object>();
+		//获取groupId下的用户信息
+		List<Map<String,Object>> userList = groupDetailsService.getUserGroupDetails(group_id);
+		//result.put("user",userList);
+		
+		return JsonUtils.writeJson(1, "获取成功", userList, "object");
 	}
 
 }

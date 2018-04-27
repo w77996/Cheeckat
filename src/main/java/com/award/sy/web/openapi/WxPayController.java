@@ -27,9 +27,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.award.core.util.JsonUtils;
 import com.award.sy.common.Constants;
+import com.award.sy.common.DateUtil;
 import com.award.sy.common.PayCommonUtil;
 import com.award.sy.common.XMLUtil;
 import com.award.sy.entity.WalletRecord;
+import com.award.sy.service.RedPacketService;
 import com.award.sy.service.WalletRecordService;
 import com.award.sy.service.WalletService;
 import com.sun.tools.javac.code.Attribute.Constant;
@@ -44,6 +46,10 @@ public class WxPayController {
 	
 	@Autowired
 	private WalletService walletService;
+	
+	@Autowired
+	private RedPacketService redPacketService;
+	
 	/**
 	 * 微信下单统一接口
 	 * 
@@ -122,11 +128,10 @@ public class WxPayController {
 			parameterMap2.put("prepayid", map.get("prepay_id"));
 			parameterMap2.put("package", "Sign=WXPay");
 			parameterMap2.put("noncestr", PayCommonUtil.CreateNoncestr());
-			// 本来生成的时间戳是13位，但是ios必须是10位，所以截取了一下
 			parameterMap2.put(
 					"timestamp",
 					Long.parseLong(String.valueOf(System.currentTimeMillis())
-							.toString().substring(0, 10)));
+							.toString()));
 			String sign2 = PayCommonUtil.createSign("UTF-8", parameterMap2);
 			parameterMap2.put("sign", sign2);
 			/*resultMap.put("code", "200");
@@ -141,6 +146,14 @@ public class WxPayController {
 
 	/**
 	 * 微信异步通知
+	 * @Title:           wxNotify
+	 * @Description:     TODO
+	 * @param:           @param request
+	 * @param:           @param response
+	 * @param:           @throws IOException
+	 * @param:           @throws JDOMException   
+	 * @return:          void   
+	 * @throws
 	 */
 	@RequestMapping("/wxNotify")
 	@ResponseBody
@@ -198,25 +211,35 @@ public class WxPayController {
 				int pay_status =  walletRecord.getPay_status();
 				int type = walletRecord.getType();
 				long from_uid = walletRecord.getFrom_uid();
-				// GoodsTrade gt = new GoodsTrade();
-				// gt.setTid(out_trade_no);
-				// 查询订单 根据订单号查询订单 GoodsTrade -订单实体类
-				// GoodsTrade trade = 订单查询;
+	
 				
 				if (!Constants.MCH_ID.equals(mch_id)
 						|| walletRecord == null
 						|| new BigDecimal(total_fee)
-								.compareTo(money
-										.multiply(new BigDecimal(100))) != 0) {
+								.compareTo(money.multiply(new BigDecimal(100))) != 0) {
 					logger.info("支付失败,错误信息：" + "参数错误");
 					resXml = "<xml>"
 							+ "<return_code><![CDATA[FAIL]]></return_code>"
 							+ "<return_msg><![CDATA[参数错误]]></return_msg>"
 							+ "</xml> ";
+					walletRecord.setPay_status(Constants.PAY_STATUS_FAIL);
+					walletRecordService.editWalletOrder(walletRecord);
 				} else {
-					if (Constants.PAY_TYPE_WAIT == pay_status) {// 支付的价格
+					if (Constants.PAY_STATUS_WAIT == pay_status) {// 支付的价格
 						// 订单状态的修改。根据实际业务逻辑执行
 						if(Constants.ORDER_TYPE_TRADE == type){
+							//充值成功，修改余额
+							walletService.editUserWalletBalance(from_uid, money);
+						}else if(Constants.ORDER_TYPE_REDPACKET == type){
+							/*walletRecord.setPay_status(Constants.PAY_STATUS_SUCCESS);
+							walletRecord.setPay_time(DateUtil.getNowTime());
+							walletRecord.setPay_type(Constants.PAY_TYPE_WECHAT);
+							walletRecord.setMoney(money);
+							walletRecordService.editWalletOrder(walletRecord);*/
+							//发送成功
+							redPacketService.editRedPacketSendMessage(out_trade_no,Constants.PAY_STATUS_SUCCESS);
+							
+						}else if(Constants.ORDER_TYPE_TASK == type){
 							
 						}
 
@@ -240,6 +263,7 @@ public class WxPayController {
 						+ "<return_code><![CDATA[FAIL]]></return_code>"
 						+ "<return_msg><![CDATA[报文为空]]></return_msg>"
 						+ "</xml> ";
+				//redPacketService.editRedPacketSendMessage("",Constants.PAY_STATUS_FAIL);
 			}
 
 		} else {

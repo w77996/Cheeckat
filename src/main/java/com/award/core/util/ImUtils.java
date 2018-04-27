@@ -14,15 +14,16 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
 
+import com.alibaba.druid.support.logging.Log;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 
 public class ImUtils {
-	private static String client_id = "";
-	private static String client_secret = "";
-	private static String org_name = "";
-	private static String app_name = "";
+	private static String client_id = "YXA6kQpwAEg_EeiS__vkAC3bvw";
+	private static String client_secret = "YXA6skgv7DwiIMDr-8uBzMEFrjSe_Ok";
+	private static String org_name = "1165180409228696";
+	private static String app_name = "apptest";
 	private static String url = "https://a1.easemob.com/";
 	
 	private static String getToken() {	
@@ -107,6 +108,7 @@ public class ImUtils {
 	        JSONObject jsonObj = new JSONObject(); 
 	        jsonObj.put("username", name);
 	        jsonObj.put("password",password);
+	        System.out.println("发送的数据"+jsonObj.toJSONString());
 	        // 构建消息实体
 	        StringEntity entity = new StringEntity(jsonObj.toString());
 	        entity.setContentEncoding("UTF-8");
@@ -121,8 +123,9 @@ public class ImUtils {
 	        if(statusCode == HttpStatus.SC_OK){
 	        	String strResult = EntityUtils.toString(response.getEntity());
 	        	JSONObject jo = JSON.parseObject(strResult);
+	        	System.out.println(jo.toJSONString());
 	        }else{		        	
-
+	        	System.out.println("失败");
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();
@@ -190,6 +193,7 @@ public class ImUtils {
 	    }
 	
 	}
+	
 	
 
 }
