@@ -90,6 +90,17 @@ public class GroupServiceImp implements GroupService{
 		where.and("group_name", C.EQ, groupName);
 		return groupDao.get(where);
 	}
+	
+	@Override
+	public Group getGroupByNameAndAdminId(String groupName,Long adminId) {
+		// TODO Auto-generated method stub
+		WherePrams where = new WherePrams();
+		where.and("group_name", C.EQ, groupName);
+		where.and("admin_id", C.EQ, adminId);
+		return groupDao.get(where);
+	}
+	
+	
 	@Override
 	public List<Map<String, Object>> getUserGroup(long userId) {
 		// TODO Auto-generated method stub

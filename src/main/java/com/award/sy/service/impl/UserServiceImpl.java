@@ -48,6 +48,16 @@ public class UserServiceImpl implements UserService{
 		return userDao.list();
 	}
 	
+	public List<User> getUserByIds(String[] ids) {
+		WherePrams where = new WherePrams();
+	    where.orStart();
+	    for(int i = 0; i < ids.length; i++) {
+	    	where.or("user_id", C.EQ, ids[i]);
+	    }
+		where.orEnd();
+		return userDao.list(where);
+	}
+	
 	public User getUserById(long userId){
 		return userDao.get(userId);
 	}

@@ -38,6 +38,8 @@ public interface GroupService {
 	
 	public Group getGroupByName(String groupName);
 	
+	public Group getGroupByNameAndAdminId(String groupName,Long adminId);
+	
 	public List<Map<String,Object>> getGroupByLatLng(Map<String,double[]> map,long userId);
 	
 	public List<Map<String,Object>> getLimitGroupByLatLng(double lat,double lng,int start,int count,long userId);
