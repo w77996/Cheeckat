@@ -86,16 +86,17 @@ public class GroupDetailsServiceImpl implements GroupDetailsService{
 	@Override
 	public List<Map<String, Object>> getUserGroupDetails(long groupId) {
 		// TODO Auto-generated method stub
-		List<Map<String,Object>> list = groupDetailsDao.listBySql("select u.* from tb_user u left  JOIN tb_group_details gd   on gd.member_id = u.user_id where gd.group_id ="+groupId);
+		List<Map<String,Object>> list = groupDetailsDao.listBySql("select u.*,gd.is_admin from tb_user u left  JOIN tb_group_details gd   on gd.member_id = u.user_id where gd.group_id ="+groupId);
 		return list;
 	}
 
 	@Override
-	public int deleteUserFromGroup(long userId) {
+	public int deleteUserFromGroup(long userId,long group_id) {
 		// TODO Auto-generated method stub
 		WherePrams where = new WherePrams();
 		where.orStart();
 		where.and("member_id", C.EQ, userId);
+		where.and("group_id", C.EQ, group_id);
 		where.orEnd();
 		return groupDetailsDao.del(where);
 	}
@@ -108,7 +109,7 @@ public class GroupDetailsServiceImpl implements GroupDetailsService{
 		List<Map<String,Object>> secondUser = groupDetailsDao.listBySql("SELECT member_id FROM tb_group_details  WHERE group_id = "+groupId+" ORDER BY join_time ASC LIMIT 1, 1");
 		long secondUserId = (long) secondUser.get(0).get("member_id");
 		//用户退出删除
-		int i = deleteUserFromGroup(userId);
+		int i = deleteUserFromGroup(userId,groupId);
 		//设置第二个用户为管理员
 		int j = groupDetailsDao.excuse("UPDATE tb_group_details SET is_admin = 1 WHERE member_id ="+secondUserId+" and group_id ="+groupId);
 		if(i > 0 && j > 0){

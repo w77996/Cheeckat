@@ -57,7 +57,7 @@ public class GroupOpenController {
 			result.put("groupId",groupId);
 			result.put("groupName",list.get(i).get("group_name"));
 			result.put("creatTime", list.get(i).get("create_time"));
-			result.put("isAdmin",list.get(i).get("is_admin"));
+			result.put("isAdmin",list.get(i).get("is_admin")+"");
 			//获取groupId下的用户信息
 			List<Map<String,Object>> userList = groupDetailsService.getUserGroupDetails(groupId);
 			result.put("user",userList);
@@ -75,22 +75,18 @@ public class GroupOpenController {
 	 */
 	@RequestMapping(value="/open/exitGroup",produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String exitGroup(@RequestParam long userId,@RequestParam long groupId,@RequestParam int isAdmin){
+	public String exitGroup(@RequestParam String userId,@RequestParam String groupId,@RequestParam String isAdmin){
 		String returnStr = JsonUtils.writeJson(0, 0, "参数为空");
-		if(StringUtils.isBlank(userId+"")||StringUtils.isBlank(groupId+"")||StringUtils.isBlank(isAdmin+"")){
+		if(StringUtils.isBlank(userId)||StringUtils.isBlank(groupId)||StringUtils.isBlank(isAdmin)){
 			return returnStr;
 		}
-		//获取User下的群组，校验防止恶意参数
-		/*List<Map<String,Object>> list = groupService.getUserGroup(userId);
-		Map<String,Object> param = new HashMap<String,Object>();
-		param.put("group_id",groupId);
-		if(null == list || 0 == list.size()||!list.contains(param)){
-			return  JsonUtils.writeJson(0, 0, "参数为空");
-		}*/
-		List<Map<String,Object>> userList = groupDetailsService.getUserGroupDetails(groupId);
+		long user_id = Long.parseLong(userId);
+		long group_id = Long.parseLong(groupId);
+		int is_Admin = Integer.parseInt(isAdmin);
+		List<Map<String,Object>> userList = groupDetailsService.getUserGroupDetails(group_id);
 		if(userList.size() ==  3){
 			//删除这个群
-			int i = groupService.deleteGroup(groupId);
+			int i = groupService.deleteGroup(group_id);
 			if(i > 0){
 				return  JsonUtils.writeJson(1, "退出成功", null, "object");
 			}else {
@@ -98,17 +94,17 @@ public class GroupOpenController {
 			}
 		}else if(userList.size() > 3){
 			//删除用户在群中的信息
-			if(isAdmin == 1){
+			if(is_Admin == 1){
 				//作为管理员
-				int i = groupDetailsService.deleteUserAdminFromGroup(userId,groupId);
+				int i = groupDetailsService.deleteUserAdminFromGroup(user_id,group_id);
 				if(i > 0){
 					return  JsonUtils.writeJson(1, "退出成功", null, "object");
 				}else {
 					return JsonUtils.writeJson(1, 0, "退出失败");
 				}
-			}else if(isAdmin == 0){
+			}else if(is_Admin == 0){
 				//不作为管理员
-				int i = groupDetailsService.deleteUserFromGroup(userId);
+				int i = groupDetailsService.deleteUserFromGroup(user_id,group_id);
 				if(i > 0){
 					return  JsonUtils.writeJson(1, "退出成功", null, "object");
 				}else {

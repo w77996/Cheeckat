@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.ibatis.cache.decorators.WeakCache;
 import org.springframework.stereotype.Service;
 
 import com.award.core.beans.WherePrams;
@@ -72,20 +73,17 @@ public class UserServiceImpl implements UserService{
 	 * @param type
 	 * @return
 	 * @see com.award.sy.service.UserService#addNewUserInfo(java.lang.String, int)
-	 */
+	 *//*
 	@Override
 	public int addNewUserInfo(String id, int type) {
 		User user = new User();
 		user.setCreate_time(DateUtil.getNowTime());
-		if(Constants.LOGIN_TYPE_PHONE == type){
-			user.setPhone(id);
-			return userDao.addLocal(user);
-		}else if(Constants.LOGIN_TYPE_WECHAT == type){
+		user.setUser_name(id);
+		 if(Constants.LOGIN_TYPE_WECHAT == type){
 			user.setOpen_id(id);
-			return userDao.addLocal(user);
 		}
-		return 0;
-	}
+		return userDao.addLocal(user);
+	}*/
 	/**
 	 * 通过手机号获取用户信息
 	 * Title: getUserByPhone
@@ -93,34 +91,49 @@ public class UserServiceImpl implements UserService{
 	 * @param phone
 	 * @return
 	 * @see com.award.sy.service.UserService#getUserByPhone(java.lang.String)
-	 */
+	 *//*
 	@Override
 	public User getUserByPhone(String phone) {
 		WherePrams where = new WherePrams();
 		where.and("phone", C.EQ, phone);
 		return userDao.get(where);
 	}
-	/**
+	*//**
 	 * 通过微信open_id获取用户信息
 	 * Title: getUserByWxOpenId
 	 * Description: 
 	 * @param phone
 	 * @return
 	 * @see com.award.sy.service.UserService#getUserByWxOpenId(java.lang.String)
-	 */
+	 *//*
 	@Override
 	public User getUserByWxOpenId(String openId) {
 		WherePrams where = new WherePrams();
 		where.and("open_id", C.EQ, openId);
 		return userDao.get(where);
+	}*/
+	/**
+	 * 添加新的用户
+	 * Title: addNewUser
+	 * Description: 
+	 * @param user
+	 * @return
+	 * @see com.award.sy.service.UserService#addNewUser(com.award.sy.entity.User)
+	 */
+	@Override
+	public int addNewUser(User user) {
+		return userDao.addLocal(user);
 	}
 
 	@Override
-	public void addNewUserInfoFromPhone(String phone) {
+	public User getUserByUserName(String userName) {
 		// TODO Auto-generated method stub
-		
+		WherePrams where = new WherePrams();
+		where.and("user_name", C.EQ, userName);
+		return userDao.get(where);
 	}
 
+	
 
 
 }

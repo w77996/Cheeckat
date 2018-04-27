@@ -70,7 +70,7 @@ public interface GroupDetailsService {
 	 * @param userId
 	 * @return
 	 */
-	int deleteUserFromGroup(long userId);
+	int deleteUserFromGroup(long userId,long group_id);
 	
 	/**
 	 * 管理员用户退出群聊

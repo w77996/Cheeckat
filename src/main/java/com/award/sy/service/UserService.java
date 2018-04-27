@@ -60,8 +60,8 @@ public interface UserService{
 	 * @param:           @param phone   
 	 * @return:          int   
 	 * @throws
-	 */
-	public int addNewUserInfo(String id,int type);
+	 *//*
+	public int addNewUserInfo(String id,int type);*/
 	/**
 	 * 通过手机号登录
 	 * @Title:           getUserByPhone
@@ -71,8 +71,8 @@ public interface UserService{
 	 * @return:          User   
 	 * @throws
 	 */
-	public User getUserByPhone(String phone);
-	/**
+	/*public User getUserByPhone(String phone);
+	*//**
 	 * 通过微信openId获取用户
 	 * @Title:           getUserByWxOpenId
 	 * @Description:     TODO
@@ -80,16 +80,28 @@ public interface UserService{
 	 * @param:           @return   
 	 * @return:          User   
 	 * @throws
-	 */
-	public User getUserByWxOpenId(String phone);
+	 *//*
+	public User getUserByWxOpenId(String phone);*/
 	/**
-	 * 通过手机注册新的用户
-	 * @Title:           addNewUserInfoFromPhone
+	 * 
+	 * @Title:           addNewUser
 	 * @Description:     TODO
-	 * @param:           @param phone   
-	 * @return:          void   
+	 * @param:           @param user
+	 * @param:           @return   
+	 * @return:          int   
 	 * @throws
 	 */
-	public void addNewUserInfoFromPhone(String phone);
+	public int addNewUser(User user);
+	/**
+	 * 通过用户名查找用户
+	 * @Title:           getUserByUserName
+	 * @Description:     TODO
+	 * @param:           @param userName
+	 * @param:           @return   
+	 * @return:          int   
+	 * @throws
+	 */
+	
+	public User getUserByUserName(String userName);
 	
 }

@@ -40,7 +40,6 @@ public class User extends Po {
     
     private Integer height;
     
-    private String phone;
     
     private String open_id;
 	
@@ -170,14 +169,6 @@ public class User extends Po {
 	}
 
 	
-	public String getPhone() {
-		return phone;
-	}
-
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
 
 
 	public String getOpen_id() {

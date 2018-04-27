@@ -85,6 +85,7 @@ public class ChatOpenController {
 					gd2.setMember_id(Long.parseLong(member[i]));
 					gd2.setIs_admin(0);
 					gd2.setJoin_time(DateUtil.getNowTime());
+					gd2.setGroup_id(group2.getGroup_id());
 					groupDetailsService.addGroupDetails(gd2);
 				}
 				returnStr = JsonUtils.writeJson("创建成功",1);
