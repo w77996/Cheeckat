@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.award.core.util.FileUtil;
+import com.award.core.util.ImUtils;
 import com.award.core.util.JsonUtils;
 import com.award.sy.common.Constants;
+import com.award.sy.common.PayCommonUtil;
 import com.award.sy.entity.User;
 import com.award.sy.entity.UserIndexImg;
 import com.award.sy.service.FriendService;
@@ -120,13 +122,23 @@ public class UserOpenController {
 		if(!isSuccess){
 			return JsonUtils.writeJson(0, 24, "图片上传失败");
 		}
+		int login_type = Integer.parseInt(type);
+		boolean addImSuccess = false;
+		if(Constants.LOGIN_TYPE_PHONE == login_type){
+			addImSuccess = ImUtils.authRegister(phone, "123456", phone);
+		}else if(Constants.LOGIN_TYPE_WECHAT == login_type){
+			addImSuccess = ImUtils.authRegister(open_id, "123456", open_id);
+		}else {
+			return JsonUtils.writeJson(0, 0, "参数为空");
+		}
+		
 		User user = new User();
 		user.setBirth(birth);
 		user.setHead_img(uploadPath+fileName);
 		user.setHeight(Integer.parseInt(height));
 		user.setSex(Integer.parseInt(sex));
 		//user.setUser_id(user_id);
-		int login_type = Integer.parseInt(type);
+		
 		
 		if(Constants.LOGIN_TYPE_PHONE == login_type){
 			user.setUser_name(phone);
