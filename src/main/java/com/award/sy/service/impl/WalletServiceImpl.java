@@ -65,45 +65,7 @@ public class WalletServiceImpl implements WalletService{
 		return walletDao.get(where);
 	}
 	
-	/**
-	 * 微信支付充值
-	 * Title: addRechargeOrderRecord
-	 * Description: 
-	 * @param userId
-	 * @param money
-	 * @param payType
-	 * @return
-	 * @see com.award.sy.service.WalletService#addRechargeOrderRecord(long, java.lang.String, int)
-	 */
-	@Override
-	public String addRechargeOrderRecord(long userId, String money, int payType) {
-		// TODO Auto-generated method stub
-		//生成订单编号
-		String record_sn = PayCommonUtil.CreateNoncestr();
-		//生成订单记录
-		WalletRecord walletRecord = new WalletRecord();
-		walletRecord.setFrom_uid(userId);
-		walletRecord.setRecord_sn(record_sn);
-		walletRecord.setType(Constants.ORDER_TYPE_REDPACKET);
-		walletRecord.setPay_type(payType);
-		walletRecord.setMoney(new Double(money));
-		int i = walletRecordDao.addLocal(walletRecord);
-		
-		
-		if(i < 0){
-			return null;
-		}
-		//walletRecordDao.excuse("insert tb_wallet_record (from_uid,record_sn,type,pay_type) values ("+userId+","+record_sn+","+Constants.ORDER_TYPE_REDPACKET+","+pay_type+")");
-		//生成红包记录
-		/*RedPacket redPacket = new RedPacket();
-		redPacket.setPublish_id(userId);
-		redPacket.setRecord_sn(record_sn);
-		redPacket.setMoney(new BigDecimal(money));
-		redPacket.setCreate_time(DateUtil.getNowTime());
-		redPacketDao.addLocal(redPacket);*/
-		
-		return record_sn;
-	}
+
 	/**
 	 * 申请提现
 	 * Title: withdrawMoney

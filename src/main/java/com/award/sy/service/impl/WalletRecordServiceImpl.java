@@ -34,12 +34,12 @@ public class WalletRecordServiceImpl implements WalletRecordService{
 	 * @return
 	 * @see com.award.sy.service.WalletRecordService#addWalletRecordOrder(long, java.lang.String, int)
 	 */
-	@Override
+	/*@Override
 	public boolean addWalletRecordOrder(long from_uid, String record_sn, int type) {
 		// TODO Auto-generated method stub
 		int i = walletRecordDao.excuse("insert tb_wallet_record (from_uid,record_sn,type) values ("+from_uid+","+record_sn+","+type+")");
 		return 1 < i;
-	}
+	}*/
 	/**
 	 * 通过record_sn查找订单
 	 * Title: findWallerOrderByRecordSN
@@ -72,24 +72,31 @@ public class WalletRecordServiceImpl implements WalletRecordService{
 		int i = walletRecordDao.update(walletRecord,where);
 		return 0 < i ;
 	}
+
 	/**
-	 * 修改
-	 * Title: addLocalWalletRecord
-	 * Description: 
-	 * @param walletRecord
+	 * 生成订单
+	 * @param user_id
+	 * @param money
+	 * @param pay_type
+	 * @param type
 	 * @return
-	 * @see com.award.sy.service.WalletRecordService#addLocalWalletRecord(com.award.sy.entity.WalletRecord)
 	 */
 	@Override
-	public boolean addLocalWalletRecord(WalletRecord walletRecord) {
-		// TODO Auto-generated method stub
-		WherePrams where = new WherePrams();
-		where.and("record_sn", C.EQ, walletRecord.getRecord_sn());
-		int i = walletRecordDao.add(walletRecord);
-		return 0 < i;
+	public String addWalletRecordOrder(long user_id, String money, int pay_type, int type) {
+		String record_sn = PayCommonUtil.createOutTradeNo();
+		//生成订单记录
+		WalletRecord walletRecord = new WalletRecord();
+		walletRecord.setFrom_uid(user_id);
+		walletRecord.setRecord_sn(record_sn);
+		walletRecord.setType(Constants.ORDER_TYPE_REDPACKET);
+		walletRecord.setPay_type(pay_type);
+		walletRecord.setMoney(Double.parseDouble(money));
+		int i = walletRecordDao.addLocal(walletRecord);
+		if(0 < i){
+			return record_sn;
+		}
+		return null;
 	}
-	
-	
-	
+
 
 }

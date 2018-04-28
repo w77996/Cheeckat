@@ -24,6 +24,8 @@ public class WalletLog extends Po{
 	private String longIdStr;				
 	
 	private String record_sn;//订单号
+
+	private int type;
 	
 	private Long user_id;//用户ID
 	
@@ -57,6 +59,14 @@ public class WalletLog extends Po{
 
 	public void setRecord_sn(String record_sn) {
 		this.record_sn = record_sn;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
 	}
 
 	public Long getUser_id() {
@@ -101,12 +111,16 @@ public class WalletLog extends Po{
 
 	@Override
 	public String toString() {
-		return "WalletLog [log_id=" + log_id + ", longIdStr=" + longIdStr
-				+ ", record_sn=" + record_sn + ", user_id=" + user_id
-				+ ", change_money=" + change_money + ", money=" + money
-				+ ", remark=" + remark + ", create_time=" + create_time + "]";
+		return "WalletLog{" +
+				"log_id=" + log_id +
+				", longIdStr='" + longIdStr + '\'' +
+				", record_sn='" + record_sn + '\'' +
+				", type=" + type +
+				", user_id=" + user_id +
+				", change_money=" + change_money +
+				", money=" + money +
+				", remark='" + remark + '\'' +
+				", create_time='" + create_time + '\'' +
+				'}';
 	}
-	
-	
-	
 }

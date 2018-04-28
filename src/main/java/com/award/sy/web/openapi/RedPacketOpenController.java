@@ -141,9 +141,6 @@ public class RedPacketOpenController {
 		int taskType = Integer.parseInt(type);
 		long user_id = Long.parseLong(userId);
 		Double price = Double.parseDouble(money);
-
-
-
 		User user = userService.getUserById(user_id);
 		if (null == user) {
 			return JsonUtils.writeJson(0, 4, "用户不存在");
@@ -151,7 +148,7 @@ public class RedPacketOpenController {
 		if (Constants.PAY_TYPE_WECHAT == pay_type) {
 			if (Constants.ORDER_TYPE_REDPACKET == taskType) {
 				//微信支付发红包
-				String record_sn = redPacketService.addRedPacketOrderRecord(user_id,money,pay_type);
+				String record_sn = walletRecordService.addWalletRecordOrder(user_id,money,Constants.PAY_TYPE_WECHAT,Constants.ORDER_TYPE_REDPACKET);
 				if(null == record_sn){
 					return JsonUtils.writeJson(0, 19, "订单生成失败");
 				}
@@ -170,10 +167,15 @@ public class RedPacketOpenController {
 					return JsonUtils.writeJson(0, 0, "参数错误");
 				}
 				//余额支付发红包
-				//wallet.getMoney().compareTo(new Double(money));
 				if(wallet.getMoney().compareTo(new Double(money)) < 0){
 					return JsonUtils.writeJson(0, 21, "余额不足");
 				}
+
+				String record_sn = walletRecordService.addWalletRecordOrder(user_id,money,Constants.PAY_TYPE_BALANCE,Constants.ORDER_TYPE_REDPACKET);
+				if(null == record_sn){
+					return JsonUtils.writeJson(0, 19, "订单生成失败");
+				}
+
 				boolean i = redPacketService.addRedPacketPayByBalanceRecord(user_id,money,pay_type,wallet);
 				if(true == i){
 					//添加日志，发送红包扣除余额

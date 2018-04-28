@@ -25,7 +25,7 @@ public interface WalletRecordService {
 	 * @return:          int   
 	 * @throws
 	 */
-	boolean addWalletRecordOrder(long from_uid,String record_sn,int type);
+/*	boolean addWalletRecordOrder(long from_uid,String record_sn,int type);*/
 	
 	//int editWalletOrder(long )
 	/**
@@ -50,7 +50,17 @@ public interface WalletRecordService {
 	 */
 	boolean editWalletOrder(WalletRecord walletRecord);
 	
-	boolean addLocalWalletRecord(WalletRecord walletRecord);
+	//boolean addLocalWalletRecord(WalletRecord walletRecord);
+
+	/**
+	 * 添加交易记录
+	 * @param user_id
+	 * @param money
+	 * @param pay_type
+	 * @param type
+	 * @return
+	 */
+	String addWalletRecordOrder(long user_id,String money,int pay_type,int type);
 
 
 	

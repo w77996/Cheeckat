@@ -123,8 +123,7 @@ public class WalletController {
 		if (Constants.PAY_TYPE_WECHAT == pay_type) {
 			 if (Constants.ORDER_TYPE_TRADE == taskType) {
 				// 微信支付充值
-				String record_sn = walletService.addRechargeOrderRecord(user_id,
-						money, pay_type);
+				String record_sn = walletRecordService.addWalletRecordOrder(user_id,money,Constants.PAY_TYPE_WECHAT,Constants.ORDER_TYPE_TRADE);
 				if (null == record_sn) {
 					return JsonUtils.writeJson(0, 19, "订单生成失败");
 				}
