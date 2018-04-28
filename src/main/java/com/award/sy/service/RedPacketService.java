@@ -41,7 +41,7 @@ public interface RedPacketService {
 	 * @return:          void   
 	 * @throws
 	 */
-	 List<Map<String, Object>> getRedPacket(RedPacket redPacket);
+	 List<Map<String, Object>> editRedPacket(RedPacket redPacket);
 	 
 	 /**
 	  * 更新红包状态

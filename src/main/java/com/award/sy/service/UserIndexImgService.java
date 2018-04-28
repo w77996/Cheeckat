@@ -1,6 +1,7 @@
 package com.award.sy.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.award.sy.entity.UserIndexImg;
 
@@ -18,5 +19,5 @@ public interface UserIndexImgService {
 	 * @return:          List<UserIndexImg>   
 	 * @throws
 	 */
-	List<UserIndexImg> getUserIndexImgList(long parseLong);
+	List<Map<String,Object>> getUserIndexImgList(long parseLong, String start, String count);
 }

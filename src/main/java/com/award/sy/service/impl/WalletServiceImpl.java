@@ -43,11 +43,10 @@ public class WalletServiceImpl implements WalletService{
 	 * @param user_id
 	 * @param money
 	 * @return
-	 * @see com.award.sy.service.WalletService#editUserWalletBalance(long, java.math.BigDecimal)
+	 * @see com.award.sy.service.WalletService#(long, java.math.BigDecimal)
 	 */
 	@Override
-	public boolean editUserWalletBalance(long user_id,BigDecimal money) {
-		// TODO Auto-generated method stub
+	public boolean editUserWalletBalance(long user_id,Double money) {
 		int i = walletDao.excuse("update tb_wallet set money ="+money.doubleValue()+" where user_id = "+user_id);
 		return   i >0;
 	}
@@ -61,7 +60,6 @@ public class WalletServiceImpl implements WalletService{
 	 */
 	@Override
 	public Wallet findWalletByUserId(long u_id) {
-		// TODO Auto-generated method stub
 		WherePrams where = new WherePrams();
 		where.and("user_id", C.EQ, u_id);
 		return walletDao.get(where);
@@ -88,7 +86,7 @@ public class WalletServiceImpl implements WalletService{
 		walletRecord.setRecord_sn(record_sn);
 		walletRecord.setType(Constants.ORDER_TYPE_REDPACKET);
 		walletRecord.setPay_type(payType);
-		walletRecord.setMoney(new BigDecimal(money));
+		walletRecord.setMoney(new Double(money));
 		int i = walletRecordDao.addLocal(walletRecord);
 		
 		
@@ -113,11 +111,11 @@ public class WalletServiceImpl implements WalletService{
 	 * @param userId
 	 * @param price
 	 * @return
-	 * @see com.award.sy.service.WalletRecordService#withdrawMoney(long, java.math.BigDecimal)
+	 * @see com.award.sy.service.WalletRecordService#(long, Double)
 	 */
 	@Transactional
 	@Override
-	public boolean withdrawMoney(long userId, BigDecimal price,Wallet wallet) {
+	public boolean withdrawMoney(long userId, Double price,Wallet wallet) {
 		// TODO Auto-generated method stub
 		//生成订单编号
 		String record_sn = PayCommonUtil.CreateNoncestr();
@@ -130,8 +128,8 @@ public class WalletServiceImpl implements WalletService{
 		walletRecord.setMoney(price);
 		int i = walletRecordDao.addLocal(walletRecord);
 		
-		BigDecimal result = null;
-		result = wallet.getMoney().subtract(price);
+		Double result = null;
+		result = wallet.getMoney()-price;
 		WherePrams where = new WherePrams();
 		where.and("user_id", C.EQ, userId);
 		int j = walletDao.update(wallet, where);

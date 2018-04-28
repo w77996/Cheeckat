@@ -207,7 +207,7 @@ public class WxPayController {
 				
 				WalletRecord walletRecord = walletRecordService.findWallerOrderByRecordSN(out_trade_no);
 				//Map<String, Object> walletRecordMap = list.get(0);
-				BigDecimal money =  walletRecord.getMoney();
+				Double money =  walletRecord.getMoney();
 				int pay_status =  walletRecord.getPay_status();
 				int type = walletRecord.getType();
 				long from_uid = walletRecord.getFrom_uid();
@@ -215,8 +215,8 @@ public class WxPayController {
 				
 				if (!Constants.MCH_ID.equals(mch_id)
 						|| walletRecord == null
-						|| new BigDecimal(total_fee)
-								.compareTo(money.multiply(new BigDecimal(100))) != 0) {
+						|| new Double(total_fee)
+								.compareTo(new Double(money*100)) != 0) {
 					logger.info("支付失败,错误信息：" + "参数错误");
 					resXml = "<xml>"
 							+ "<return_code><![CDATA[FAIL]]></return_code>"

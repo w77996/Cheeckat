@@ -80,6 +80,15 @@ public interface GroupDetailsService {
 	 * @return
 	 */
 	int deleteUserAdminFromGroup(long userId,long groupId);
+
+	/**
+	 * 判断用户是否是和权限一致
+	 * @param user_id
+	 * @param group_id
+	 * @param is_admin
+	 * @return
+	 */
+    GroupDetails getUserGroupDetailsIsAdmin(long user_id, long group_id, int is_admin);
 	
 /*	User getGroupAdmin(long )*/
 

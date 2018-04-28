@@ -25,7 +25,7 @@ public class Wallet extends Po{
 	
 	private Long user_id;//用户ID
 	
-	private BigDecimal money;//余额
+	private Double money;//余额
 	
 	private String salt;//盐
 	
@@ -59,11 +59,11 @@ public class Wallet extends Po{
 		this.user_id = user_id;
 	}
 
-	public BigDecimal getMoney() {
+	public Double getMoney() {
 		return money;
 	}
 
-	public void setMoney(BigDecimal money) {
+	public void setMoney(Double money) {
 		this.money = money;
 	}
 

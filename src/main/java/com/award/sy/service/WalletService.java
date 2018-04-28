@@ -21,7 +21,7 @@ public interface WalletService {
 	 * @return:          boolean   
 	 * @throws
 	 */
-	boolean editUserWalletBalance(long user_id,BigDecimal money);
+	boolean editUserWalletBalance(long user_id,Double money);
 	/**
 	 * 通过ID查找用户钱包数据
 	 * @Title:           findWalletByUserId
@@ -66,6 +66,6 @@ public interface WalletService {
 	 * @return:          boolean   
 	 * @throws
 	 */
-	boolean withdrawMoney(long userId, BigDecimal price,Wallet wallet);
+	boolean withdrawMoney(long userId, Double price,Wallet wallet);
 	
 }

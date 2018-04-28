@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.award.core.util.ImUtils;
+import com.award.sy.entity.GroupDetails;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -83,9 +85,18 @@ public class GroupOpenController {
 		long user_id = Long.parseLong(userId);
 		long group_id = Long.parseLong(groupId);
 		int is_Admin = Integer.parseInt(isAdmin);
+
+
+		GroupDetails groupDetails = groupDetailsService.getUserGroupDetailsIsAdmin(user_id,group_id,is_Admin);
+		if(null == groupDetails){
+			return JsonUtils.writeJson(0, 35, "权限错误");
+		}
 		List<Map<String,Object>> userList = groupDetailsService.getUserGroupDetails(group_id);
 		if(userList.size() ==  3){
 			//删除这个群
+
+			//ImUtils.deleteGroup()
+
 			int i = groupService.deleteGroup(group_id);
 			if(i > 0){
 				return  JsonUtils.writeJson(1, "退出成功", null, "object");

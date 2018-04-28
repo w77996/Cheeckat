@@ -30,22 +30,23 @@ public class UserIndexImgServiceImpl implements UserIndexImgService{
 
 	@Override
 	public int delUserIndexImg(long user_id, String img_path) {
-		// TODO Auto-generated method stub
-		return 0;
+		int i = userIndexImgDao.excuse("delete from tb_user_index_img where user_id ="+user_id+" and img="+img_path);
+		return  i;
 	}
+
 	/**
-	 * 获取主页list
-	 * Title: getUserIndexImgList
-	 * Description: 
-	 * @param parseLong
+	 * 获取主页图片
+	 * @param userId
+	 * @param start
+	 * @param count
 	 * @return
-	 * @see com.award.sy.service.UserIndexImgService#getUserIndexImgList(long)
 	 */
 	@Override
-	public List<UserIndexImg> getUserIndexImgList(long userId) {
-		WherePrams where = new WherePrams();
+	public List<Map<String,Object>> getUserIndexImgList(long userId,String start,String count) {
+		/*WherePrams where = new WherePrams();
 		where.and("user_id", C.EQ,userId);
-		List<UserIndexImg> list = userIndexImgDao.list(where);
+		List<UserIndexImg> list = userIndexImgDao.list(where);*/
+		List<Map<String,Object>> list = userIndexImgDao.listBySql("select * from tb_user_index_img where user_id ="+userId+" order by create_time desc limit "+start+","+count);
 		return list;
 	}
 	

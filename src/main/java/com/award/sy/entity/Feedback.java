@@ -17,6 +17,8 @@ public class Feedback extends Po {
 
     private String content;
 
+    private String create_time;
+
     public Long getFeedback_id() {
         return feedback_id;
     }
@@ -49,6 +51,14 @@ public class Feedback extends Po {
         this.content = content;
     }
 
+    public String getCreate_time() {
+        return create_time;
+    }
+
+    public void setCreate_time(String create_time) {
+        this.create_time = create_time;
+    }
+
     @Override
     public String toString() {
         return "Feedback{" +
@@ -56,6 +66,7 @@ public class Feedback extends Po {
                 ", feedbackIdStr='" + feedbackIdStr + '\'' +
                 ", user_id1=" + user_id1 +
                 ", content='" + content + '\'' +
+                ", create_time='" + create_time + '\'' +
                 '}';
     }
 }

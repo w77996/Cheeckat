@@ -52,53 +52,6 @@ public class WalletController {
 	private UserService userService;
 
 	/**
-	 * 生成订单
-	 * 
-	 * @Title: genOrder
-	 * @Description: TODO
-	 * @param: @param request
-	 * @param: @return
-	 * @return: String
-	 * @throws
-	 */
-	/*
-	 * @RequestMapping(value="/genOrder",method=RequestMethod.POST)
-	 * 
-	 * @ResponseBody public String genOrder(HttpServletRequest request){ String
-	 * user_id = request.getParameter("user_id"); String body =
-	 * request.getParameter("body");//订单类型 //String total_fee =
-	 * request.getParameter("total_fee");//订单金额 String spbill_create_ip =
-	 * PayCommonUtil.getIpAddress(request); String trade_type =
-	 * request.getParameter("trade_type");
-	 * 
-	 * String returnStr = JsonUtils.writeJson(0, 0, "参数为空");
-	 * if(StringUtils.isBlank
-	 * (user_id)||StringUtils.isBlank(body)||StringUtils.isBlank
-	 * (spbill_create_ip)||StringUtils.isBlank(trade_type)){ return returnStr; }
-	 * int orderType = Integer.parseInt(body); long userId =
-	 * Long.parseLong(user_id); //生成订单号并生成订单 String record_sn =
-	 * PayCommonUtil.createOutTradeNo();
-	 * 
-	 * WalletRecord walletRecord = new WalletRecord();
-	 * 
-	 * walletRecord.setFrom_uid(userId); if(Constants.ORDER_TYPE_TRADE ==
-	 * orderType ){ //交易充值 walletRecord.setTo_uid(0L);
-	 * 
-	 * }else if (Constants.ORDER_TYPE_REDPACKET == orderType){ //红包
-	 * 
-	 * }else if(Constants.ORDER_TYPE_TASK == orderType){ //任务
-	 * 
-	 * }else if(Constants.ORDER_TYPE_WITHDRAWLS == orderType){ //提现
-	 * 
-	 * }else if(Constants.ORDER_TYPE_BACK == orderType){ //退款
-	 * 
-	 * }else{ return JsonUtils.writeJson(0, 0, "参数错误"); }
-	 * walletRecordService.addWalletRecordOrder(Long.parseLong(user_id),
-	 * record_sn, orderType); logger.info("genOrder生成订单 ");
-	 * 
-	 * return JsonUtils.writeJson("订单生成成功",1); }
-	 */
-	/**
 	 * 申请提现
 	 * 
 	 * @Title: withdrawMoney
@@ -109,7 +62,7 @@ public class WalletController {
 	 * @return: String
 	 * @throws
 	 */
-	@RequestMapping(value = "/open/withdraw",method=RequestMethod.POST)
+	@RequestMapping(value = "/open/withdraw", produces = "text/html;charset=UTF-8",method=RequestMethod.POST)
 	@ResponseBody
 	public String withdrawMoney(@RequestParam String user_id,
 			@RequestParam String money,@RequestParam String type) {
@@ -122,7 +75,7 @@ public class WalletController {
 		}
 		long userId = Long.parseLong(user_id);
 		User user = userService.getUserById(userId);
-		BigDecimal price = new BigDecimal(money);
+		Double price = new Double(money);
 		if (null == user) {
 			return JsonUtils.writeJson(0, 4, "用户不存在");
 		}
@@ -197,7 +150,7 @@ public class WalletController {
 	 * @return:          String   
 	 * @throws
 	 */
-	@RequestMapping("/open/getBalance")
+	@RequestMapping(value = "/open/getBalance", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String getBalance(@RequestParam String userId){
 		if (StringUtils.isBlank(userId)) {

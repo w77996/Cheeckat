@@ -1,5 +1,6 @@
 package com.award.sy.service.impl;
 
+import com.award.sy.common.DateUtil;
 import com.award.sy.dao.FeedbackDao;
 import com.award.sy.entity.Feedback;
 import com.award.sy.service.FeedbackService;
@@ -16,6 +17,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         Feedback feedback = new Feedback();
         feedback.setUser_id1(userId);
         feedback.setContent(content);
+        feedback.setCreate_time(DateUtil.getNowTime());
         return feedbackDao.addLocal(feedback);
     }
 }

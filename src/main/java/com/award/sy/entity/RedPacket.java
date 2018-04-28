@@ -15,13 +15,13 @@ public class RedPacket extends Po{
 	private Long   redpacket_id;					//任务ID
 	
 	@TempField
-	private String redpacketIdStr;		
+	private String redpacketIdStr;
 	
 	private String record_sn;//流水订单号
 		
     private Integer type;				//任务类型
 	
-	private BigDecimal money;                 //金额
+	private Double money;                 //金额
 	
 	private Long publish_id;               //发布者
 	
@@ -66,11 +66,11 @@ public class RedPacket extends Po{
 		this.type = type;
 	}
 
-	public BigDecimal getMoney() {
+	public Double getMoney() {
 		return money;
 	}
 
-	public void setMoney(BigDecimal money) {
+	public void setMoney(Double money) {
 		this.money = money;
 	}
 

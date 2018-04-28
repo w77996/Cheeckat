@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import jdk.nashorn.internal.objects.annotations.Where;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,7 +59,8 @@ public class RedPacketServiceImpl implements RedPacketService {
 	 */
 	@Override
 	public RedPacket getRedPacketById(long redpacketId) {
-		// TODO Auto-generated method stub
+		/*WherePrams where = new WherePrams();
+		where.and("redpacket_id",C.EQ,redpacketId);*/
 		return redPacketDao.get(redpacketId);
 	}
 	/**
@@ -83,7 +85,7 @@ public class RedPacketServiceImpl implements RedPacketService {
 		walletRecord.setRecord_sn(record_sn);
 		walletRecord.setType(Constants.ORDER_TYPE_REDPACKET);
 		walletRecord.setPay_type(pay_type);
-		walletRecord.setMoney(new BigDecimal(money));
+		walletRecord.setMoney(new Double(money));
 		walletRecordDao.addLocal(walletRecord);
 		
 		//walletRecordDao.excuse("insert tb_wallet_record (from_uid,record_sn,type,pay_type) values ("+userId+","+record_sn+","+Constants.ORDER_TYPE_REDPACKET+","+pay_type+")");
@@ -91,7 +93,7 @@ public class RedPacketServiceImpl implements RedPacketService {
 		RedPacket redPacket = new RedPacket();
 		redPacket.setPublish_id(userId);
 		redPacket.setRecord_sn(record_sn);
-		redPacket.setMoney(new BigDecimal(money));
+		redPacket.setMoney(new Double(money));
 		redPacket.setCreate_time(DateUtil.getNowTime());
 		redPacketDao.addLocal(redPacket);
 		
@@ -132,29 +134,24 @@ public class RedPacketServiceImpl implements RedPacketService {
 	 * Description: 
 	 * @param redPacket
 	 * @return
-	 * @see com.award.sy.service.RedPacketService#getRedPacket(com.award.sy.entity.RedPacket)
+	 * @see com.award.sy.service.RedPacketService#editRedPacket(com.award.sy.entity.RedPacket)
 	 */
 	@Transactional
 	@Override
-	public List<Map<String,Object>> getRedPacket(RedPacket redPacket) {
+	public List<Map<String,Object>> editRedPacket(RedPacket redPacket) {
 		// TODO Auto-generated method stub
 		
 		//WalletRecord walletRecord = walletRecordService.findWallerOrderByRecordSN(redPacket.getRecord_sn());
-		//查记录
-		WherePrams recordWhere = new WherePrams();
-		recordWhere.and("record_sn", C.EQ, redPacket.getRecord_sn());
-		WalletRecord walletRecord = walletRecordDao.get(recordWhere);
-		//查账
-		if(redPacket.getMoney().compareTo(walletRecord.getMoney())!=0){
-			return null;
-		}
+
 		//更新红包状态
 		String date = DateUtil.getNowTime();
+
 		redPacket.setAccept_time(date);
 		WherePrams where = new WherePrams();
 		where.and("redpacket_id", C.EQ, redPacket.getRedpacket_id());
-		int i = redPacketDao.updateLocal(redPacket);
-		if(i < 0){
+		System.out.println(redPacket.toString());
+		int i = redPacketDao.updateLocal(redPacket,where);
+		if(0 > i){
 			return null;
 		}
 		//修改被抢用户的金额
@@ -162,23 +159,24 @@ public class RedPacketServiceImpl implements RedPacketService {
 		walletWhere.and("user_id", C.EQ, redPacket.getAccept_id());
 		Wallet wallet = walletDao.get(walletWhere);
 		//获取钱包的余额
-		BigDecimal walletMoney = wallet.getMoney();
-		BigDecimal totalMoney = new BigDecimal(walletMoney.doubleValue());
+		Double walletMoney = wallet.getMoney();
+		Double totalMoney = new Double(walletMoney.doubleValue());
 		//获取红包的数额
-		totalMoney.add(new BigDecimal(redPacket.getMoney().doubleValue()));
+		totalMoney = totalMoney+redPacket.getMoney();
 		//修改钱包余额
 		
-		walletDao.excuse("update tb_wallet set money ="+totalMoney.doubleValue()+" where user_id = "+redPacket.getAccept_id());
+		walletDao.excuse("update tb_wallet set money ="+totalMoney+" where user_id = "+redPacket.getAccept_id());
 		/*if(!walletService.editUserWalletBalance(redPacket.getAccept_id(),totalMoney)){
 			return null;
 		}*/
 		//修改记录
 		WherePrams recordPrams2 = new WherePrams();
+		WalletRecord walletRecord = new WalletRecord();
 		walletRecord.setMoney(totalMoney);
 		walletRecord.setFetch_status(Constants.FETCH_SUCCESS);
 		walletRecord.setFetch_time(date);
 		walletRecord.setTo_uid(redPacket.getAccept_id());
-		
+		recordPrams2.and("record_sn",C.EQ,redPacket.getRecord_sn());
 		walletRecordDao.updateLocal(walletRecord,recordPrams2);
 		
 		List<Map<String,Object>> list = redPacketDao.listBySql("select r.*,u.head_img,u.user_name,u.sex from tb_user u,tb_red_packet r where r.publish_id = u.user_id and u.user_id = "+redPacket.getPublish_id()+" and r.accept_id ="+redPacket.getAccept_id()+" and status = 1 order by accept_time desc");
@@ -192,39 +190,52 @@ public class RedPacketServiceImpl implements RedPacketService {
 	 * @param money
 	 * @param payType
 	 * @return
-	 * @see com.award.sy.service.RedPacketService#addRedPacketPyByBalanceRecord(long, java.lang.String, int)
+	 * @see com.award.sy.service.RedPacketService#(long, java.lang.String, int)
 	 */
 	@Transactional
 	@Override
 	public boolean addRedPacketPayByBalanceRecord(long userId, String money,
 			int payType,Wallet wallet) {
+		//时间
+		String date = DateUtil.getNowTime();
 		//生成订单编号
-		String record_sn = PayCommonUtil.CreateNoncestr();
+		String record_sn = PayCommonUtil.createOutTradeNo();
 		//生成订单记录
 		WalletRecord walletRecord = new WalletRecord();
 		walletRecord.setFrom_uid(userId);
 		walletRecord.setRecord_sn(record_sn);
 		walletRecord.setType(Constants.ORDER_TYPE_REDPACKET);
 		walletRecord.setPay_type(payType);
-		walletRecord.setMoney(new BigDecimal(money));
-		walletRecordDao.addLocal(walletRecord);
+
+		walletRecord.setMoney(Double.parseDouble(money));
+		walletRecord.setPay_time(date);
+		walletRecord.setPay_status(1);
+		int j = walletRecordDao.addLocal(walletRecord);
 		
 		//walletRecordDao.excuse("insert tb_wallet_record (from_uid,record_sn,type,pay_type) values ("+userId+","+record_sn+","+Constants.ORDER_TYPE_REDPACKET+","+pay_type+")");
 		//生成红包记录
 		RedPacket redPacket = new RedPacket();
 		redPacket.setPublish_id(userId);
 		redPacket.setRecord_sn(record_sn);
-		redPacket.setMoney(new BigDecimal(money));
-		redPacket.setCreate_time(DateUtil.getNowTime());
-		redPacketDao.addLocal(redPacket);
+		redPacket.setMoney(Double.parseDouble(money));
+		redPacket.setCreate_time(date);
+		int x = redPacketDao.addLocal(redPacket);
 		
 		//扣除用户余额中的钱
-		BigDecimal result = null;
-		BigDecimal total_balance = wallet.getMoney();
-		result = total_balance.subtract(new BigDecimal(money));
+		Double result = null;
+		Double total_balance = wallet.getMoney();
+		result = total_balance - Double.parseDouble(money);
+		//result = total_balance.subtract(new BigDecimal(money));
 		wallet.setMoney(result);
 		int i = walletDao.updateLocal(wallet);
-		return 1 < i;
+
+
+		if(i > 0 && x > 0 && j > 0){
+			return true;
+		}else{
+			return false;
+		}
+
 	}
 	
 	

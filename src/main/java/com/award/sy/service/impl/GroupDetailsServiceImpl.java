@@ -106,7 +106,7 @@ public class GroupDetailsServiceImpl implements GroupDetailsService{
 	public int deleteUserAdminFromGroup(long userId,long groupId) {
 		// TODO Auto-generated method stub
 		//获取第二个用户
-		List<Map<String,Object>> secondUser = groupDetailsDao.listBySql("SELECT member_id FROM tb_group_details  WHERE group_id = "+groupId+" ORDER BY join_time ASC LIMIT 1, 1");
+		List<Map<String,Object>> secondUser = groupDetailsDao.listBySql("SELECT member_id FROM tb_group_details  WHERE group_id = "+groupId+" ORDER BY user_id ASC LIMIT 1, 1");
 		long secondUserId = (long) secondUser.get(0).get("member_id");
 		//用户退出删除
 		int i = deleteUserFromGroup(userId,groupId);
@@ -116,6 +116,16 @@ public class GroupDetailsServiceImpl implements GroupDetailsService{
 			return 1;
 		}
 		return 0;
+	}
+
+	@Override
+	public GroupDetails getUserGroupDetailsIsAdmin(long user_id, long group_id, int is_admin) {
+		WherePrams where = new WherePrams();
+		where.and("user_id",C.EQ,user_id);
+		where.and("group_id",C.EQ,group_id);
+		where.and("is_admin",C.EQ,is_admin);
+		GroupDetails groupDetails = groupDetailsDao.get(where);
+		return groupDetails;
 	}
 
 }
