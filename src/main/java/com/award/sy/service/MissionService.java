@@ -32,6 +32,8 @@ public interface MissionService {
 	 * @return
 	 */
 	public Mission getMissionById(long missionId);
+	
+	public Mission getMissionByPubIdAndCreateTime(long userId,String createTime,String content,String startTime);
 
 	/**
 	 * 功能描述：添加任务信息

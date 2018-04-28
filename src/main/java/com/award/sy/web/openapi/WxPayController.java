@@ -230,7 +230,7 @@ public class WxPayController {
 						if(Constants.ORDER_TYPE_TRADE == type){
 							//充值成功，修改余额
 							walletService.editUserWalletBalance(from_uid, money);
-						}else if(Constants.ORDER_TYPE_REDPACKET == type){
+						}else if(Constants.ORDER_TYPE_REDPACKET == type || Constants.ORDER_TYPE_TASK == type){
 							/*walletRecord.setPay_status(Constants.PAY_STATUS_SUCCESS);
 							walletRecord.setPay_time(DateUtil.getNowTime());
 							walletRecord.setPay_type(Constants.PAY_TYPE_WECHAT);
