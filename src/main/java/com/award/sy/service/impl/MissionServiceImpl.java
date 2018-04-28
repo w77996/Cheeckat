@@ -46,6 +46,15 @@ public class MissionServiceImpl implements MissionService{
 		return missionDao.get(missionId);
 	}
 	
+	public Mission getMissionByPubIdAndCreateTime(long userId,String createTime,String content,String startTime) {
+		WherePrams where = new WherePrams();
+		where.and("publish_id", C.EQ, userId);
+		where.and("create_time", C.EQ, createTime);
+		where.and("start_time", C.EQ, startTime);
+		where.and("content", C.EQ, content);
+		return missionDao.get(where);
+	}
+	
 	public int addMission(Mission mission){
 		return missionDao.addLocal(mission);
 	}

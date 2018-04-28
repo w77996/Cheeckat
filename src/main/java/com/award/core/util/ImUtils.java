@@ -90,7 +90,7 @@ public class ImUtils {
 	    jsonObj.put("target",target);
 	    JSONObject msgJson = new JSONObject();
 	    msgJson.put("type", "txt");
-	    msgJson.put("msg", msg);//msg格式为WtwdMissionTxt:好友X发布了一个任务，点击查看:任务id
+	    msgJson.put("msg", msg);//msg格式为WtwdMissionTxt:好友X发布了一个任务，点击查看:任务id    WtwdRedPacketTxt:好友发送了一个红包：红包id
 	    jsonObj.put("msg", msgJson);
 		String result = post("messages",jsonObj,false,true);
 		if(!StringUtils.isBlank(result)) {

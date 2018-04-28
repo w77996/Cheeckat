@@ -13,10 +13,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.award.core.util.ImUtils;
 import com.award.core.util.JsonUtils;
 import com.award.sy.common.DateUtil;
 import com.award.sy.entity.Mission;
 import com.award.sy.entity.User;
+import com.award.sy.service.FriendService;
 import com.award.sy.service.MissionService;
 import com.award.sy.service.UserService;
 
@@ -31,6 +33,9 @@ public class MissionOpenController {
 	
 	@Resource
 	private MissionService missionService;
+	
+	@Resource
+	private FriendService friendService;
 	
 	/**
 	 * 查询附近的人
@@ -207,6 +212,45 @@ public class MissionOpenController {
 		    	mission.setTo_user(Long.parseLong(to));
 		    	mission.setAnonymous(Integer.parseInt(anonymous));
 		    	missionService.addMission(mission);
+		    	Mission mission2 = missionService.getMissionByPubIdAndCreateTime(user.getUser_id(),mission.getCreate_time(),mission.getContent(),mission.getStart_time());
+		    	List<Map<String,Object>> fList = friendService.getUserFriends(Long.parseLong(userId));
+		    	if(fList.size() > 20) {//每次只能发送给20个人
+		    		int count = fList.size() / 20;
+		    		for(int i = 0; i < count; i++) {
+		    			String userNames = "";
+		    			for(int j = 20*i; j < 20*(i+1); j++) {
+		    				Map<String,Object> map = fList.get(j);
+		    				if(userNames.equals("")) {		    					
+			    				userNames = (String)map.get("user_name");
+			    			}else {
+			    				userNames = userNames.concat(",").concat((String)map.get("user_name"));
+			    			}
+		    			}
+		    			ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getUser_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
+		    		}
+		    		int mod = fList.size() % 20;
+		    		String userNames = "";
+		    		for(int i = count*20; i < count*20+mod; i++) {
+		    			Map<String,Object> map = fList.get(i);
+	    				if(userNames.equals("")) {		    					
+		    				userNames = (String)map.get("user_name");
+		    			}else {
+		    				userNames = userNames.concat(",").concat((String)map.get("user_name"));
+		    			}
+		    		}
+		    		ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getUser_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
+		    	}else if(fList.size() > 0) {//每次只能发送给20个人
+		    		String userNames = "";
+		    		for(Map<String,Object> map : fList) {
+		    			if(userNames.equals("")) {
+		    				userNames = (String)map.get("user_name");
+		    			}else {
+		    				userNames = userNames.concat(",").concat((String)map.get("user_name"));
+		    			}
+		    		}
+		    		ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getUser_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
+		    	}
+		    	
 		    	returnStr = JsonUtils.writeJson("发布成功", 1);
 		    }else {
 		    	returnStr = JsonUtils.writeJson(0, 4, "用户不存在");			
