@@ -12,7 +12,7 @@ import com.award.sy.entity.Wallet;
  */
 public interface WalletService {
 	/**
-	 * 修改用户钱包余额
+	 * 修改用户钱包余额,支付状态
 	 * @Title:           editUserWalletBalance
 	 * @Description:     TODO
 	 * @param:           @param user_id
@@ -21,7 +21,18 @@ public interface WalletService {
 	 * @return:          boolean   
 	 * @throws
 	 */
-	boolean editUserWalletBalance(long user_id,Double money);
+	boolean editUserWalletPayBalance(String record_sn,long user_id,int log_type,Double changemoney,Double money);
+	/**
+	 * 修改用户钱包余额,领取状态
+	 * @Title:           editUserWalletBalance
+	 * @Description:     TODO
+	 * @param:           @param user_id
+	 * @param:           @param money
+	 * @param:           @return
+	 * @return:          boolean
+	 * @throws
+	 */
+	boolean editUserWalletFetchBalance(String record_sn,long user_id,int log_type,Double changemoney,Double money);
 	/**
 	 * 通过ID查找用户钱包数据
 	 * @Title:           findWalletByUserId

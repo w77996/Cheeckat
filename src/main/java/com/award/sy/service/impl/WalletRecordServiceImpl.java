@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.award.sy.common.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,22 +25,7 @@ public class WalletRecordServiceImpl implements WalletRecordService{
 	
 	@Autowired
 	private WalletLogDao walletLogDao;
-	/**
-	 * 生成订单
-	 * Title: addWalletOrder
-	 * Description: 
-	 * @param from_uid
-	 * @param record_sn
-	 * @param type
-	 * @return
-	 * @see com.award.sy.service.WalletRecordService#addWalletRecordOrder(long, java.lang.String, int)
-	 */
-	/*@Override
-	public boolean addWalletRecordOrder(long from_uid, String record_sn, int type) {
-		// TODO Auto-generated method stub
-		int i = walletRecordDao.excuse("insert tb_wallet_record (from_uid,record_sn,type) values ("+from_uid+","+record_sn+","+type+")");
-		return 1 < i;
-	}*/
+
 	/**
 	 * 通过record_sn查找订单
 	 * Title: findWallerOrderByRecordSN
@@ -50,28 +36,31 @@ public class WalletRecordServiceImpl implements WalletRecordService{
 	 */
 	@Override
 	public WalletRecord findWallerOrderByRecordSN(String record_sn) {
-		// TODO Auto-generated method stub
 		WherePrams where = new WherePrams();
 		where.and("record_sn", C.EQ, record_sn);
 		WalletRecord  walletRecord= walletRecordDao.get(where);
 		return walletRecord;
 	}
+
 	/**
-	 * 修改记录信息
-	 * Title: editWalletOrder
-	 * Description: 
-	 * @param walletRecord
+	 * 更新记录支付状态
+	 * @param record_sn
+	 * @param status
 	 * @return
-	 * @see com.award.sy.service.WalletRecordService#editWalletOrder(com.award.sy.entity.WalletRecord)
 	 */
 	@Override
-	public boolean editWalletOrder(WalletRecord walletRecord) {
-		// TODO Auto-generated method stub
+	public boolean editWalletOrderPayStatus(String record_sn, int status) {
+		WalletRecord walletRecord = new WalletRecord();
 		WherePrams where = new WherePrams();
-		where.and("record_sn", C.EQ, walletRecord.getRecord_sn());
-		int i = walletRecordDao.update(walletRecord,where);
+		where.and("record_sn", C.EQ, record_sn);
+		walletRecord.setPay_status(status);
+		walletRecord.setPay_time(DateUtil.getNowTime());
+		int i = walletRecordDao.updateLocal(walletRecord,where);
+
+
 		return 0 < i ;
 	}
+
 
 	/**
 	 * 生成订单
@@ -88,7 +77,7 @@ public class WalletRecordServiceImpl implements WalletRecordService{
 		WalletRecord walletRecord = new WalletRecord();
 		walletRecord.setFrom_uid(user_id);
 		walletRecord.setRecord_sn(record_sn);
-		walletRecord.setType(Constants.ORDER_TYPE_REDPACKET);
+		walletRecord.setType(type);
 		walletRecord.setPay_type(pay_type);
 		walletRecord.setMoney(Double.parseDouble(money));
 		int i = walletRecordDao.addLocal(walletRecord);
@@ -96,6 +85,36 @@ public class WalletRecordServiceImpl implements WalletRecordService{
 			return record_sn;
 		}
 		return null;
+	}
+
+	@Override
+	public boolean editUserWalletPayElse(String record_sn, long user_id, int log_type, Double changemoney, Double money) {
+		String date = DateUtil.getNowTime();
+		//更新支付的状态
+		WherePrams where = new WherePrams();
+		where.and("record_sn", C.EQ, record_sn);
+		WalletRecord walletRecord = new WalletRecord();
+		walletRecord.setPay_status(Constants.PAY_STATUS_SUCCESS);
+		walletRecord.setPay_time(date);
+		int i = walletRecordDao.updateLocal(walletRecord, where);
+		//更新日志
+		WalletLog walletLog = new WalletLog();
+		walletLog.setRecord_sn(record_sn);
+		walletLog.setUser_id(user_id);
+		walletLog.setType(log_type);
+		walletLog.setChange_money(changemoney);
+		walletLog.setMoney(money);
+		walletLog.setCreate_time(date);
+		int j = walletLogDao.addLocal(walletLog);
+
+
+
+		if (0 < j && 0 < i) {
+			return true;
+		} else {
+			return false;
+		}
+
 	}
 
 

@@ -23,55 +23,31 @@ public interface RedPacketService {
 	 * @throws
 	 */
 	RedPacket getRedPacketById(long redpacketId);
-	/**
-	 * 生成红包订单,充值
-	 * @Title:           addRedPacketOrder
-	 * @Description:     TODO
-	 * @param:           @param parseLong
-	 * @param:           @return   
-	 * @return:          int   
-	 * @throws
-	 */
-	//String addRedPacketOrder(long userId);
-	/**
-	 * 抢红包
-	 * @Title:           getRedPacket
-	 * @Description:     TODO
-	 * @param:           @param redPacket   
-	 * @return:          void   
-	 * @throws
-	 */
-	 List<Map<String, Object>> editRedPacket(RedPacket redPacket);
-	 
+
+
 	 /**
-	  * 更新红包状态
+	  * 更新领取状态
 	  * @Title:           editRedPacket
 	  * @Description:     TODO
-	  * @param:           @param redPacket   
-	  * @return:          void   
+	  * @param:           @param redPacket
+	  * @return:          void
 	  * @throws
 	  */
-	 boolean editRedPacketSendMessage(String  record_sn,int pay_status);
-	 /**
-	  * 生成订单和红包记录
-	  * @Title:           addRedPacketOrderRecord
-	  * @Description:     TODO
-	  * @param:           @param userId
-	  * @param:           @return   
-	  * @return:          String   
-	  * @throws
-	  */
-	 String addRedPacketOrderRecord(long userId,String money,int pay_type);
-	 /**
-	  * 使用余额发送红包
-	  * @Title:           addRedPacketPyByBalanceRecord
-	  * @Description:     TODO
-	  * @param:           @param userId
-	  * @param:           @param money
-	  * @param:           @param payType   
-	  * @return:          void   
-	  * @throws
-	  */
-	 boolean addRedPacketPayByBalanceRecord(long userId, String money, int payType,Wallet wallet);
+	 boolean editRedPacketFetchStatus(String  record_sn,long accept_id, int fect_status);
 
+	/**
+	 * 生成一个红包
+	 * @param record_sn
+	 * @param userId
+	 * @param money
+	 * @return
+	 */
+	 boolean addRedpacketRecord(String record_sn, String userId, String money);
+
+	/**
+	 * 获取领取者信息及红包信息
+	 * @param redpacketId
+	 * @return
+	 */
+	List<Map<String,Object>> getRedPacketAndUserInfoByRedPacketId(String redpacketId);
 }

@@ -62,7 +62,7 @@ public class WalletController {
 	 * @return: String
 	 * @throws
 	 */
-	@RequestMapping(value = "/open/withdraw", produces = "text/html;charset=UTF-8",method=RequestMethod.POST)
+	@RequestMapping(value = "/open/withdraw", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String withdrawMoney(@RequestParam String user_id,
 			@RequestParam String money,@RequestParam String type) {
@@ -86,7 +86,18 @@ public class WalletController {
 		if (wallet.getMoney().compareTo(price) < 0) {
 			return JsonUtils.writeJson(0, 21, "余额不足");
 		}
-		walletService.withdrawMoney(userId, price, wallet);
+		String record_sn = walletRecordService.addWalletRecordOrder(userId,money,0,Constants.ORDER_TYPE_WITHDRAWLS);
+		if(null == record_sn){
+			return JsonUtils.writeJson(0, 23, "提现额度错误");
+		}
+		//修改金额,更新订单支付状态，插入余额记录
+		Double total_fee = wallet.getMoney()-Double.parseDouble(money);
+		String changemoney = "-"+money;
+		boolean i = walletService.editUserWalletPayBalance(record_sn,userId,Constants.LOG_WITHDRAW,Double.parseDouble(changemoney),total_fee);
+		if(true == i){
+			return  JsonUtils.writeJson("申请成功", 1);
+		}
+
 		return null;
 	}
 
