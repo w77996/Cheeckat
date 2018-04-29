@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.award.core.util.ImUtils;
 import com.award.sy.entity.*;
 import com.award.sy.service.*;
+
 import org.apache.commons.lang3.StringUtils;
 import org.jdom.JDOMException;
 import org.slf4j.Logger;
@@ -51,6 +53,12 @@ public class WxPayController {
 
 	@Autowired
 	private GroupService groupService;
+	
+	@Autowired
+	private MissionService missionService;
+	
+	@Autowired
+	private FriendService friendService;
 	
 	/**
 	 * 微信下单统一接口
@@ -245,12 +253,12 @@ public class WxPayController {
 								if(Constants.TO_TYPE_PRIVATE == redPacket.getTo()){
 									User toUser = userService.getUserById(redPacket.getTo_id());
 
-									ImUtils.sendTextMessage("users", new String[]{toUser.getUser_name()}, "WtwdMissionTxt:好友"+fromUser.getUser_name()+"发布了一个任务，点击查看:"+redPacket.getRedpacket_id());
+									ImUtils.sendTextMessage("users", new String[]{toUser.getUser_name()}, "WtwdMissionTxt:好友"+fromUser.getNick_name()+"发布了一个任务，点击查看:"+redPacket.getRedpacket_id());
 								}else if (Constants.TO_TYPE_GROUP == redPacket.getTo()){
 									//群发，获取群成员的名称，并发送
 									Group group = groupService.getGroupById(redPacket.getTo_id());
 									if(group != null) {
-										ImUtils.sendTextMessage("chatgroups", new String[]{group.getIm_group_id()}, "WtwdMissionTxt:好友"+fromUser.getUser_name()+"发布了一个任务，点击查看:"+redPacket.getRedpacket_id());
+										ImUtils.sendTextMessage("chatgroups", new String[]{group.getIm_group_id()}, "WtwdMissionTxt:好友"+fromUser.getNick_name()+"发布了一个任务，点击查看:"+redPacket.getRedpacket_id());
 									}
 								}
 
@@ -260,7 +268,65 @@ public class WxPayController {
 								// ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getUser_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
 							}
 						}else if(Constants.ORDER_TYPE_TASK == type){
-							
+
+							//微信发红包成功，更新支付状态，更新log
+							boolean tag = walletRecordService.editUserWalletPayElse(out_trade_no,from_uid,Constants.LOG_AWARD_TASK,money,fee);
+							if(true == tag){
+								Mission mission = missionService.getMissionByRecordSN(out_trade_no);
+								User user = userService.getUserById(mission.getPublish_id());
+						    	if(mission.getTo() == 0){//如果发给所有人
+							    	List<Map<String,Object>> fList = friendService.getUserFriends(mission.getPublish_id());							    	
+							    	if(fList.size() > 20) {//每次只能发送给20个人
+							    		int count = fList.size() / 20;
+							    		for(int i = 0; i < count; i++) {
+							    			String userNames = "";
+							    			for(int j = 20*i; j < 20*(i+1); j++) {
+							    				Map<String,Object> map = fList.get(j);
+							    				if(userNames.equals("")) {		    					
+								    				userNames = (String)map.get("user_name");
+								    			}else {
+								    				userNames = userNames.concat(",").concat((String)map.get("user_name"));
+								    			}
+							    			}
+							    			ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission.getMission_id());
+							    		}
+							    		int mod = fList.size() % 20;
+							    		String userNames = "";
+							    		for(int i = count*20; i < count*20+mod; i++) {
+							    			Map<String,Object> map = fList.get(i);
+						    				if(userNames.equals("")) {		    					
+							    				userNames = (String)map.get("user_name");
+							    			}else {
+							    				userNames = userNames.concat(",").concat((String)map.get("user_name"));
+							    			}
+							    		}
+							    		ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission.getMission_id());
+							    	}else if(fList.size() > 0) {//每次只能发送给20个人
+							    		String userNames = "";
+							    		for(Map<String,Object> map : fList) {
+							    			if(userNames.equals("")) {
+							    				userNames = (String)map.get("user_name");
+							    			}else {
+							    				userNames = userNames.concat(",").concat((String)map.get("user_name"));
+							    			}
+							    		}
+							    		ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission.getMission_id());
+							    	}
+							    }else if(mission.getTo() == 1) {//发给个人
+							    	User toUser = userService.getUserById(mission.getTo_id());
+							    	if(toUser != null) {
+							    		ImUtils.sendTextMessage("users", new String[]{toUser.getUser_name()}, "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission.getMission_id());
+							    	}		    	
+							    }else {//发群
+							    	Group group = groupService.getGroupById(mission.getTo_id());
+							    	if(group != null) {
+							    		ImUtils.sendTextMessage("chatgroups", new String[]{group.getIm_group_id()}, "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission.getMission_id());
+							    	}		    	
+							    }
+								mission.setStatus(0);
+								missionService.editMission(mission);
+							}
+						
 						}
 
 						resXml = "<xml>"

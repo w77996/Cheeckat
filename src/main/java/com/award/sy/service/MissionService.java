@@ -33,6 +33,8 @@ public interface MissionService {
 	 */
 	public Mission getMissionById(long missionId);
 	
+	public Mission getMissionByRecordSN(String recordSN);
+	
 	public Mission getMissionByPubIdAndCreateTime(long userId,String createTime,String content,String startTime);
 
 	/**

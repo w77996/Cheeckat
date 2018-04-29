@@ -269,6 +269,21 @@ public class MissionOpenController {
 					if(null == map){
 						return JsonUtils.writeJson(0, 19, "订单生成失败");
 					}
+					Mission mission = new Mission();
+			    	mission.setAddress(address);
+			    	mission.setContent(content);
+			    	mission.setCreate_time(DateUtil.getNowTime());
+			    	mission.setMoney(Double.parseDouble(money));
+			    	mission.setPublish_id(user.getUser_id());
+			    	mission.setSex(Integer.parseInt(sex));
+			    	mission.setStart_time(startTime);
+			    	mission.setStatus(5);//等待微信返回支付成功
+			    	mission.setType(Integer.parseInt(type));
+			    	mission.setTo(Integer.parseInt(to));
+			    	mission.setTo_id(Long.parseLong(toId));
+			    	mission.setRecord_sn(record_sn);
+			    	mission.setAnonymous(Integer.parseInt(anonymous));
+			    	missionService.addMission(mission);
 			}else if(Constants.PAY_TYPE_BALANCE == Integer.parseInt(pay_type)){
 					Wallet wallet = walletService.findWalletByUserId(Long.parseLong(userId));
 					if(null == wallet){
@@ -290,72 +305,72 @@ public class MissionOpenController {
 					if(false == isWalletSuccess){
 						return JsonUtils.writeJson(0, 22, "订单生成失败");
 					}
-			}
-		    	Mission mission = new Mission();
-		    	mission.setAddress(address);
-		    	mission.setContent(content);
-		    	mission.setCreate_time(DateUtil.getNowTime());
-		    	mission.setMoney(Double.parseDouble(money));
-		    	mission.setPublish_id(user.getUser_id());
-		    	mission.setSex(Integer.parseInt(sex));
-		    	mission.setStart_time(startTime);
-		    	mission.setStatus(0);
-		    	mission.setType(Integer.parseInt(type));
-		    	mission.setTo(Integer.parseInt(to));
-		    	mission.setTo_id(Long.parseLong(toId));
-		    	mission.setRecord_sn(record_sn);
-		    	mission.setAnonymous(Integer.parseInt(anonymous));
-		    	missionService.addMission(mission);
-		    	Mission mission2 = missionService.getMissionByPubIdAndCreateTime(user.getUser_id(),mission.getCreate_time(),mission.getContent(),mission.getStart_time());
-		    	if(Integer.parseInt(to) == 0){//如果发给所有人
-		    	List<Map<String,Object>> fList = friendService.getUserFriends(Long.parseLong(userId));
-		    	if(fList.size() > 20) {//每次只能发送给20个人
-		    		int count = fList.size() / 20;
-		    		for(int i = 0; i < count; i++) {
-		    			String userNames = "";
-		    			for(int j = 20*i; j < 20*(i+1); j++) {
-		    				Map<String,Object> map = fList.get(j);
+					Mission mission = new Mission();
+			    	mission.setAddress(address);
+			    	mission.setContent(content);
+			    	mission.setCreate_time(DateUtil.getNowTime());
+			    	mission.setMoney(Double.parseDouble(money));
+			    	mission.setPublish_id(user.getUser_id());
+			    	mission.setSex(Integer.parseInt(sex));
+			    	mission.setStart_time(startTime);
+			    	mission.setStatus(0);
+			    	mission.setType(Integer.parseInt(type));
+			    	mission.setTo(Integer.parseInt(to));
+			    	mission.setTo_id(Long.parseLong(toId));
+			    	mission.setRecord_sn(record_sn);
+			    	mission.setAnonymous(Integer.parseInt(anonymous));
+			    	missionService.addMission(mission);
+			    	Mission mission2 = missionService.getMissionByPubIdAndCreateTime(user.getUser_id(),mission.getCreate_time(),mission.getContent(),mission.getStart_time());
+			    	if(Integer.parseInt(to) == 0){//如果发给所有人
+			    	List<Map<String,Object>> fList = friendService.getUserFriends(Long.parseLong(userId));
+			    	if(fList.size() > 20) {//每次只能发送给20个人
+			    		int count = fList.size() / 20;
+			    		for(int i = 0; i < count; i++) {
+			    			String userNames = "";
+			    			for(int j = 20*i; j < 20*(i+1); j++) {
+			    				Map<String,Object> map = fList.get(j);
+			    				if(userNames.equals("")) {		    					
+				    				userNames = (String)map.get("user_name");
+				    			}else {
+				    				userNames = userNames.concat(",").concat((String)map.get("user_name"));
+				    			}
+			    			}
+			    			ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
+			    		}
+			    		int mod = fList.size() % 20;
+			    		String userNames = "";
+			    		for(int i = count*20; i < count*20+mod; i++) {
+			    			Map<String,Object> map = fList.get(i);
 		    				if(userNames.equals("")) {		    					
 			    				userNames = (String)map.get("user_name");
 			    			}else {
 			    				userNames = userNames.concat(",").concat((String)map.get("user_name"));
 			    			}
-		    			}
-		    			ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getUser_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
-		    		}
-		    		int mod = fList.size() % 20;
-		    		String userNames = "";
-		    		for(int i = count*20; i < count*20+mod; i++) {
-		    			Map<String,Object> map = fList.get(i);
-	    				if(userNames.equals("")) {		    					
-		    				userNames = (String)map.get("user_name");
-		    			}else {
-		    				userNames = userNames.concat(",").concat((String)map.get("user_name"));
-		    			}
-		    		}
-		    		ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getUser_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
-		    	}else if(fList.size() > 0) {//每次只能发送给20个人
-		    		String userNames = "";
-		    		for(Map<String,Object> map : fList) {
-		    			if(userNames.equals("")) {
-		    				userNames = (String)map.get("user_name");
-		    			}else {
-		    				userNames = userNames.concat(",").concat((String)map.get("user_name"));
-		    			}
-		    		}
-		    		ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getUser_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
-		    	}
-		    }else if(Integer.parseInt(to) == 1) {//发给个人
-		    	User toUser = userService.getUserById(Long.parseLong(toId));
-		    	if(toUser != null) {
-		    		ImUtils.sendTextMessage("users", new String[]{toUser.getUser_name()}, "WtwdMissionTxt:好友"+user.getUser_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
-		    	}		    	
-		    }else {//发群
-		    	Group group = groupService.getGroupById(Long.parseLong(toId));
-		    	if(group != null) {
-		    		ImUtils.sendTextMessage("chatgroups", new String[]{group.getIm_group_id()}, "WtwdMissionTxt:好友"+user.getUser_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
-		    	}		    	
-		    }
+			    		}
+			    		ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
+			    	}else if(fList.size() > 0) {//每次只能发送给20个人
+			    		String userNames = "";
+			    		for(Map<String,Object> map : fList) {
+			    			if(userNames.equals("")) {
+			    				userNames = (String)map.get("user_name");
+			    			}else {
+			    				userNames = userNames.concat(",").concat((String)map.get("user_name"));
+			    			}
+			    		}
+			    		ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
+			    	}
+			    }else if(Integer.parseInt(to) == 1) {//发给个人
+			    	User toUser = userService.getUserById(Long.parseLong(toId));
+			    	if(toUser != null) {
+			    		ImUtils.sendTextMessage("users", new String[]{toUser.getUser_name()}, "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
+			    	}		    	
+			    }else {//发群
+			    	Group group = groupService.getGroupById(Long.parseLong(toId));
+			    	if(group != null) {
+			    		ImUtils.sendTextMessage("chatgroups", new String[]{group.getIm_group_id()}, "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
+			    	}		    	
+			    }
+			}		    	
 		    	returnStr = JsonUtils.writeJson("发布成功", 1);
 		    }else {
 		    	returnStr = JsonUtils.writeJson(0, 4, "用户不存在");			
