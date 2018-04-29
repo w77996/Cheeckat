@@ -16,10 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.award.core.util.ImUtils;
-import com.award.sy.entity.RedPacket;
-import com.award.sy.entity.Wallet;
-import com.award.sy.entity.WalletLog;
-import com.award.sy.service.WalletLogService;
+import com.award.sy.entity.*;
+import com.award.sy.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.jdom.JDOMException;
 import org.slf4j.Logger;
@@ -33,10 +31,6 @@ import com.award.core.util.JsonUtils;
 import com.award.sy.common.Constants;
 import com.award.sy.common.PayCommonUtil;
 import com.award.sy.common.XMLUtil;
-import com.award.sy.entity.WalletRecord;
-import com.award.sy.service.RedPacketService;
-import com.award.sy.service.WalletRecordService;
-import com.award.sy.service.WalletService;
 
 @Controller
 public class WxPayController {
@@ -51,6 +45,12 @@ public class WxPayController {
 	
 	@Autowired
 	private RedPacketService redPacketService;
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private GroupService groupService;
 	
 	/**
 	 * 微信下单统一接口
@@ -240,9 +240,21 @@ public class WxPayController {
 							if(true == i){
 								//判断to类型是群发还是个人红包
 								RedPacket redPacket = redPacketService.getRedPacketByRecordSN(out_trade_no);
+								User fromUser = userService.getUserById(redPacket.getPublish_id());
 								//个人,直接获取个人Id并发送至环信
+								if(Constants.TO_TYPE_PRIVATE == redPacket.getTo()){
+									User toUser = userService.getUserById(redPacket.getTo_id());
 
-								//群发，获取群成员的名称，并发送
+									ImUtils.sendTextMessage("users", new String[]{toUser.getUser_name()}, "WtwdMissionTxt:好友"+fromUser.getUser_name()+"发布了一个任务，点击查看:"+redPacket.getRedpacket_id());
+								}else if (Constants.TO_TYPE_GROUP == redPacket.getTo()){
+									//群发，获取群成员的名称，并发送
+									Group group = groupService.getGroupById(redPacket.getTo_id());
+									if(group != null) {
+										ImUtils.sendTextMessage("chatgroups", new String[]{group.getIm_group_id()}, "WtwdMissionTxt:好友"+fromUser.getUser_name()+"发布了一个任务，点击查看:"+redPacket.getRedpacket_id());
+									}
+								}
+
+
 
 								//通过环信发送数据
 								// ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getUser_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());

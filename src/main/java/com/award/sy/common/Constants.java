@@ -172,14 +172,17 @@ public class Constants {
 	public static final String HEAD_IMG_PATH="/upload/head/image/";
 	public static final String USER_IMG_PATH="/upload/user/image/";
 
-    public static int LOG_RECHARGE = 1;//充值
-    public static int LOG_WITHDRAW= 1;//提现
-	public static int LOG_AWARD_REDPACKET = 3;//发红包
-	public static int LOG_FETCH_REDPACKET = 4;//接红包
-	public static int LOG_AWARD_TASK = 5;//发任务
-	public static int LOG_FETCH_TASK = 6;//接任务
-	public static int LOG_REFUND_READPACKET = 7;//红包退款
-	public static int LOG_REFUND_TASK = 8;//任务退款
+    public static final int LOG_RECHARGE = 1;//充值
+    public static final int LOG_WITHDRAW= 1;//提现
+	public static final int LOG_AWARD_REDPACKET = 3;//发红包
+	public static final int LOG_FETCH_REDPACKET = 4;//接红包
+	public static final int LOG_AWARD_TASK = 5;//发任务
+	public static final int LOG_FETCH_TASK = 6;//接任务
+	public static final int LOG_REFUND_READPACKET = 7;//红包退款
+	public static final int LOG_REFUND_TASK = 8;//任务退款
+
+	public static final int TO_TYPE_PRIVATE = 1;//私人
+	public static final int TO_TYPE_GROUP = 2;//群发
 
 	
 }
