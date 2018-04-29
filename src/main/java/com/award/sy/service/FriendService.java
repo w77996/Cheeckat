@@ -66,6 +66,17 @@ public interface FriendService {
 	 * @return int
 	 */
 	public int removeFriend(long friendId);
+
+
+
 	List<Map<String,Object>> getUserFriends(long userId);
 
+	/**
+	 *
+	 * @param userId
+	 * @param friendId
+	 */
+	Friend findFriends(long userId, long friendId);
+
+	int addFriends(Friend useraddFriend);
 }

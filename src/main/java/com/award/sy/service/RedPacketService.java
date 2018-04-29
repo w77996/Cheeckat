@@ -42,7 +42,7 @@ public interface RedPacketService {
 	 * @param money
 	 * @return
 	 */
-	 boolean addRedpacketRecord(String record_sn, String userId, String money);
+	 boolean addRedpacketRecord(String record_sn, String userId, String money,String to,String to_id);
 
 	/**
 	 * 获取领取者信息及红包信息
@@ -50,4 +50,11 @@ public interface RedPacketService {
 	 * @return
 	 */
 	List<Map<String,Object>> getRedPacketAndUserInfoByRedPacketId(String redpacketId);
+
+	/**
+	 * 通过recordSn获取红包信息
+	 * @param out_trade_no
+	 * @return
+	 */
+	RedPacket getRedPacketByRecordSN(String out_trade_no);
 }

@@ -86,4 +86,32 @@ public class FriendServiceImpl implements FriendService {
 		return list;
 	}
 
+	@Override
+	public Friend findFriends(long userId, long friendId) {
+		WherePrams wherePrams = new WherePrams();
+		wherePrams.and("user_id_fr1",C.EQ,userId);
+		wherePrams.and("user_id_fr1",C.EQ,friendId);
+		return friendDao.get(wherePrams);
+	}
+
+	@Override
+	public int addFriends(Friend friend) {
+		Friend useraddFriend = new Friend();
+		useraddFriend.setUser_id_fr1(friend.getUser_id_fr1());
+		useraddFriend.setUser_id_fr2(friend.getUser_id_fr2());
+		useraddFriend.setStatus(2);
+
+		int i = friendDao.addLocal(useraddFriend);
+
+		Friend friendadduser = new Friend();
+		friendadduser.setUser_id_fr1(friend.getUser_id_fr2());
+		friendadduser.setUser_id_fr2(friend.getUser_id_fr1());
+		friendadduser.setStatus(2);
+		int j = friendDao.addLocal(useraddFriend);
+		if(0 < i && 0 < j){
+			return 1;
+		}
+		return 0;
+	}
+
 }

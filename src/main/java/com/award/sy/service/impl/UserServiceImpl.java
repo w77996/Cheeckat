@@ -57,7 +57,31 @@ public class UserServiceImpl implements UserService{
 		where.orEnd();
 		return userDao.list(where);
 	}
-	
+
+	/**
+	 * 通过OpenId查询用户
+	 * @param openId
+	 * @return
+	 */
+	@Override
+	public User getUserByOpenId(String openId) {
+		WherePrams where = new WherePrams();
+		where.and("open_id",C.EQ,openId);
+		return userDao.get(where);
+	}
+
+	/**
+	 * 更新提现及绑定方式
+	 * @param userId
+	 * @param openId
+	 * @return
+	 */
+	@Override
+	public boolean editUserBindWeChat(long userId, long openId) {
+		int i = userDao.excuse("update tb_user set open_id ="+openId+" where usre_id = "+userId);
+		return 0 < i;
+	}
+
 	public User getUserById(long userId){
 		return userDao.get(userId);
 	}

@@ -55,10 +55,16 @@ public class FriendOpenController {
 		
 		List<Map<String,Object>> list = friendService.getUserFriends(Long.parseLong(userId));
 		
-		return returnStr = JsonUtils.writeJson(1, "获取成功", list, "object");
+		return  JsonUtils.writeJson(1, "获取成功", list, "object");
 	}
 
-	@RequestMapping("/open/addFriend")
+	/**
+	 * 添加好友
+	 * @param userId
+	 * @param friendId
+	 * @return
+	 */
+	@RequestMapping(value = "/open/addFriend")
 	@ResponseBody
 	public String addFriend(@RequestParam String userId,@RequestParam String friendId){
 		String returnStr = JsonUtils.writeJson(0, 0, "参数为空");
@@ -66,13 +72,20 @@ public class FriendOpenController {
 			return returnStr;
 		}
 
+		Friend friend = friendService.findFriends(Long.parseLong(userId),Long.parseLong(friendId));
+		if(null != friend){
+			return  JsonUtils.writeJson(0, 38, "好友已添加");
+		}
 		Friend useraddFriend = new Friend();
-		useraddFriend.setFriend_id(Long.parseLong(friendId));
 		useraddFriend.setUser_id_fr1(Long.parseLong(userId));
 		useraddFriend.setUser_id_fr2(Long.parseLong(friendId));
+		useraddFriend.setStatus(2);
 
-
-		//friendService.addFriend(friendId);
-		return null;
+		int i = friendService.addFriends(useraddFriend);
+		if(0 < i){
+			return JsonUtils.writeJson("添加成功", 1);
+		}else{
+			return JsonUtils.writeJson(0, 39, "参数为空");
+		}
 	}
 }

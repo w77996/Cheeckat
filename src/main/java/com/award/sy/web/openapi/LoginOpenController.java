@@ -30,66 +30,9 @@ public class LoginOpenController {
 	
 	@Autowired
 	private UserService userService;
+
 	
-	@Autowired
-	private WalletService walletService;
-	
-	/**
-	 * 用户登录
-	 * @Title:           userLogin
-	 * @Description:     TODO
-	 * @param:           @return   
-	 * @return:          String   
-	 * @throws
-	 *//*
-	@RequestMapping(value="/open/userLogin",produces = "text/html;charset=UTF-8")
-	@ResponseBody
-	public String userLogin(@RequestParam(required=false) String phone,@RequestParam(required=true) String type,@RequestParam(required=false) String openId){
-		if(StringUtils.isBlank(type)){
-			return  JsonUtils.writeJson(0, 0, "参数为空");
-		}
-		Map<String,Object> map = new HashMap<String, Object>();
-		if(Constants.LOGIN_TYPE_PHONE == Integer.parseInt(type)){
-			//通过手机查找用户是否存在
-			User user = userService.getUserByPhone(phone);
-			if(null == user){
-				map.put("isFirst", true);
-				userService.addNewUserInfo(phone, Integer.parseInt(type));
-				//ImUtils.authRegister(name, password, nickName);
-				user = userService.getUserByPhone(phone);
-			}else{
-				if(StringUtils.isBlank(user.getUser_name())||StringUtils.isBlank(user.getHead_img())){
-					map.put("isFirst", true);
-					user = userService.getUserByPhone(phone);
-				}
-			}
-			map.put("user", user);
-			return JsonUtils.writeJson(1, "请求成功", map, "object");
-			
-		}else if(Constants.LOGIN_TYPE_WECHAT == Integer.parseInt(type)){
-			//判断参数
-			if(StringUtils.isBlank(openId)){
-				return JsonUtils.writeJson(0, 0, "参数为空");
-			}
-			//查询
-			User user = userService.getUserByWxOpenId(openId);
-			if(null == user){
-				map.put("isFirst", true);
-				userService.addNewUserInfo(openId,Integer.parseInt(type));
-				user = userService.getUserByWxOpenId(openId);
-			}else{
-				if(StringUtils.isBlank(user.getUser_name())||StringUtils.isBlank(user.getHead_img())){
-					map.put("isFirst", true);
-					user = userService.getUserByWxOpenId(openId);
-				}
-			}
-			map.put("user", user);
-			return JsonUtils.writeJson(1, "请求成功", map, "object");
-		}
-		
-		return  JsonUtils.writeJson(0, 0, "参数为空");
-	}
-	*/
+
 	/**
 	 * 用户是否存在
 	 * @Title:           userLogin
@@ -123,6 +66,12 @@ public class LoginOpenController {
 			if(StringUtils.isBlank(openId)){
 				return JsonUtils.writeJson(0, 0, "参数为空");
 			}
+
+			User wechatUser = userService.getUserByOpenId(openId);
+			if(null != wechatUser){
+				return JsonUtils.writeJson(0,40,"微信已被绑定");
+			}
+
 			//查询user是否存在
 			User user = userService.getUserByUserName(openId);
 			if(null == user){

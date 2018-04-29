@@ -25,7 +25,7 @@ public class WalletLog extends Po{
 	
 	private String record_sn;//订单号
 
-	private int type;
+	private Integer type;//交易类型
 	
 	private Long user_id;//用户ID
 	
@@ -61,11 +61,11 @@ public class WalletLog extends Po{
 		this.record_sn = record_sn;
 	}
 
-	public int getType() {
+	public Integer getType() {
 		return type;
 	}
 
-	public void setType(int type) {
+	public void setType(Integer type) {
 		this.type = type;
 	}
 

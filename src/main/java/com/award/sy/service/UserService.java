@@ -105,5 +105,19 @@ public interface UserService{
 	public User getUserByUserName(String userName);
 	
 	public List<User> getUserByIds(String[] ids);
-	
+
+	/**
+	 * 通过open_id查找用户
+	 * @param openId
+	 * @return
+	 */
+    User getUserByOpenId(String openId);
+
+	/**
+	 * 绑定微信支付open_id
+	 * @param userId
+	 * @param openId
+	 * @return
+	 */
+	boolean editUserBindWeChat(long userId, long openId);
 }
