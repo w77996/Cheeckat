@@ -80,7 +80,7 @@ public class MissionOpenController {
 					}
 					//修改金额,更新订单支付状态，插入余额记录
 					Double total_fee = wallet.getMoney()+mission.getMoney();
-					String changemoney = "+"+mission.getMoney();
+					String changemoney = ""+mission.getMoney();
 					boolean isWalletSuccess = walletService.refund(mission.getRecord_sn(),mission.getPublish_id(),Constants.LOG_REFUND_TASK,Double.parseDouble(changemoney),total_fee);
 					if(false == isWalletSuccess){
 						return JsonUtils.writeJson(0, 22, "余额更新失败");
@@ -174,7 +174,7 @@ public class MissionOpenController {
 							return JsonUtils.writeJson(0, 0, "参数错误");
 						}
 		 			    Double total_fee = wallet.getMoney()+mission.getMoney();
-						String changemoney = "+"+mission.getMoney();
+						String changemoney = ""+mission.getMoney();
 						boolean isWalletSuccess = walletService.editUserWalletPayBalance(mission.getRecord_sn(),mission.getAccept_id(),Constants.LOG_FETCH_TASK,Double.parseDouble(changemoney),total_fee);
 						if(false == isWalletSuccess){
 							return JsonUtils.writeJson(0, 22, "余额更新失败");
@@ -217,7 +217,7 @@ public class MissionOpenController {
 						}
 						//修改金额,更新订单支付状态，插入余额记录
 						Double total_fee = wallet.getMoney()+mission.getMoney();
-						String changemoney = "+"+mission.getMoney();
+						String changemoney = ""+mission.getMoney();
 						boolean isWalletSuccess = walletService.refund(mission.getRecord_sn(),Long.parseLong(userId),Constants.LOG_REFUND_TASK,Double.parseDouble(changemoney),total_fee);
 						if(false == isWalletSuccess){
 							return JsonUtils.writeJson(0, 22, "余额更新失败");
