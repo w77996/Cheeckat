@@ -187,7 +187,7 @@ public class RedPacketOpenController {
                 if (false == isWalletSuccess) {
                     return JsonUtils.writeJson(0, 22, "红包发送失败");
                 } else {
-
+                    redPacketService.editRedPacketPayStatus(record_sn,Constants.PAY_STATUS_SUCCESS);
                     //判断to类型是群发还是个人红包
                     RedPacket redPacket = redPacketService.getRedPacketByRecordSN(record_sn);
                     User fromUser = userService.getUserById(user_id);

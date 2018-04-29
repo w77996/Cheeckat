@@ -238,6 +238,8 @@ public class WxPayController {
 							//微信发红包成功，更新支付状态，更新log
 							boolean i = walletRecordService.editUserWalletPayElse(out_trade_no,from_uid,Constants.LOG_AWARD_REDPACKET,money,fee);
 							if(true == i){
+								//更新红包支付状态
+								redPacketService.editRedPacketPayStatus(out_trade_no,Constants.PAY_STATUS_SUCCESS);
 								//判断to类型是群发还是个人红包
 								RedPacket redPacket = redPacketService.getRedPacketByRecordSN(out_trade_no);
 								User fromUser = userService.getUserById(redPacket.getPublish_id());
@@ -253,11 +255,6 @@ public class WxPayController {
 										ImUtils.sendTextMessage("chatgroups", new String[]{group.getIm_group_id()}, "WtwdMissionTxt:好友"+fromUser.getUser_name()+"发布了一个任务，点击查看:"+redPacket.getRedpacket_id());
 									}
 								}
-
-
-
-								//通过环信发送数据
-								// ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getUser_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
 							}
 						}else if(Constants.ORDER_TYPE_TASK == type){
 							

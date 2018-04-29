@@ -52,6 +52,7 @@ public class GroupOpenController {
 		if(null == list || 0 == list.size()){
 			return  JsonUtils.writeJson(1, "获取成功,无群组", null, "object");
 		}
+
 		List<Map<String,Object>> resultList = new ArrayList<>();
 		for(int i = 0;i < list.size();i++){
 			Map<String,Object> result = new HashMap<String,Object>();
@@ -77,7 +78,7 @@ public class GroupOpenController {
 	 */
 	@RequestMapping(value="/open/exitGroup",produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String exitGroup(@RequestParam String userId,@RequestParam String groupId,@RequestParam String isAdmin){
+	public String exitGroup(@RequestParam String userId,@RequestParam String groupId,@RequestParam String imGroupId,@RequestParam String isAdmin){
 		String returnStr = JsonUtils.writeJson(0, 0, "参数为空");
 		if(StringUtils.isBlank(userId)||StringUtils.isBlank(groupId)||StringUtils.isBlank(isAdmin)){
 			return returnStr;
@@ -95,10 +96,11 @@ public class GroupOpenController {
 		if(userList.size() ==  3){
 			//删除这个群
 
-			//ImUtils.deleteGroup()
+
 
 			int i = groupService.deleteGroup(group_id);
 			if(i > 0){
+				ImUtils.deleteGroup(imGroupId);
 				return  JsonUtils.writeJson(1, "退出成功", null, "object");
 			}else {
 				return JsonUtils.writeJson(1, 0, "退出失败");
@@ -109,6 +111,7 @@ public class GroupOpenController {
 				//作为管理员
 				int i = groupDetailsService.deleteUserAdminFromGroup(user_id,group_id);
 				if(i > 0){
+					//ImUtils.d
 					return  JsonUtils.writeJson(1, "退出成功", null, "object");
 				}else {
 					return JsonUtils.writeJson(1, 0, "退出失败");
@@ -117,6 +120,7 @@ public class GroupOpenController {
 				//不作为管理员
 				int i = groupDetailsService.deleteUserFromGroup(user_id,group_id);
 				if(i > 0){
+					//ImUtils.delSingleMember(imGroupId,)
 					return  JsonUtils.writeJson(1, "退出成功", null, "object");
 				}else {
 					return JsonUtils.writeJson(1, 0, "退出失败");
@@ -153,8 +157,7 @@ public class GroupOpenController {
 		Map<String,Object> result = new HashMap<String,Object>();
 		//获取groupId下的用户信息
 		List<Map<String,Object>> userList = groupDetailsService.getUserGroupDetails(group_id);
-		//result.put("user",userList);
-		
+
 		return JsonUtils.writeJson(1, "获取成功", userList, "object");
 	}
 

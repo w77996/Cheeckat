@@ -104,5 +104,20 @@ public class RedPacketServiceImpl implements RedPacketService {
 		return redPacketDao.get(where);
 	}
 
+	/**
+	 * 修改红包支付状态
+	 * @param record_sn
+	 * @param pay_status
+	 * @return
+	 */
+	@Override
+	public int editRedPacketPayStatus(String record_sn, int pay_status) {
+		WherePrams where = new WherePrams();
+		where.and("record_sn",C.EQ,record_sn);
+		RedPacket redPacket = new RedPacket();
+		redPacket.setRecord_sn(record_sn);
+		return redPacketDao.update(redPacket,where);
+	}
+
 
 }
