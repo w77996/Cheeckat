@@ -257,10 +257,11 @@ public class MissionOpenController {
 				return returnStr;
 			}
 			User user = userService.getUserById(Long.parseLong(userId));
+			String record_sn = "";
 		    if(user != null) {
 				if (Constants.PAY_TYPE_WECHAT == Integer.parseInt(pay_type)) {
 					//微信支付发红包
-					String record_sn = walletRecordService.addWalletRecordOrder(Long.parseLong(userId),money,Constants.PAY_TYPE_WECHAT,Constants.ORDER_TYPE_TASK);
+					record_sn = walletRecordService.addWalletRecordOrder(Long.parseLong(userId),money,Constants.PAY_TYPE_WECHAT,Constants.ORDER_TYPE_TASK);
 					if(null == record_sn){
 						return JsonUtils.writeJson(0, 19, "订单生成失败");
 					}
@@ -278,7 +279,7 @@ public class MissionOpenController {
 						return JsonUtils.writeJson(0, 21, "余额不足");
 					}
 					//生成订单
-					String record_sn = walletRecordService.addWalletRecordOrder(Long.parseLong(userId),money,Constants.PAY_TYPE_BALANCE,Constants.ORDER_TYPE_TASK);
+					record_sn = walletRecordService.addWalletRecordOrder(Long.parseLong(userId),money,Constants.PAY_TYPE_BALANCE,Constants.ORDER_TYPE_TASK);
 					if(null == record_sn){
 						return JsonUtils.writeJson(0, 22, "订单生成失败");
 					}
@@ -302,6 +303,7 @@ public class MissionOpenController {
 		    	mission.setType(Integer.parseInt(type));
 		    	mission.setTo(Integer.parseInt(to));
 		    	mission.setTo_id(Long.parseLong(toId));
+		    	mission.setRecord_sn(record_sn);
 		    	mission.setAnonymous(Integer.parseInt(anonymous));
 		    	missionService.addMission(mission);
 		    	Mission mission2 = missionService.getMissionByPubIdAndCreateTime(user.getUser_id(),mission.getCreate_time(),mission.getContent(),mission.getStart_time());
