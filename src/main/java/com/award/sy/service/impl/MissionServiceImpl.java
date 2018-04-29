@@ -65,10 +65,13 @@ public class MissionServiceImpl implements MissionService{
 		return missionDao.updateLocal(mission,where);
 	}
 	
-	public int updateExpired() {
+	public List<Mission> getExpiredMission() {
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		return missionDao.excuse("update tb_mission set status = 4 where start_time < "+sdf.format(date)+"and status <> 4");
+		WherePrams where = new WherePrams();
+		where.and("start_time", C.IXAO, sdf.format(date));
+		where.and("status", C.NE, 4);
+		return missionDao.list(where);		
 	}
 	
 	public int removeMission(long missionId){
@@ -77,7 +80,7 @@ public class MissionServiceImpl implements MissionService{
 
 	@Override
 	public List<Map<String,Object>> getAllMissionLimit(int start,int count) {
-		List<Map<String,Object>> list = missionDao.listBySql("select a.*,b.head_img,b.birth,b.user_name,b.sex as user_sex,b.country,b.invisible from tb_mission a,tb_user b where a.publish_id = b.user_id and a.status=0 and a.to_user = 0 order by money desc limit "+start+","+count);
+		List<Map<String,Object>> list = missionDao.listBySql("select a.*,b.head_img,b.birth,b.user_name,b.sex as user_sex,b.country,b.invisible from tb_mission a,tb_user b where a.publish_id = b.user_id and a.status=0 and a.to = 0 order by money desc limit "+start+","+count);
 //		WherePrams where = new WherePrams();
 //		where.and("status", C.EQ, 0);
 //		where.and("to_user", C.EQ, 0);
@@ -89,7 +92,7 @@ public class MissionServiceImpl implements MissionService{
 
 	@Override
 	public List<Map<String,Object>> getMyMission(Long userId) {
-		List<Map<String,Object>> list = missionDao.listBySql("select a.*,b.head_img,b.birth,b.user_name,b.sex as user_sex,b.country,b.invisible from tb_mission a,tb_user b where a.publish_id = b.user_id and (a.publish_id = "+userId+" or a.accept_id = "+userId+" or a.to_user = "+userId+") order by create_time desc");
+		List<Map<String,Object>> list = missionDao.listBySql("select a.*,b.head_img,b.birth,b.user_name,b.sex as user_sex,b.country,b.invisible from tb_mission a,tb_user b where a.publish_id = b.user_id and (a.publish_id = "+userId+" or a.accept_id = "+userId+" or (a.to_id = "+userId+" and a.to <> 2)) order by create_time desc");
 //		WherePrams where = new WherePrams();
 //		where.orStart();
 //		where.or("publish_id", C.EQ, userId);

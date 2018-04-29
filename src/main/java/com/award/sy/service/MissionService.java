@@ -49,7 +49,7 @@ public interface MissionService {
 	 */
 	public int editMission(Mission mission);
 	
-	public int updateExpired();
+	public List<Mission> getExpiredMission();
 	
 	/**
 	 * @功能描述：删除任务信息

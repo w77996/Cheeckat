@@ -2,6 +2,7 @@ package com.award.sy.web.openapi;
 
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -15,12 +16,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.award.core.util.ImUtils;
 import com.award.core.util.JsonUtils;
+import com.award.sy.common.Constants;
 import com.award.sy.common.DateUtil;
+import com.award.sy.common.PayCommonUtil;
+import com.award.sy.common.WxPayUtil;
+import com.award.sy.entity.Group;
 import com.award.sy.entity.Mission;
 import com.award.sy.entity.User;
+import com.award.sy.entity.Wallet;
 import com.award.sy.service.FriendService;
+import com.award.sy.service.GroupService;
 import com.award.sy.service.MissionService;
 import com.award.sy.service.UserService;
+import com.award.sy.service.WalletRecordService;
+import com.award.sy.service.WalletService;
 
 
 @Controller
@@ -37,6 +46,15 @@ public class MissionOpenController {
 	@Resource
 	private FriendService friendService;
 	
+	@Resource
+	private WalletService walletService;
+	
+	@Resource
+	private WalletRecordService walletRecordService;
+	
+	@Resource
+	private GroupService groupService;
+	
 	/**
 	 * 查询附近的人
 	 * 
@@ -52,7 +70,22 @@ public class MissionOpenController {
 		String count = request.getParameter("count");
 		String returnStr = JsonUtils.writeJson(0, 0, "参数为空");
 		if(!StringUtils.isBlank(start) && !StringUtils.isBlank(count)) {
-			missionService.updateExpired();
+			List<Mission> mList = missionService.getExpiredMission();
+			for(Mission mission:mList) {
+				mission.setStatus(4);
+				missionService.editMission(mission);
+				Wallet wallet = walletService.findWalletByUserId(mission.getPublish_id());
+					if(null == wallet){
+						return JsonUtils.writeJson(0, 0, "参数错误");
+					}
+					//修改金额,更新订单支付状态，插入余额记录
+					Double total_fee = wallet.getMoney()+mission.getMoney();
+					String changemoney = "+"+mission.getMoney();
+					boolean isWalletSuccess = walletService.refund(mission.getRecord_sn(),mission.getPublish_id(),Constants.LOG_REFUND_TASK,Double.parseDouble(changemoney),total_fee);
+					if(false == isWalletSuccess){
+						return JsonUtils.writeJson(0, 22, "余额更新失败");
+					}
+			}
 			List<Map<String,Object>> list = missionService.getAllMissionLimit(Integer.parseInt(start), Integer.parseInt(count));
 			returnStr = JsonUtils.writeJson(1, "获取成功", list, "object");
 		}
@@ -136,6 +169,16 @@ public class MissionOpenController {
 		    				returnStr = JsonUtils.writeJson(0, 12, "无法确认完成");
 		    			}
 		 			    missionService.editMission(mission);
+		 			   Wallet wallet = walletService.findWalletByUserId(mission.getAccept_id());
+						if(null == wallet){
+							return JsonUtils.writeJson(0, 0, "参数错误");
+						}
+		 			    Double total_fee = wallet.getMoney()+mission.getMoney();
+						String changemoney = "+"+mission.getMoney();
+						boolean isWalletSuccess = walletService.editUserWalletPayBalance(mission.getRecord_sn(),mission.getAccept_id(),Constants.LOG_FETCH_TASK,Double.parseDouble(changemoney),total_fee);
+						if(false == isWalletSuccess){
+							return JsonUtils.writeJson(0, 22, "余额更新失败");
+						}
 		 			    returnStr = JsonUtils.writeJson("设置成功", 1);
 		    		}else {
 		    			returnStr = JsonUtils.writeJson(0, 10, "无权限操作");
@@ -166,8 +209,19 @@ public class MissionOpenController {
 		    				mission.setStatus(4);
 		    			}else {
 		    				returnStr = JsonUtils.writeJson(0, 12, "无法关闭");
-		    			}
+		    			}                        
 		 			    missionService.editMission(mission);
+		 			    Wallet wallet = walletService.findWalletByUserId(Long.parseLong(userId));
+						if(null == wallet){
+							return JsonUtils.writeJson(0, 0, "参数错误");
+						}
+						//修改金额,更新订单支付状态，插入余额记录
+						Double total_fee = wallet.getMoney()+mission.getMoney();
+						String changemoney = "+"+mission.getMoney();
+						boolean isWalletSuccess = walletService.refund(mission.getRecord_sn(),Long.parseLong(userId),Constants.LOG_REFUND_TASK,Double.parseDouble(changemoney),total_fee);
+						if(false == isWalletSuccess){
+							return JsonUtils.writeJson(0, 22, "余额更新失败");
+						}
 		 			    returnStr = JsonUtils.writeJson("设置成功", 1);
 		    		}else {
 		    			returnStr = JsonUtils.writeJson(0, 10, "无权限操作");
@@ -193,12 +247,49 @@ public class MissionOpenController {
 		String money = request.getParameter("money");
 		String address = request.getParameter("address");
 		String startTime = request.getParameter("startTime");
-		String to = request.getParameter("to");
+		String to = request.getParameter("to");//0是发给所有人,1传用户,2是传群
 		String anonymous = request.getParameter("anonymous");
+		String pay_type = request.getParameter("payType");
+		String toId = request.getParameter("toId"); //发送到群
 		String returnStr = JsonUtils.writeJson(0, 0, "参数为空");
-		if(!StringUtils.isBlank(userId) && !StringUtils.isBlank(content)&& !StringUtils.isBlank(type)&& !StringUtils.isBlank(sex)&& !StringUtils.isBlank(money)&& !StringUtils.isBlank(address)&& !StringUtils.isBlank(startTime)) {
+		if(!StringUtils.isBlank(userId) && !StringUtils.isBlank(content)&& !StringUtils.isBlank(type)&& !StringUtils.isBlank(sex)&& !StringUtils.isBlank(money)&& !StringUtils.isBlank(address) && !StringUtils.isBlank(startTime) && !StringUtils.isBlank(pay_type) && !StringUtils.isBlank(to)) {
+			if(Integer.parseInt(to) > 0 && StringUtils.isBlank(toId)) {
+				return returnStr;
+			}
 			User user = userService.getUserById(Long.parseLong(userId));
 		    if(user != null) {
+				if (Constants.PAY_TYPE_WECHAT == Integer.parseInt(pay_type)) {
+					//微信支付发红包
+					String record_sn = walletRecordService.addWalletRecordOrder(Long.parseLong(userId),money,Constants.PAY_TYPE_WECHAT,Constants.ORDER_TYPE_TASK);
+					if(null == record_sn){
+						return JsonUtils.writeJson(0, 19, "订单生成失败");
+					}
+					SortedMap<Object, Object> map =  WxPayUtil.getPreperIdFromWX(record_sn, PayCommonUtil.getIpAddress(request),Constants.APP_NAME+Constants.TASK, Double.parseDouble(money));
+					if(null == map){
+						return JsonUtils.writeJson(0, 19, "订单生成失败");
+					}
+			}else if(Constants.PAY_TYPE_BALANCE == Integer.parseInt(pay_type)){
+					Wallet wallet = walletService.findWalletByUserId(Long.parseLong(userId));
+					if(null == wallet){
+						return JsonUtils.writeJson(0, 0, "参数错误");
+					}
+					//余额支付发红包
+					if(wallet.getMoney().compareTo(new Double(money)) < 0){
+						return JsonUtils.writeJson(0, 21, "余额不足");
+					}
+					//生成订单
+					String record_sn = walletRecordService.addWalletRecordOrder(Long.parseLong(userId),money,Constants.PAY_TYPE_BALANCE,Constants.ORDER_TYPE_TASK);
+					if(null == record_sn){
+						return JsonUtils.writeJson(0, 22, "订单生成失败");
+					}
+					//修改金额,更新订单支付状态，插入余额记录
+					Double total_fee = wallet.getMoney()-Double.parseDouble(money);
+					String changemoney = "-"+money;
+					boolean isWalletSuccess = walletService.editUserWalletPayBalance(record_sn,Long.parseLong(userId),Constants.LOG_AWARD_REDPACKET,Double.parseDouble(changemoney),total_fee);
+					if(false == isWalletSuccess){
+						return JsonUtils.writeJson(0, 22, "订单生成失败");
+					}
+			}
 		    	Mission mission = new Mission();
 		    	mission.setAddress(address);
 		    	mission.setContent(content);
@@ -209,10 +300,12 @@ public class MissionOpenController {
 		    	mission.setStart_time(startTime);
 		    	mission.setStatus(0);
 		    	mission.setType(Integer.parseInt(type));
-		    	mission.setTo_user(Long.parseLong(to));
+		    	mission.setTo(Integer.parseInt(to));
+		    	mission.setTo_id(Long.parseLong(toId));
 		    	mission.setAnonymous(Integer.parseInt(anonymous));
 		    	missionService.addMission(mission);
 		    	Mission mission2 = missionService.getMissionByPubIdAndCreateTime(user.getUser_id(),mission.getCreate_time(),mission.getContent(),mission.getStart_time());
+		    	if(Integer.parseInt(to) == 0){//如果发给所有人
 		    	List<Map<String,Object>> fList = friendService.getUserFriends(Long.parseLong(userId));
 		    	if(fList.size() > 20) {//每次只能发送给20个人
 		    		int count = fList.size() / 20;
@@ -250,7 +343,17 @@ public class MissionOpenController {
 		    		}
 		    		ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getUser_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
 		    	}
-		    	
+		    }else if(Integer.parseInt(to) == 1) {//发给个人
+		    	User toUser = userService.getUserById(Long.parseLong(toId));
+		    	if(toUser != null) {
+		    		ImUtils.sendTextMessage("users", new String[]{toUser.getUser_name()}, "WtwdMissionTxt:好友"+user.getUser_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
+		    	}		    	
+		    }else {//发群
+		    	Group group = groupService.getGroupById(Long.parseLong(toId));
+		    	if(group != null) {
+		    		ImUtils.sendTextMessage("chatgroups", new String[]{group.getIm_group_id()}, "WtwdMissionTxt:好友"+user.getUser_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
+		    	}		    	
+		    }
 		    	returnStr = JsonUtils.writeJson("发布成功", 1);
 		    }else {
 		    	returnStr = JsonUtils.writeJson(0, 4, "用户不存在");			
