@@ -55,6 +55,12 @@ public class MissionServiceImpl implements MissionService{
 		return missionDao.get(where);
 	}
 	
+	public Mission getMissionByRecordSN(String recordSN) {
+		WherePrams where = new WherePrams();
+		where.and("record_sn", C.EQ, recordSN);
+		return missionDao.get(where);
+	}
+	
 	public int addMission(Mission mission){
 		return missionDao.addLocal(mission);
 	}
@@ -92,7 +98,7 @@ public class MissionServiceImpl implements MissionService{
 
 	@Override
 	public List<Map<String,Object>> getMyMission(Long userId) {
-		List<Map<String,Object>> list = missionDao.listBySql("select a.*,b.head_img,b.birth,b.user_name,b.sex as user_sex,b.country,b.invisible from tb_mission a,tb_user b where a.publish_id = b.user_id and (a.publish_id = "+userId+" or a.accept_id = "+userId+" or (a.to_id = "+userId+" and a.to <> 2)) order by create_time desc");
+		List<Map<String,Object>> list = missionDao.listBySql("select a.*,b.head_img,b.birth,b.user_name,b.sex as user_sex,b.country,b.invisible from tb_mission a,tb_user b where a.publish_id = b.user_id and (a.publish_id = "+userId+" or a.accept_id = "+userId+" or (a.to_id = "+userId+" and a.to <> 2)) and a.status<>5 order by create_time desc");
 //		WherePrams where = new WherePrams();
 //		where.orStart();
 //		where.or("publish_id", C.EQ, userId);

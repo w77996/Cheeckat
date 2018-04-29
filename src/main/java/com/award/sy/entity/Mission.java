@@ -32,7 +32,7 @@ public class Mission extends Po {
 	
 	private Long accept_id;     //任务接收者，可以为空
 	
-	private Integer  status;    //任务状态，0是待领取，1是进行中，2是接受者确认完成，等待对方确认，3是已完成，4是已失效
+	private Integer  status;    //任务状态，0是待领取，1是进行中，2是接受者确认完成，等待对方确认，3是已完成，4是已失效  5待支付
 	
 	private String accept_time;
 	
