@@ -36,8 +36,6 @@ public class RedPacketOpenController {
 	@Autowired
 	private WalletService walletService;
 
-	@Autowired
-	private WalletLogService walletLogService;
 
 	/**
 	 * 抢红包
@@ -122,10 +120,10 @@ public class RedPacketOpenController {
 	@ResponseBody
 	public String payRedPacket(@RequestParam String userId,
 			@RequestParam String payType, @RequestParam String money,
-			@RequestParam String type, HttpServletRequest request) {
+			@RequestParam String type, @RequestParam String to , @RequestParam String to_id ,HttpServletRequest request) {
 		System.out.println("进入");
 		if (StringUtils.isBlank(userId) || StringUtils.isBlank(payType)
-				|| StringUtils.isBlank(money) || StringUtils.isBlank(type)) {
+				|| StringUtils.isBlank(money) || StringUtils.isBlank(type)||StringUtils.isBlank(to)||StringUtils.isBlank(to_id)) {
 			return JsonUtils.writeJson(0, 0, "参数错误");
 		}
 		String result = JsonUtils.writeJson(0, 0, "参数错误");
@@ -144,6 +142,12 @@ public class RedPacketOpenController {
 				if(null == record_sn){
 					return JsonUtils.writeJson(0, 19, "订单生成失败");
 				}
+				//生成红包
+				boolean isRedPacketSuccess = redPacketService.addRedpacketRecord(record_sn,userId,money,to,to_id);
+				if(false == isRedPacketSuccess){
+					return JsonUtils.writeJson(0, 22, "红包发送失败");
+				}
+				//请求微信prepay发送给手机
 				SortedMap<Object, Object> map =  WxPayUtil.getPreperIdFromWX(record_sn, PayCommonUtil.getIpAddress(request),Constants.APP_NAME+Constants.REDPACKET, price);
 				if(null == map){
 					return JsonUtils.writeJson(0, 19, "订单生成失败");
@@ -166,7 +170,7 @@ public class RedPacketOpenController {
 					return JsonUtils.writeJson(0, 22, "红包发送失败");
 				}
 				//生成红包
-				boolean isRedPacketSuccess = redPacketService.addRedpacketRecord(record_sn,userId,money);
+				boolean isRedPacketSuccess = redPacketService.addRedpacketRecord(record_sn,userId,money,to,to_id);
 				if(false == isRedPacketSuccess){
 					return JsonUtils.writeJson(0, 22, "红包发送失败");
 				}
@@ -177,16 +181,13 @@ public class RedPacketOpenController {
 				if(false == isWalletSuccess){
 					return JsonUtils.writeJson(0, 22, "红包发送失败");
 				}else{
+					//判断to类型是群发还是个人红包
+					//个人,直接获取个人Id并发送至环信
+
+					//群发，获取群成员的名称，并发送
+
 					return  JsonUtils.writeJson("红包发送成功", 1);
 				}
-				//修改
-               // boolean isLogSuccess = walletRecordService.editWalletOrderPayStatus(record_sn,Constants.PAY_STATUS_SUCCESS);
-				/*if(true ==  isLogSuccess){
-					//添加日志，发送红包扣除余额
-					return  JsonUtils.writeJson("红包发送成功", 1);
-				}else {
-					return JsonUtils.writeJson(0, 22, "红包发送失败");
-				}*/
 			}
 		}
 		return JsonUtils.writeJson(0, 0, "参数错误");

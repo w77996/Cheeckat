@@ -29,9 +29,14 @@ public class UserIndexImgServiceImpl implements UserIndexImgService{
 	}
 
 	@Override
-	public int delUserIndexImg(long user_id, String img_path) {
-		int i = userIndexImgDao.excuse("delete from tb_user_index_img where user_id ="+user_id+" and img="+img_path);
-		return  i;
+	public int delUserIndexImg(long user_id, String[] img_path) {
+		WherePrams where = new WherePrams();
+		where.orStart();
+		for(int i = 0; i < img_path.length; i++) {
+			where.or("img", C.EQ, img_path[i]);
+		}
+		where.orEnd();
+		return  userIndexImgDao.del(where);
 	}
 
 	/**

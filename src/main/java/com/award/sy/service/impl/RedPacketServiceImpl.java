@@ -33,14 +33,7 @@ public class RedPacketServiceImpl implements RedPacketService {
 	@Autowired
 	private RedPacketDao redPacketDao;
 	
-	@Autowired
-	private WalletRecordDao walletRecordDao;
-	
-	@Autowired
-	private WalletDao walletDao;
-	
-	@Autowired
-	private WalletLogDao walletLogDao;
+
 	/**
 	 * 通过Id获取红包
 	 * Title: getRedPacketById
@@ -83,7 +76,7 @@ public class RedPacketServiceImpl implements RedPacketService {
 	 * @return
 	 */
 	@Override
-	public boolean addRedpacketRecord(String record_sn, String userId, String money) {
+	public boolean addRedpacketRecord(String record_sn, String userId, String money,String to,String to_id) {
 		RedPacket redPacket = new RedPacket();
 		redPacket.setPublish_id(Long.parseLong(userId));
 		redPacket.setRecord_sn(record_sn);
@@ -98,6 +91,18 @@ public class RedPacketServiceImpl implements RedPacketService {
 	    List<Map<String,Object>> list = redPacketDao.listBySql("select * from tb_red_packet where redpacket_id = "+redpacketId);
         return list;
     }
+
+	/**
+	 * 通过recordSn获取红包信息
+	 * @param out_trade_no
+	 * @return
+	 */
+	@Override
+	public RedPacket getRedPacketByRecordSN(String out_trade_no) {
+		WherePrams where = new WherePrams();
+		where.and("record_sn",C.EQ,out_trade_no);
+		return redPacketDao.get(where);
+	}
 
 
 }

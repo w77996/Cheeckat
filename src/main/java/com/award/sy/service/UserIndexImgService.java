@@ -9,7 +9,7 @@ public interface UserIndexImgService {
 
 	int addUserIndexImg(long user_id,String img_path);
 	
-	int delUserIndexImg(long user_id,String img_path);
+	int delUserIndexImg(long user_id,String[] img_path);
 	/**
 	 * 获取用户主页图片
 	 * @Title:           getUserIndexImgList

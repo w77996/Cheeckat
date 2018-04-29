@@ -38,9 +38,6 @@ public class UserOpenController {
     @Autowired
     private UserIndexImgService userIndexImgService;
 
-    @Autowired
-    private FriendService friendService;
-
     /**
      * 设置user信息
      * <p>Title: editUser</p>
@@ -141,7 +138,7 @@ public class UserOpenController {
         }
         User user = new User();
         user.setBirth(birth);
-        user.setHead_img(uploadPath + fileName);
+        user.setHead_img(Constants.CONTEXT_PATH+uploadPath + fileName);
         user.setHeight(Integer.parseInt(height));
         user.setSex(Integer.parseInt(sex));
         //user.setUser_id(user_id);
@@ -183,31 +180,55 @@ public class UserOpenController {
         if (null == userExist) {
             return JsonUtils.writeJson(0, 4, "用户不存在");
         }
-        String path = Constants.HEAD_IMG_PATH;
+        String path = Constants.USER_IMG_PATH;
         //获取绝对路径
         String uploadPath = request.getSession().getServletContext().getRealPath("/");
         log.info("uploadPath路径：" + uploadPath);
-        File file = new File(uploadPath + Constants.HEAD_IMG_PATH);
+        File file = new File(uploadPath + Constants.USER_IMG_PATH);
         if (!file.exists()) {
             file.mkdirs();
         }
-
         String fileName = System.currentTimeMillis() + String.valueOf((int) ((Math.random() * 9 + 1) * 100000)) + ".jpg";
         log.info("fileName路径：" + fileName);
-        boolean isSuccess = FileUtil.CreateImgBase64(headImg, uploadPath + Constants.HEAD_IMG_PATH + fileName);
+        boolean isSuccess = FileUtil.CreateImgBase64(headImg, uploadPath + Constants.USER_IMG_PATH + fileName);
         if (!isSuccess) {
             return JsonUtils.writeJson(0, 24, "图片上传失败");
         }
-        int i = userIndexImgService.addUserIndexImg(user_id, path + fileName);
-        //user.setHeight(Integer.parseInt(height));
-        //user.setSex(sex);
-        if (1 < i) {
-            return JsonUtils.writeJson("修改成功", 1);
+        int i = userIndexImgService.addUserIndexImg(user_id, Constants.CONTEXT_PATH+path + fileName);
+        if (0 < i) {
+            return JsonUtils.writeJson("上传成功", 1);
         } else {
-            return JsonUtils.writeJson(0, 0, "修改失败");
+            return JsonUtils.writeJson(0, 0, "上传失败");
         }
     }
 
+    /**
+     * 删除图片
+     * @param userId
+     * @param img
+     * @return
+     */
+    @RequestMapping(value = "/open/deleteIndexImg", produces = "text/html;charset=UTF-8")
+    @ResponseBody
+    public String deleteIndexImg(@RequestParam String userId,@RequestParam String img){
+
+        if(StringUtils.isBlank(userId)|| StringUtils.isBlank(img)){
+            return JsonUtils.writeJson(0, 0, "参数为空");
+        }
+        User user = userService.getUserById(Long.parseLong(userId));
+        if(null == user){
+            return JsonUtils.writeJson(0,4,"用户不存在");
+        }
+        String[] imgpath = img.split(",");
+
+        int i = userIndexImgService.delUserIndexImg(Long.parseLong(userId),imgpath);
+
+        if(0 < i){
+            return JsonUtils.writeJson("删除成功",1);
+        }else{
+            return JsonUtils.writeJson(0,41,"删除失败");
+        }
+    }
     /**
      * 获取用户主页信息
      *
@@ -218,7 +239,7 @@ public class UserOpenController {
      * @param: @return
      * @return: String
      */
-    @RequestMapping(value = "/getUserIndex", produces = "text/html;charset=UTF-8")
+    @RequestMapping(value = "/open/getUserIndex", produces = "text/html;charset=UTF-8")
     @ResponseBody
     public String getUserIndex(@RequestParam String userId) {
         if (StringUtils.isBlank(userId)) {
@@ -229,13 +250,7 @@ public class UserOpenController {
         if (null == user) {
             return JsonUtils.writeJson(0, 4, "用户不存在");
         }
-
-        //查询好友关系
-        //friendService.
-
-        //查询用户信息
-
-        return null;
+        return JsonUtils.writeJson(1, "请求成功", user, "object");
 
     }
 
@@ -249,7 +264,7 @@ public class UserOpenController {
      * @param: @return
      * @return: String
      */
-    @RequestMapping(value = "/getUserIndexImg", produces = "text/html;charset=UTF-8")
+    @RequestMapping(value = "/open/getUserIndexImg", produces = "text/html;charset=UTF-8")
     @ResponseBody
     public String getUserIndexImg(@RequestParam String userId, @RequestParam String start, @RequestParam String count) {
         if (StringUtils.isBlank(userId)) {
@@ -259,6 +274,26 @@ public class UserOpenController {
 
         return JsonUtils.writeJson(1, "请求成功", list, "object");
 
+    }
+
+    /**
+     * 绑定提现账号
+     * @param userId
+     * @param openId
+     * @return
+     */
+    @RequestMapping(value = "/open/bindWithdraw", produces = "text/html;charset=UTF-8")
+    @ResponseBody
+    public String bindWithdraw(@RequestParam String userId, @RequestParam String openId) {
+        if (StringUtils.isBlank(userId)||StringUtils.isBlank(openId)) {
+            return JsonUtils.writeJson(0, 0, "参数为空");
+        }
+       boolean isBindSuccess = userService.editUserBindWeChat(Long.parseLong(userId),Long.parseLong(openId));
+        if(true == isBindSuccess){
+            return JsonUtils.writeJson("请求成功",1);
+        }else{
+            return JsonUtils.writeJson(0,41,"提现账号绑定失败");
+        }
     }
 
 }

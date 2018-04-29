@@ -15,6 +15,8 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.award.core.util.ImUtils;
+import com.award.sy.entity.RedPacket;
 import com.award.sy.entity.Wallet;
 import com.award.sy.entity.WalletLog;
 import com.award.sy.service.WalletLogService;
@@ -48,7 +50,7 @@ public class WxPayController {
 	private WalletService walletService;
 	
 	@Autowired
-	private WalletLogService walletLogService;
+	private RedPacketService redPacketService;
 	
 	/**
 	 * 微信下单统一接口
@@ -236,8 +238,14 @@ public class WxPayController {
 							//微信发红包成功，更新支付状态，更新log
 							boolean i = walletRecordService.editUserWalletPayElse(out_trade_no,from_uid,Constants.LOG_AWARD_REDPACKET,money,fee);
 							if(true == i){
+								//判断to类型是群发还是个人红包
+								RedPacket redPacket = redPacketService.getRedPacketByRecordSN(out_trade_no);
+								//个人,直接获取个人Id并发送至环信
+
+								//群发，获取群成员的名称，并发送
+
 								//通过环信发送数据
-								//ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getUser_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
+								// ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getUser_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
 							}
 						}else if(Constants.ORDER_TYPE_TASK == type){
 							

@@ -102,6 +102,7 @@ public class WalletServiceImpl implements WalletService {
         WherePrams where = new WherePrams();
         where.and("record_sn", C.EQ, record_sn);
         WalletRecord walletRecord = new WalletRecord();
+        walletRecord.setTo_uid(user_id);
         walletRecord.setFetch_status(Constants.PAY_STATUS_SUCCESS);
         walletRecord.setFetch_time(date);
         int x = walletRecordDao.updateLocal(walletRecord, where);
