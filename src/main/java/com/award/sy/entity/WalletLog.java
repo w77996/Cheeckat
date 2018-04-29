@@ -24,12 +24,14 @@ public class WalletLog extends Po{
 	private String longIdStr;				
 	
 	private String record_sn;//订单号
+
+	private int type;
 	
 	private Long user_id;//用户ID
 	
-	private BigDecimal change_money;//变动金额
+	private Double change_money;//变动金额
 	
-	private BigDecimal money;//变动后的金额
+	private Double money;//变动后的金额
 	
 	private String remark;//备注
 	
@@ -59,6 +61,14 @@ public class WalletLog extends Po{
 		this.record_sn = record_sn;
 	}
 
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
 	public Long getUser_id() {
 		return user_id;
 	}
@@ -67,19 +77,19 @@ public class WalletLog extends Po{
 		this.user_id = user_id;
 	}
 
-	public BigDecimal getChange_money() {
+	public Double getChange_money() {
 		return change_money;
 	}
 
-	public void setChange_money(BigDecimal change_money) {
+	public void setChange_money(Double change_money) {
 		this.change_money = change_money;
 	}
 
-	public BigDecimal getMoney() {
+	public Double getMoney() {
 		return money;
 	}
 
-	public void setMoney(BigDecimal money) {
+	public void setMoney(Double money) {
 		this.money = money;
 	}
 
@@ -101,12 +111,16 @@ public class WalletLog extends Po{
 
 	@Override
 	public String toString() {
-		return "WalletLog [log_id=" + log_id + ", longIdStr=" + longIdStr
-				+ ", record_sn=" + record_sn + ", user_id=" + user_id
-				+ ", change_money=" + change_money + ", money=" + money
-				+ ", remark=" + remark + ", create_time=" + create_time + "]";
+		return "WalletLog{" +
+				"log_id=" + log_id +
+				", longIdStr='" + longIdStr + '\'' +
+				", record_sn='" + record_sn + '\'' +
+				", type=" + type +
+				", user_id=" + user_id +
+				", change_money=" + change_money +
+				", money=" + money +
+				", remark='" + remark + '\'' +
+				", create_time='" + create_time + '\'' +
+				'}';
 	}
-	
-	
-	
 }

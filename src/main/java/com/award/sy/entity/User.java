@@ -25,6 +25,8 @@ public class User extends Po {
 	private String birth;				//生日
 	
 	private String user_name;          //用户名
+
+	private String nick_name;
 	
 	private String password;          //密码
 	
@@ -40,7 +42,6 @@ public class User extends Po {
     
     private Integer height;
     
-    private String phone;
     
     private String open_id;
 	
@@ -99,6 +100,14 @@ public class User extends Po {
 		this.user_name = user_name;
 	}
 
+
+	public String getNick_name() {
+		return nick_name;
+	}
+
+	public void setNick_name(String nick_name) {
+		this.nick_name = nick_name;
+	}
 
 	public String getPassword() {
 		return password;
@@ -170,14 +179,6 @@ public class User extends Po {
 	}
 
 	
-	public String getPhone() {
-		return phone;
-	}
-
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
 
 
 	public String getOpen_id() {
@@ -192,11 +193,21 @@ public class User extends Po {
 
 	@Override
 	public String toString() {
-		return "User [user_id=" + user_id + ", userIdStr=" + userIdStr + ", head_img=" + head_img + ", birth=" + birth
-				+ ", user_name=" + user_name + ", password=" + password + ", sex=" + sex + ", country=" + country
-				+ ", create_time=" + create_time + ", height=" + height + ", invisible=" + ", im_user_name=" + im_user_name + invisible + "]";
+		return "User{" +
+				"user_id=" + user_id +
+				", userIdStr='" + userIdStr + '\'' +
+				", head_img='" + head_img + '\'' +
+				", birth='" + birth + '\'' +
+				", user_name='" + user_name + '\'' +
+				", nick_name='" + nick_name + '\'' +
+				", password='" + password + '\'' +
+				", sex=" + sex +
+				", country='" + country + '\'' +
+				", create_time='" + create_time + '\'' +
+				", invisible=" + invisible +
+				", im_user_name='" + im_user_name + '\'' +
+				", height=" + height +
+				", open_id='" + open_id + '\'' +
+				'}';
 	}
-
-
-	
 }

@@ -3,6 +3,7 @@ package com.award.sy.entity;
 import java.math.BigDecimal;
 
 import com.award.core.annotation.ID;
+import com.award.core.annotation.TableName;
 import com.award.core.annotation.TempField;
 import com.award.core.beans.Po;
 
@@ -13,6 +14,7 @@ import com.award.core.beans.Po;
  * @author:          w77996
  * @date:            2018年4月24日        上午9:20:05
  */
+@TableName(name = "tb_wallet_record")
 public class WalletRecord extends Po{
 	
 	@ID
@@ -29,7 +31,7 @@ public class WalletRecord extends Po{
 	
 	private Integer type;//交易类型
 	
-	private BigDecimal money;//交易金额
+	private Double money;//交易金额
 	
 	private Integer pay_type;//支付方式
 	
@@ -89,11 +91,11 @@ public class WalletRecord extends Po{
 		this.type = type;
 	}
 
-	public BigDecimal getMoney() {
+	public Double getMoney() {
 		return money;
 	}
 
-	public void setMoney(BigDecimal money) {
+	public void setMoney(Double money) {
 		this.money = money;
 	}
 

@@ -8,6 +8,7 @@
 		<typeAlias type="com.award.sy.entity.User" alias="User"/>
 		<typeAlias type="com.award.sy.entity.Location" alias="Location"/>
 		<typeAlias type="com.award.sy.entity.Mission" alias="Mission"/>
+		<typeAlias type="com.award.sy.entity.RedPacket" alias="RedPacket"/>
 		<typeAlias type="com.award.sy.entity.bean.QueryCondition" alias="QueryCondition"/>
     </typeAliases>
     

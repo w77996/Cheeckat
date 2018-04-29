@@ -86,16 +86,17 @@ public class GroupDetailsServiceImpl implements GroupDetailsService{
 	@Override
 	public List<Map<String, Object>> getUserGroupDetails(long groupId) {
 		// TODO Auto-generated method stub
-		List<Map<String,Object>> list = groupDetailsDao.listBySql("select u.* from tb_user u left  JOIN tb_group_details gd   on gd.member_id = u.user_id where gd.group_id ="+groupId);
+		List<Map<String,Object>> list = groupDetailsDao.listBySql("select u.*,gd.is_admin from tb_user u left  JOIN tb_group_details gd   on gd.member_id = u.user_id where gd.group_id ="+groupId);
 		return list;
 	}
 
 	@Override
-	public int deleteUserFromGroup(long userId) {
+	public int deleteUserFromGroup(long userId,long group_id) {
 		// TODO Auto-generated method stub
 		WherePrams where = new WherePrams();
 		where.orStart();
 		where.and("member_id", C.EQ, userId);
+		where.and("group_id", C.EQ, group_id);
 		where.orEnd();
 		return groupDetailsDao.del(where);
 	}
@@ -105,16 +106,26 @@ public class GroupDetailsServiceImpl implements GroupDetailsService{
 	public int deleteUserAdminFromGroup(long userId,long groupId) {
 		// TODO Auto-generated method stub
 		//获取第二个用户
-		List<Map<String,Object>> secondUser = groupDetailsDao.listBySql("SELECT member_id FROM tb_group_details  WHERE group_id = "+groupId+" ORDER BY join_time ASC LIMIT 1, 1");
+		List<Map<String,Object>> secondUser = groupDetailsDao.listBySql("SELECT member_id FROM tb_group_details  WHERE group_id = "+groupId+" ORDER BY user_id ASC LIMIT 1, 1");
 		long secondUserId = (long) secondUser.get(0).get("member_id");
 		//用户退出删除
-		int i = deleteUserFromGroup(userId);
+		int i = deleteUserFromGroup(userId,groupId);
 		//设置第二个用户为管理员
 		int j = groupDetailsDao.excuse("UPDATE tb_group_details SET is_admin = 1 WHERE member_id ="+secondUserId+" and group_id ="+groupId);
 		if(i > 0 && j > 0){
 			return 1;
 		}
 		return 0;
+	}
+
+	@Override
+	public GroupDetails getUserGroupDetailsIsAdmin(long user_id, long group_id, int is_admin) {
+		WherePrams where = new WherePrams();
+		where.and("user_id",C.EQ,user_id);
+		where.and("group_id",C.EQ,group_id);
+		where.and("is_admin",C.EQ,is_admin);
+		GroupDetails groupDetails = groupDetailsDao.get(where);
+		return groupDetails;
 	}
 
 }

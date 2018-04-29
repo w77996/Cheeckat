@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -16,6 +15,9 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.award.sy.entity.Wallet;
+import com.award.sy.entity.WalletLog;
+import com.award.sy.service.WalletLogService;
 import org.apache.commons.lang3.StringUtils;
 import org.jdom.JDOMException;
 import org.slf4j.Logger;
@@ -27,14 +29,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.award.core.util.JsonUtils;
 import com.award.sy.common.Constants;
-import com.award.sy.common.DateUtil;
 import com.award.sy.common.PayCommonUtil;
 import com.award.sy.common.XMLUtil;
 import com.award.sy.entity.WalletRecord;
 import com.award.sy.service.RedPacketService;
 import com.award.sy.service.WalletRecordService;
 import com.award.sy.service.WalletService;
-import com.sun.tools.javac.code.Attribute.Constant;
 
 @Controller
 public class WxPayController {
@@ -48,7 +48,7 @@ public class WxPayController {
 	private WalletService walletService;
 	
 	@Autowired
-	private RedPacketService redPacketService;
+	private WalletLogService walletLogService;
 	
 	/**
 	 * 微信下单统一接口
@@ -207,38 +207,38 @@ public class WxPayController {
 				
 				WalletRecord walletRecord = walletRecordService.findWallerOrderByRecordSN(out_trade_no);
 				//Map<String, Object> walletRecordMap = list.get(0);
-				BigDecimal money =  walletRecord.getMoney();
+				Double money =  walletRecord.getMoney();
 				int pay_status =  walletRecord.getPay_status();
 				int type = walletRecord.getType();
 				long from_uid = walletRecord.getFrom_uid();
-	
-				
+
+				Wallet wallet = walletService.findWalletByUserId(from_uid);
+				Double fee = wallet.getMoney()+money;
 				if (!Constants.MCH_ID.equals(mch_id)
 						|| walletRecord == null
-						|| new BigDecimal(total_fee)
-								.compareTo(money.multiply(new BigDecimal(100))) != 0) {
+						|| new Double(total_fee)
+								.compareTo(new Double(money*100)) != 0) {
 					logger.info("支付失败,错误信息：" + "参数错误");
 					resXml = "<xml>"
 							+ "<return_code><![CDATA[FAIL]]></return_code>"
 							+ "<return_msg><![CDATA[参数错误]]></return_msg>"
 							+ "</xml> ";
-					walletRecord.setPay_status(Constants.PAY_STATUS_FAIL);
-					walletRecordService.editWalletOrder(walletRecord);
+
+					walletRecordService.editWalletOrderPayStatus(out_trade_no,Constants.PAY_STATUS_FAIL);
 				} else {
 					if (Constants.PAY_STATUS_WAIT == pay_status) {// 支付的价格
 						// 订单状态的修改。根据实际业务逻辑执行
 						if(Constants.ORDER_TYPE_TRADE == type){
-							//充值成功，修改余额
-							walletService.editUserWalletBalance(from_uid, money);
-						}else if(Constants.ORDER_TYPE_REDPACKET == type || Constants.ORDER_TYPE_TASK == type){
-							/*walletRecord.setPay_status(Constants.PAY_STATUS_SUCCESS);
-							walletRecord.setPay_time(DateUtil.getNowTime());
-							walletRecord.setPay_type(Constants.PAY_TYPE_WECHAT);
-							walletRecord.setMoney(money);
-							walletRecordService.editWalletOrder(walletRecord);*/
-							//发送成功
-							redPacketService.editRedPacketSendMessage(out_trade_no,Constants.PAY_STATUS_SUCCESS);
-							
+							//充值成功，更新支付状态，修改余额
+
+							walletService.editUserWalletPayBalance(out_trade_no,from_uid,Constants.LOG_RECHARGE, money,fee);
+						}else if(Constants.ORDER_TYPE_REDPACKET == type){
+							//微信发红包成功，更新支付状态，更新log
+							boolean i = walletRecordService.editUserWalletPayElse(out_trade_no,from_uid,Constants.LOG_AWARD_REDPACKET,money,fee);
+							if(true == i){
+								//通过环信发送数据
+								//ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getUser_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
+							}
 						}else if(Constants.ORDER_TYPE_TASK == type){
 							
 						}
@@ -263,7 +263,7 @@ public class WxPayController {
 						+ "<return_code><![CDATA[FAIL]]></return_code>"
 						+ "<return_msg><![CDATA[报文为空]]></return_msg>"
 						+ "</xml> ";
-				//redPacketService.editRedPacketSendMessage("",Constants.PAY_STATUS_FAIL);
+				//redPacketService.editRedPacketPayStatus("",Constants.PAY_STATUS_FAIL);
 			}
 
 		} else {

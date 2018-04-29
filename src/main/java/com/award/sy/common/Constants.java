@@ -10,7 +10,10 @@ package com.award.sy.common;
  */
 public class Constants {
 
-	/**
+
+
+
+    /**
 	 * 该类不能被实例化
 	 */
 	private Constants() {
@@ -163,7 +166,14 @@ public class Constants {
 
 	public static final int LOGIN_TYPE_PHONE = 1;//手机登录
 	public static final int LOGIN_TYPE_WECHAT = 2;//微信登录
-     
+	
+	public static final String HEAD_IMG_PATH="/upload/head/image/";
+	public static final String USER_IMG_PATH="/upload/user/image/";
+
+    public static int LOG_RECHARGE = 1;//充值
+    public static int LOG_WITHDRAW= 1;//提现
+	public static int LOG_AWARD_REDPACKET = 3;//发红包
+	public static int LOG_FETCH_REDPACKET = 4;//接红包
 
 	
 }
