@@ -174,6 +174,10 @@ public class Constants {
     public static int LOG_WITHDRAW= 1;//提现
 	public static int LOG_AWARD_REDPACKET = 3;//发红包
 	public static int LOG_FETCH_REDPACKET = 4;//接红包
+	public static int LOG_AWARD_TASK = 5;//发任务
+	public static int LOG_FETCH_TASK = 6;//接任务
+	public static int LOG_REFUND_READPACKET = 7;//红包退款
+	public static int LOG_REFUND_TASK = 8;//任务退款
 
 	
 }

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import com.award.sy.dao.WalletLogDao;
 import com.award.sy.entity.WalletLog;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -172,6 +173,39 @@ public class WalletServiceImpl implements WalletService {
         where.and("user_id", C.EQ, userId);
         int j = walletDao.update(wallet, where);
         return 0 < j;
+    }
+    
+    @Transactional
+    @Override
+    public boolean refund(String record_sn,long user_id,int log_type,Double changemoney,Double money) {
+    	 String date = DateUtil.getNowTime();
+         //更新支付的状态
+         WherePrams where = new WherePrams();
+         where.and("record_sn", C.EQ, record_sn);
+         WalletRecord walletRecord = new WalletRecord();
+         walletRecord.setType(Constants.ORDER_TYPE_BACK);
+         walletRecord.setFetch_time(date);
+         walletRecord.setFetch_status(1);
+         int x = walletRecordDao.updateLocal(walletRecord, where);
+         //更新日志
+         WalletLog walletLog = new WalletLog();
+         walletLog.setRecord_sn(record_sn);
+         walletLog.setUser_id(user_id);
+         walletLog.setType(log_type);
+         walletLog.setChange_money(changemoney);
+         walletLog.setMoney(money);
+         walletLog.setCreate_time(date);
+         int j = walletLogDao.addLocal(walletLog);
+
+
+         //更新金额
+         int i = walletDao.excuse("update tb_wallet set money =" + money + " where user_id = " + user_id);
+
+         if (0 < j && 0 < i && 0 < x) {
+             return true;
+         } else {
+             return false;
+         }
     }
 
 }

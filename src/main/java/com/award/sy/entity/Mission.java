@@ -40,7 +40,11 @@ public class Mission extends Po {
 	
 	private Integer anonymous;
 	
-	private Long to_user;
+	private String record_sn;
+	
+	private Long to_id;
+	
+	private Integer to;
 	
 	public Mission() {
 		super();
@@ -196,13 +200,33 @@ public class Mission extends Po {
 		this.anonymous = anonymous;
 	}
 
-	public Long getTo_user() {
-		return to_user;
+	public Long getTo_id() {
+		return to_id;
 	}
 
 
-	public void setTo_user(Long to_user) {
-		this.to_user = to_user;
+	public void setTo_id(Long to_id) {
+		this.to_id = to_id;
+	}
+
+
+	public String getRecord_sn() {
+		return record_sn;
+	}
+
+
+	public void setRecord_sn(String record_sn) {
+		this.record_sn = record_sn;
+	}
+
+
+	public Integer getTo() {
+		return to;
+	}
+
+
+	public void setTo(Integer to) {
+		this.to = to;
 	}
 
 
@@ -215,7 +239,8 @@ public class Mission extends Po {
 				+ ", create_time=" + create_time + ", start_time=" + start_time
 				+ ", accept_id=" + accept_id + ", status=" + status
 				+ ", accept_time=" + accept_time + ", finish_time=" + finish_time 
-				+ ", anonymous=" + anonymous + ", to_user=" + to_user
+				+ ", anonymous=" + anonymous + ", to_id=" + to_id
+				+ ", record_sn=" + record_sn + ", to=" + to
 				+ "]";
 	}
 	
