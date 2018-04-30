@@ -192,10 +192,10 @@ public class RedPacketOpenController {
                     RedPacket redPacket = redPacketService.getRedPacketByRecordSN(record_sn);
                     User fromUser = userService.getUserById(user_id);
                     //个人,直接获取个人Id并发送至环信
-                    if (Constants.TO_TYPE_PRIVATE == redPacket.getTo()) {
+                    if (Constants.TO_TYPE_PRIVATE == redPacket.getTo_type()) {
                         User toUser = userService.getUserById(redPacket.getTo_id());
                         ImUtils.sendTextMessage("users", new String[]{toUser.getUser_name()}, "WtwdMissionTxt:好友" + fromUser.getUser_name() + "发布了一个红包，点击查看:" + redPacket.getRedpacket_id());
-                    } else if (Constants.TO_TYPE_GROUP == redPacket.getTo()) {
+                    } else if (Constants.TO_TYPE_GROUP == redPacket.getTo_type()) {
                         //群发，获取群成员的名称，并发送
                         Group group = groupService.getGroupById(redPacket.getTo_id());
                         if (null !=group) {

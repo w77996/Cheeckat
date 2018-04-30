@@ -65,4 +65,10 @@ public interface RedPacketService {
 	 * @return
 	 */
 	int editRedPacketPayStatus(String record_sn, int pay_status);
+
+	/**
+	 * 获取失效的红包
+	 * @return
+	 */
+	List<RedPacket> getExpiredRedPacket();
 }

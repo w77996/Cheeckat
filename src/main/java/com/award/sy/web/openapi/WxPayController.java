@@ -252,11 +252,11 @@ public class WxPayController {
 								RedPacket redPacket = redPacketService.getRedPacketByRecordSN(out_trade_no);
 								User fromUser = userService.getUserById(redPacket.getPublish_id());
 								//个人,直接获取个人Id并发送至环信
-								if(Constants.TO_TYPE_PRIVATE == redPacket.getTo()){
+								if(Constants.TO_TYPE_PRIVATE == redPacket.getTo_type()){
 									User toUser = userService.getUserById(redPacket.getTo_id());
 
 									ImUtils.sendTextMessage("users", new String[]{toUser.getUser_name()}, "WtwdMissionTxt:好友"+fromUser.getNick_name()+"发布了一个任务，点击查看:"+redPacket.getRedpacket_id());
-								}else if (Constants.TO_TYPE_GROUP == redPacket.getTo()){
+								}else if (Constants.TO_TYPE_GROUP == redPacket.getTo_type()){
 									//群发，获取群成员的名称，并发送
 									Group group = groupService.getGroupById(redPacket.getTo_id());
 									if(group != null) {
@@ -271,7 +271,7 @@ public class WxPayController {
 							if(true == tag){
 								Mission mission = missionService.getMissionByRecordSN(out_trade_no);
 								User user = userService.getUserById(mission.getPublish_id());
-						    	if(mission.getTo() == 0){//如果发给所有人
+						    	if(mission.getTo_type() == 0){//如果发给所有人
 							    	List<Map<String,Object>> fList = friendService.getUserFriends(mission.getPublish_id());							    	
 							    	if(fList.size() > 20) {//每次只能发送给20个人
 							    		int count = fList.size() / 20;
@@ -309,7 +309,7 @@ public class WxPayController {
 							    		}
 							    		ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission.getMission_id());
 							    	}
-							    }else if(mission.getTo() == 1) {//发给个人
+							    }else if(mission.getTo_type() == 1) {//发给个人
 							    	User toUser = userService.getUserById(mission.getTo_id());
 							    	if(toUser != null) {
 							    		ImUtils.sendTextMessage("users", new String[]{toUser.getUser_name()}, "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission.getMission_id());

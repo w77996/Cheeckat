@@ -115,8 +115,17 @@ public class RedPacketServiceImpl implements RedPacketService {
 		WherePrams where = new WherePrams();
 		where.and("record_sn",C.EQ,record_sn);
 		RedPacket redPacket = new RedPacket();
-		redPacket.setRecord_sn(record_sn);
+		redPacket.setPay_status(pay_status);
 		return redPacketDao.update(redPacket,where);
+	}
+
+	@Override
+	public List<RedPacket> getExpiredRedPacket() {
+		WherePrams where = new WherePrams();
+		where.and("pay_status",C.EQ,Constants.PAY_STATUS_SUCCESS);
+		where.and("status",C.EQ,0);
+		where.and("create_time",C.IXAO,DateUtil.getDayBeginDate(System.currentTimeMillis()));
+		return redPacketDao.list(where);
 	}
 
 
