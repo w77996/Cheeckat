@@ -170,7 +170,6 @@ public class Constants {
 
 	public static final String CONTEXT_PATH = "http://121.196.232.11:9883/Award";
 	//public static final String CONTEXT_PATH = "http://192.168.13.235:8080";
-	public static final String HEAD_IMG_DIR_PATH="D:\\360安全浏览器下载\\apache-tomcat-8.0.0-RC1/Award/upload/head/image/";
 	public static final String HEAD_IMG_PATH="/upload/head/image/";
 	public static final String USER_IMG_PATH="/upload/user/image/";
 

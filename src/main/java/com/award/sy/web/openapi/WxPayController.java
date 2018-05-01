@@ -235,6 +235,7 @@ public class WxPayController {
 							+ "</xml> ";
 
 					walletRecordService.editWalletOrderPayStatus(out_trade_no,Constants.PAY_STATUS_FAIL);
+					redPacketService.editRedPacketPayStatus(out_trade_no,Constants.PAY_STATUS_FAIL);
 				} else {
 					if (Constants.PAY_STATUS_WAIT == pay_status) {// 支付的价格
 						// 订单状态的修改。根据实际业务逻辑执行
@@ -255,12 +256,12 @@ public class WxPayController {
 								if(Constants.TO_TYPE_PRIVATE == redPacket.getTo_type()){
 									User toUser = userService.getUserById(redPacket.getTo_id());
 
-									ImUtils.sendTextMessage("users", new String[]{toUser.getUser_name()}, "WtwdMissionTxt:好友"+fromUser.getNick_name()+"发布了一个任务，点击查看:"+redPacket.getRedpacket_id());
+									ImUtils.sendTextMessage("users", new String[]{toUser.getUser_name()}, "WtwdRedPacketTxt:好友"+fromUser.getNick_name()+"发布了一个任务，点击查看:"+redPacket.getRedpacket_id());
 								}else if (Constants.TO_TYPE_GROUP == redPacket.getTo_type()){
 									//群发，获取群成员的名称，并发送
 									Group group = groupService.getGroupById(redPacket.getTo_id());
 									if(group != null) {
-										ImUtils.sendTextMessage("chatgroups", new String[]{group.getIm_group_id()}, "WtwdMissionTxt:好友"+fromUser.getNick_name()+"发布了一个任务，点击查看:"+redPacket.getRedpacket_id());
+										ImUtils.sendTextMessage("chatgroups", new String[]{group.getIm_group_id()}, "WtwdRedPacketTxt:好友"+fromUser.getNick_name()+"发布了一个任务，点击查看:"+redPacket.getRedpacket_id());
 									}
 								}
 							}

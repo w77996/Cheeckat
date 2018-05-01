@@ -82,6 +82,8 @@ public class RedPacketServiceImpl implements RedPacketService {
 		redPacket.setRecord_sn(record_sn);
 		redPacket.setMoney(Double.parseDouble(money));
 		redPacket.setCreate_time(DateUtil.getNowTime());
+		redPacket.setTo_type(Integer.parseInt(to));
+		redPacket.setTo_id(Long.parseLong(to_id));
 		int i = redPacketDao.addLocal(redPacket);
 		return 0 < i;
 	}
@@ -116,7 +118,7 @@ public class RedPacketServiceImpl implements RedPacketService {
 		where.and("record_sn",C.EQ,record_sn);
 		RedPacket redPacket = new RedPacket();
 		redPacket.setPay_status(pay_status);
-		return redPacketDao.update(redPacket,where);
+		return redPacketDao.updateLocal(redPacket,where);
 	}
 
 	@Override
