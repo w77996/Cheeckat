@@ -138,4 +138,12 @@ public class GroupDetailsServiceImpl implements GroupDetailsService{
 		return groupDetails;
 	}
 
+	@Override
+	public List<Map<String, Object>> getUserGroupByImId(long imgroup) {
+		// TODO Auto-generated method stub
+		List<Map<String,Object>> list = groupDetailsDao.listBySql("select u.* ,gd.is_admin,c.group_id from (select g.* from tb_group g where g.im_group_id ="+imgroup+") c, tb_user u left OUTER join tb_group_details gd on gd.member_id = u.user_id where  c.group_id = gd.group_id");
+
+		return list;
+	}
+
 }

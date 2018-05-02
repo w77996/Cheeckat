@@ -186,12 +186,12 @@ public class WalletController {
 	 */
 	@RequestMapping(value = "/open/getBalanceDetail",produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String getBalanceDetail(@RequestParam String userId){
+	public String getBalanceDetail(@RequestParam String userId,@RequestParam String start,@RequestParam String count){
 		if(StringUtils.isBlank(userId)){
 			return JsonUtils.writeJson(0, 0, "参数错误");
 		}
 
-		List<Map<String,Object>> list = walletLogService.getWalletLogByUserId(Long.parseLong(userId));
+		List<Map<String,Object>> list = walletLogService.getWalletLogByUserId(Long.parseLong(userId),Integer.parseInt(start),Integer.parseInt(count));
 		return JsonUtils.writeJson(1, "请求成功", list, "object");
 	}
 }

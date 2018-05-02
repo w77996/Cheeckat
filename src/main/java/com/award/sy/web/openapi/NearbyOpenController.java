@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import com.award.sy.common.DateUtil;
 import com.award.sy.entity.Location;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -133,10 +134,12 @@ public class NearbyOpenController {
 			newLocation.setLng(Double.parseDouble(lng));
 			newLocation.setLat(Double.parseDouble(lat));
 			newLocation.setUser_id(Long.parseLong(userId));
+			newLocation.setLast_time(DateUtil.getNowTime());
 			i = locationService.addLocation(newLocation);
 		}else{
 			location.setLng(Double.parseDouble(lng));
 			location.setLat(Double.parseDouble(lat));
+			location.setLast_time(DateUtil.getNowTime());
 			i = locationService.editLocation(location);
 		}
 		if(0 < i){

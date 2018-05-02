@@ -83,7 +83,7 @@ public class RedPacketServiceImpl implements RedPacketService {
 		redPacket.setMoney(Double.parseDouble(money));
 		redPacket.setCreate_time(DateUtil.getNowTime());
 		redPacket.setTo_type(Integer.parseInt(to));
-		redPacket.setTo_id(Long.parseLong(to_id));
+		redPacket.setTo_id(to_id);
 		int i = redPacketDao.addLocal(redPacket);
 		return 0 < i;
 	}

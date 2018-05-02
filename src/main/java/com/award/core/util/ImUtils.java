@@ -83,7 +83,7 @@ public class ImUtils {
 		return isSuccess;
 	}
 	
-	public static boolean sendTextMessage(String targetType,String[] target,String msg) {
+	public static boolean sendTextMessage(String targetType,String[] target,String msg,String userName) {
 		boolean isSuccess = true;
 		JSONObject jsonObj = new JSONObject(); 
 	    jsonObj.put("target_type", targetType);
@@ -92,6 +92,9 @@ public class ImUtils {
 	    msgJson.put("type", "txt");
 	    msgJson.put("msg", msg);//msg格式为WtwdMissionTxt:好友X发布了一个任务，点击查看:任务id    WtwdRedPacketTxt:好友发送了一个红包：红包id
 	    jsonObj.put("msg", msgJson);
+	    if(!StringUtils.isBlank(userName)){
+			jsonObj.put("from", userName);
+		}
 		String result = post("messages",jsonObj,false,true);
 		if(!StringUtils.isBlank(result)) {
 		    	JSONObject jo = JSON.parseObject(result);

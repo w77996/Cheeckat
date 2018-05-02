@@ -60,6 +60,7 @@ public class GroupOpenController {
 			long groupId = (long) list.get(i).get("group_id");
 			result.put("groupId",groupId);
 			result.put("groupName",list.get(i).get("group_name"));
+			result.put("im_group_id",list.get(i).get("im_group_id"));
 			result.put("creatTime", list.get(i).get("create_time"));
 			result.put("isAdmin",list.get(i).get("is_admin")+"");
 			//获取groupId下的用户信息
@@ -163,7 +164,7 @@ public class GroupOpenController {
 		}
 		Map<String,Object> result = new HashMap<String,Object>();
 		//获取groupId下的用户信息
-		List<Map<String,Object>> userList = groupDetailsService.getUserGroupDetails(group_id);
+		List<Map<String,Object>> userList = groupDetailsService.getUserGroupByImId(group_id);
 
 		return JsonUtils.writeJson(1, "获取成功", userList, "object");
 	}

@@ -20,5 +20,5 @@ public interface WalletLogService {
      * @param l
      * @return
      */
-    List<Map<String,Object>> getWalletLogByUserId(long l);
+    List<Map<String,Object>> getWalletLogByUserId(long l,int start,int count);
 }

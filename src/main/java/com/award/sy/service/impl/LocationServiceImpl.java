@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.award.sy.common.DateUtil;
 import org.springframework.stereotype.Service;
 
 import com.award.core.beans.WherePrams;
@@ -50,7 +51,7 @@ public class LocationServiceImpl implements LocationService{
 	
 	public int editLocation(Location location){
 		WherePrams where = new WherePrams();
-		where.and("location_id", C.EQ, location.getLoc_id());
+		where.and("loc_id", C.EQ, location.getLoc_id());
 		return locationDao.updateLocal(location,where);
 	}
 	

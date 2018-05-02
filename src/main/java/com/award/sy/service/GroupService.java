@@ -67,4 +67,6 @@ public interface GroupService {
 	List<Map<String,Object>> getUserGroup(long groupId);
 	
 	int deleteGroup(long groupId);
+
+	Group getGroupByImId(long imgroupId);
 }

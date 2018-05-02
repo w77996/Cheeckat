@@ -40,13 +40,10 @@ public class ChatOpenController {
 	
 	@Resource
 	private GroupDetailsService groupDetailsService;
-	
+
 	/**
-	 * 查询附近的人
-	 * 
+	 * c查询附近的人
 	 * @param request
-	 * @param query
-	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "/open/addGroup", produces = "text/html;charset=UTF-8")

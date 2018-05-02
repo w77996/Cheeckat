@@ -89,7 +89,13 @@ public interface GroupDetailsService {
 	 * @return
 	 */
     GroupDetails getUserGroupDetailsIsAdmin(long user_id, long group_id, int is_admin);
-	
+
+	/**
+	 *
+	 * @param imgroup
+	 * @return
+	 */
+    List<Map<String,Object>> getUserGroupByImId(long imgroup);
 /*	User getGroupAdmin(long )*/
 
 }

@@ -333,7 +333,7 @@ public class MissionOpenController {
 				    				userNames = userNames.concat(",").concat((String)map.get("user_name"));
 				    			}
 			    			}
-			    			ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
+			    			ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission2.getMission_id(),user.getUser_name());
 			    		}
 			    		int mod = fList.size() % 20;
 			    		String userNames = "";
@@ -345,7 +345,7 @@ public class MissionOpenController {
 			    				userNames = userNames.concat(",").concat((String)map.get("user_name"));
 			    			}
 			    		}
-			    		ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
+			    		ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission2.getMission_id(),user.getUser_name());
 			    	}else if(fList.size() > 0) {//每次只能发送给20个人
 			    		String userNames = "";
 			    		for(Map<String,Object> map : fList) {
@@ -355,17 +355,17 @@ public class MissionOpenController {
 			    				userNames = userNames.concat(",").concat((String)map.get("user_name"));
 			    			}
 			    		}
-			    		ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
+			    		ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission2.getMission_id(),user.getUser_name());
 			    	}
 			    }else if(Integer.parseInt(to) == 1) {//发给个人
 			    	User toUser = userService.getUserById(Long.parseLong(toId));
 			    	if(toUser != null) {
-			    		ImUtils.sendTextMessage("users", new String[]{toUser.getUser_name()}, "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
+			    		ImUtils.sendTextMessage("users", new String[]{toUser.getUser_name()}, "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission2.getMission_id(),user.getUser_name());
 			    	}		    	
 			    }else {//发群
 			    	Group group = groupService.getGroupById(Long.parseLong(toId));
 			    	if(group != null) {
-			    		ImUtils.sendTextMessage("chatgroups", new String[]{group.getIm_group_id()}, "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission2.getMission_id());
+			    		ImUtils.sendTextMessage("chatgroups", new String[]{group.getIm_group_id()}, "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission2.getMission_id(),user.getUser_name());
 			    	}		    	
 			    }
 			}		    	

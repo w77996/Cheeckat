@@ -36,7 +36,7 @@ public class RedPacket extends Po {
 
     private Integer to_type;
 
-    private Long to_id;
+    private String to_id;
 
     private Integer pay_status;
 
@@ -129,11 +129,11 @@ public class RedPacket extends Po {
         this.to_type = to_type;
     }
 
-    public Long getTo_id() {
+    public String getTo_id() {
         return to_id;
     }
 
-    public void setTo_id(Long to_id) {
+    public void setTo_id(String to_id) {
         this.to_id = to_id;
     }
 

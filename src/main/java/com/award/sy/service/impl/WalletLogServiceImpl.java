@@ -47,9 +47,9 @@ public class WalletLogServiceImpl implements WalletLogService{
      * @return
      */
     @Override
-    public List<Map<String, Object>> getWalletLogByUserId(long l) {
+    public List<Map<String, Object>> getWalletLogByUserId(long l,int start,int count) {
 
-        List<Map<String,Object>> list = walletLogDao.listBySql("select * from tb_wallet_log where user_id = "+l+"order by create_time desc");
+        List<Map<String,Object>> list = walletLogDao.listBySql("select * from tb_wallet_log where user_id = "+l+" order by create_time desc");
         return list;
     }
 }

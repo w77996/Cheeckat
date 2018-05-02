@@ -53,7 +53,13 @@ public class GroupServiceImp implements GroupService{
 	public Group getGroupById(long groupId){
 		return groupDao.get(groupId);
 	}
-	
+
+	public Group getGroupByImId(long imgroupId){
+		WherePrams wherePrams = new WherePrams();
+		wherePrams.and("im_group_id",C.EQ,imgroupId);
+		return groupDao.get(wherePrams);
+	}
+
 	public int addGroup(Group group){
 		return groupDao.addLocal(group);
 	}
@@ -104,7 +110,7 @@ public class GroupServiceImp implements GroupService{
 	@Override
 	public List<Map<String, Object>> getUserGroup(long userId) {
 		// TODO Auto-generated method stub
-		List<Map<String,Object>> list = groupDao.listBySql("select g.group_name,c.group_id,c.is_admin,g.create_time from tb_group g,(select DISTINCT gd.group_id,gd.is_admin from tb_group_details gd where gd.member_id ="+userId+") c where g.group_id = c.group_id");
+		List<Map<String,Object>> list = groupDao.listBySql("select g.group_name,c.group_id,g.im_group_id,c.is_admin,g.create_time from tb_group g,(select DISTINCT gd.group_id,gd.is_admin from tb_group_details gd where gd.member_id ="+userId+") c where g.group_id = c.group_id");
 		return list;
 	}
 

@@ -76,7 +76,7 @@ public class RedPacketOpenController {
             return JsonUtils.writeJson(0, 18, "红包领取失败");
         }
         if (redPacket.getStatus() == Constants.FETCH_SUCCESS) {
-            if (redPacket.getPublish_id() == Long.parseLong(userId)) {
+            if (redPacket.getPublish_id() == user.getUser_id()) {
                 //查询被领取人的信息
                 User acceptUser = userService.getUserById(redPacket.getAccept_id());
                 Map<String, Object> map = new HashMap<>();
@@ -86,18 +86,18 @@ public class RedPacketOpenController {
             }
             return JsonUtils.writeJson(0, 17, "红包被领取");
         }
-        if (redPacket.getPublish_id() == Long.parseLong(userId)) {
+        if (redPacket.getPublish_id() == user.getUser_id()) {
             return JsonUtils.writeJson(0, 36, "不能领取自己的红包");
         }
         //更新红包状态
-        boolean isRedPacket = redPacketService.editRedPacketFetchStatus(redPacket.getRecord_sn(), Long.parseLong(userId), Constants.FETCH_SUCCESS);
+        boolean isRedPacket = redPacketService.editRedPacketFetchStatus(redPacket.getRecord_sn(), user.getUser_id(), Constants.FETCH_SUCCESS);
         if (false == isRedPacket) {
             return JsonUtils.writeJson(0, 18, "红包领取失败");
         }
         //更新状态
-        Wallet wallet = walletService.findWalletByUserId(Long.parseLong(userId));
+        Wallet wallet = walletService.findWalletByUserId(user.getUser_id());
         Double total_fee = wallet.getMoney() + redPacket.getMoney();
-        boolean isWalletSuccess = walletService.editUserWalletFetchBalance(redPacket.getRecord_sn(), Long.parseLong(userId), Constants.LOG_FETCH_REDPACKET, redPacket.getMoney(), total_fee);
+        boolean isWalletSuccess = walletService.editUserWalletFetchBalance(redPacket.getRecord_sn(), user.getUser_id(), Constants.LOG_FETCH_REDPACKET, redPacket.getMoney(), total_fee);
         if (false == isWalletSuccess) {
             return JsonUtils.writeJson(0, 18, "红包领取失败");
         }
@@ -125,32 +125,30 @@ public class RedPacketOpenController {
      */
     @RequestMapping(value = "/open/payRedPacket", produces = "text/html;charset=UTF-8")
     @ResponseBody
-    public String payRedPacket(@RequestParam String userId,
-                               @RequestParam String payType, @RequestParam String money,
-                               @RequestParam String type, @RequestParam String to, @RequestParam String to_id, HttpServletRequest request) {
+    public String payRedPacket(@RequestParam String payType, @RequestParam String money,
+                               @RequestParam String type, @RequestParam String to, @RequestParam String to_id,@RequestParam String userName, HttpServletRequest request) {
         System.out.println("进入");
-        if (StringUtils.isBlank(userId) || StringUtils.isBlank(payType)
-                || StringUtils.isBlank(money) || StringUtils.isBlank(type) || StringUtils.isBlank(to) || StringUtils.isBlank(to_id)) {
+        if ( StringUtils.isBlank(payType)
+                || StringUtils.isBlank(money) || StringUtils.isBlank(type) || StringUtils.isBlank(to) || StringUtils.isBlank(to_id)||StringUtils.isBlank(userName)) {
             return JsonUtils.writeJson(0, 0, "参数错误");
         }
         String result = JsonUtils.writeJson(0, 0, "参数错误");
         int pay_type = Integer.parseInt(payType);
         int taskType = Integer.parseInt(type);
-        long user_id = Long.parseLong(userId);
         Double price = Double.parseDouble(money);
-        User user = userService.getUserById(user_id);
+        User user = userService.getUserByUserName(userName);
         if (null == user) {
             return JsonUtils.writeJson(0, 4, "用户不存在");
         }
         if (Constants.PAY_TYPE_WECHAT == pay_type) {
             if (Constants.ORDER_TYPE_REDPACKET == taskType) {
                 //微信支付发红包
-                String record_sn = walletRecordService.addWalletRecordOrder(user_id, money, Constants.PAY_TYPE_WECHAT, Constants.ORDER_TYPE_REDPACKET);
+                String record_sn = walletRecordService.addWalletRecordOrder(user.getUser_id(), money, Constants.PAY_TYPE_WECHAT, Constants.ORDER_TYPE_REDPACKET);
                 if (null == record_sn) {
                     return JsonUtils.writeJson(0, 19, "订单生成失败");
                 }
                 //生成红包
-                boolean isRedPacketSuccess = redPacketService.addRedpacketRecord(record_sn, userId, money, to, to_id);
+                boolean isRedPacketSuccess = redPacketService.addRedpacketRecord(record_sn, String.valueOf(user.getUser_id()), money, to, to_id);
                 if (false == isRedPacketSuccess) {
                     return JsonUtils.writeJson(0, 22, "红包发送失败");
                 }
@@ -163,7 +161,7 @@ public class RedPacketOpenController {
             }
         } else if (Constants.PAY_TYPE_BALANCE == pay_type) {
             if (Constants.ORDER_TYPE_REDPACKET == taskType) {
-                Wallet wallet = walletService.findWalletByUserId(user_id);
+                Wallet wallet = walletService.findWalletByUserId(user.getUser_id());
                 if (null == wallet) {
                     return JsonUtils.writeJson(0, 0, "参数错误");
                 }
@@ -172,19 +170,19 @@ public class RedPacketOpenController {
                     return JsonUtils.writeJson(0, 21, "余额不足");
                 }
                 //生成订单
-                String record_sn = walletRecordService.addWalletRecordOrder(user_id, money, Constants.PAY_TYPE_BALANCE, Constants.ORDER_TYPE_REDPACKET);
+                String record_sn = walletRecordService.addWalletRecordOrder(user.getUser_id(), money, Constants.PAY_TYPE_BALANCE, Constants.ORDER_TYPE_REDPACKET);
                 if (null == record_sn) {
                     return JsonUtils.writeJson(0, 22, "红包发送失败");
                 }
                 //生成红包，待支付
-                boolean isRedPacketSuccess = redPacketService.addRedpacketRecord(record_sn, userId, money, to, to_id);
+                boolean isRedPacketSuccess = redPacketService.addRedpacketRecord(record_sn, String.valueOf(user.getUser_id()), money, to, to_id);
                 if (false == isRedPacketSuccess) {
                     return JsonUtils.writeJson(0, 22, "红包发送失败");
                 }
                 //修改金额,更新订单支付状态，插入余额记录
                 Double total_fee = wallet.getMoney() - Double.parseDouble(money);
                 String changemoney = "-" + money;
-                boolean isWalletSuccess = walletService.editUserWalletPayBalance(record_sn, user_id, Constants.LOG_AWARD_REDPACKET, Double.parseDouble(changemoney), total_fee);
+                boolean isWalletSuccess = walletService.editUserWalletPayBalance(record_sn, user.getUser_id(), Constants.LOG_AWARD_REDPACKET, Double.parseDouble(changemoney), total_fee);
                 if (false == isWalletSuccess) {
                     return JsonUtils.writeJson(0, 22, "红包发送失败");
                 } else {
@@ -193,17 +191,17 @@ public class RedPacketOpenController {
                     redPacketService.editRedPacketPayStatus(record_sn,Constants.PAY_STATUS_SUCCESS);
                     //判断to类型是群发还是个人红包
                     RedPacket redPacket = redPacketService.getRedPacketByRecordSN(record_sn);
-                    User fromUser = userService.getUserById(user_id);
+                    User fromUser = userService.getUserById(user.getUser_id());
                     //个人,直接获取个人Id并发送至环信
                     if (Constants.TO_TYPE_PRIVATE == redPacket.getTo_type()) {
-                        User toUser = userService.getUserById(redPacket.getTo_id());
-                        ImUtils.sendTextMessage("users", new String[]{toUser.getUser_name()}, "WtwdRedPacketTxt:好友" + fromUser.getNick_name()  + "发布了一个红包，点击查看:" + redPacket.getRedpacket_id());
-                        ImUtils.sendTextMessage("users", new String[]{fromUser.getUser_name()}, "WtwdRedPacketTxt:" + fromUser.getNick_name()  + "发布了一个红包，点击查看:" + redPacket.getRedpacket_id());
+                        User toUser = userService.getUserByUserName(redPacket.getTo_id());
+                        ImUtils.sendTextMessage("users", new String[]{toUser.getUser_name()}, "WtwdRedPacketTxt:好友" + fromUser.getNick_name()  + "发布了一个红包，点击查看:" + redPacket.getRedpacket_id(),fromUser.getUser_name());
+                        //ImUtils.sendTextMessage("users", new String[]{fromUser.getUser_name()}, "WtwdRedPacketTxt:" + fromUser.getNick_name()  + "发布了一个红包，点击查看:" + redPacket.getRedpacket_id());
                     } else if (Constants.TO_TYPE_GROUP == redPacket.getTo_type()) {
                         //群发，获取群成员的名称，并发送
-                        Group group = groupService.getGroupById(redPacket.getTo_id());
+                        Group group = groupService.getGroupByImId(Long.parseLong(redPacket.getTo_id()));
                         if (null !=group) {
-                            ImUtils.sendTextMessage("chatgroups", new String[]{group.getIm_group_id()}, "WtwdRedPacketTxt:好友" + fromUser.getNick_name()  + "发布了一个红包，点击查看:" + redPacket.getRedpacket_id());
+                            ImUtils.sendTextMessage("chatgroups", new String[]{group.getIm_group_id()}, "WtwdRedPacketTxt:好友" + fromUser.getNick_name()  + "发布了一个红包，点击查看:" + redPacket.getRedpacket_id(),fromUser.getUser_name());
 
                         }
                     }
