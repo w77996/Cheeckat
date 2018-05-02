@@ -131,7 +131,7 @@ public class GroupDetailsServiceImpl implements GroupDetailsService{
 	@Override
 	public GroupDetails getUserGroupDetailsIsAdmin(long user_id, long group_id, int is_admin) {
 		WherePrams where = new WherePrams();
-		where.and("user_id",C.EQ,user_id);
+		where.and("member_id",C.EQ,user_id);
 		where.and("group_id",C.EQ,group_id);
 		where.and("is_admin",C.EQ,is_admin);
 		GroupDetails groupDetails = groupDetailsDao.get(where);

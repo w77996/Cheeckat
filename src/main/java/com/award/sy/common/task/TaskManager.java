@@ -48,12 +48,12 @@ public class TaskManager {
 		}
 		System.out.println("专注于前端开发技术和研究的技术博客</span>");
 	}
-	@Scheduled(cron = "0 0/10 * * * ?")
+	@Scheduled(cron = "0/10 * * * * ?")
 	public void task1(){
 		System.out.println("我每10分钟都要执行一次，不管是刮风还是下雨");
 	}
 	
-	@Scheduled(cron = "0 0 2 * * ?")
+	@Scheduled(cron = "0 5 0 * * ?")
 	public void task2(){
 		System.out.println("我每天凌晨两点执行");
 	}

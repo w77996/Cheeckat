@@ -215,7 +215,7 @@ public class WxPayController {
 				String transaction_id = (String) packageParams
 						.get("transaction_id"); // 微信支付订单号
 				
-				WalletRecord walletRecord = walletRecordService.findWallerOrderByRecordSN(out_trade_no);
+				WalletRecord walletRecord = walletRecordService.getWallerOrderByRecordSN(out_trade_no);
 				//Map<String, Object> walletRecordMap = list.get(0);
 				Double money =  walletRecord.getMoney();
 				int pay_status =  walletRecord.getPay_status();
@@ -257,6 +257,7 @@ public class WxPayController {
 									User toUser = userService.getUserById(redPacket.getTo_id());
 
 									ImUtils.sendTextMessage("users", new String[]{toUser.getUser_name()}, "WtwdRedPacketTxt:好友"+fromUser.getNick_name()+"发布了一个任务，点击查看:"+redPacket.getRedpacket_id());
+									ImUtils.sendTextMessage("users", new String[]{fromUser.getUser_name()}, "WtwdRedPacketTxt:" + fromUser.getNick_name() + "发布了一个红包，点击查看:" + redPacket.getRedpacket_id());
 								}else if (Constants.TO_TYPE_GROUP == redPacket.getTo_type()){
 									//群发，获取群成员的名称，并发送
 									Group group = groupService.getGroupById(redPacket.getTo_id());
