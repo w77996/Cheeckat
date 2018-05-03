@@ -3,9 +3,11 @@ package com.award.sy.web.openapi;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.award.core.util.PropertiesUtil;
 import com.award.sy.entity.Wallet;
 import com.award.sy.service.WalletService;
 import org.apache.commons.lang3.StringUtils;
@@ -69,8 +71,10 @@ public class UserOpenController {
         if (null == user) {
             return JsonUtils.writeJson(0, 4, "用户不存在");
         }
+        Properties properties =  new PropertiesUtil().getProperites("config.properties");
+        String context_path = properties.getProperty("context_path", "");
         //获取绝对路径
-        String httpPath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+"/";
+       // String httpPath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+"/";
 
         String filePathName= request.getSession().getServletContext().getRealPath("/")+"/"+Constants.HEAD_IMG_PATH;;//存放路径
         System.out.println(filePathName);
@@ -85,7 +89,7 @@ public class UserOpenController {
             return JsonUtils.writeJson(0, 24, "图片上传失败");
         }
         user.setBirth(birth);
-        user.setHead_img(httpPath+Constants.HEAD_IMG_PATH  + fileName);
+        user.setHead_img(context_path+Constants.HEAD_IMG_PATH  + fileName);
         user.setHeight(Integer.parseInt(height));
         user.setSex(Integer.parseInt(sex));
         user.setUser_id(user_id);
@@ -146,7 +150,10 @@ public class UserOpenController {
         }
 
         //获取绝对路径
-        String httpPath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+"/";
+       // String httpPath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+"/";
+
+        Properties properties =  new PropertiesUtil().getProperites("config.properties");
+        String context_path = properties.getProperty("context_path", "");
 
         String filePathName= request.getSession().getServletContext().getRealPath("/")+"/"+Constants.HEAD_IMG_PATH;;//存放路径
         System.out.println(filePathName);
@@ -154,7 +161,7 @@ public class UserOpenController {
         if (!file.exists()) {
             file.mkdirs();
         }
-       // System.out.println(filePathName);
+        System.out.println("filePathName"+filePathName);
         String fileName = System.currentTimeMillis() + String.valueOf((int) ((Math.random() * 9 + 1) * 100000)) + ".jpg";
         boolean isSuccess = FileUtil.CreateImgBase64(headImg, filePathName + fileName);
         if (!isSuccess) {
@@ -174,7 +181,7 @@ public class UserOpenController {
         }
         User user = new User();
         user.setBirth(birth);
-        user.setHead_img(httpPath+Constants.HEAD_IMG_PATH + fileName);
+        user.setHead_img(context_path+Constants.HEAD_IMG_PATH + fileName);
         user.setHeight(Integer.parseInt(height));
         user.setSex(Integer.parseInt(sex));
         user.setNick_name(userName);

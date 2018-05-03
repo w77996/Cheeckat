@@ -76,7 +76,7 @@ public class LocationServiceImpl implements LocationService{
 	public List<Map<String,Object>> getLimitLocationByLatLng(double lat, double lng,
 			int start, int count, long userId) {
 		// TODO Auto-generated method stub
-		List<Map<String,Object>> list = locationDao.listBySql("select a.*,b.head_img,b.birth,b.user_name,b.sex,b.country,b.invisible,(POWER(MOD(ABS(lng - "+lng+"),360),2) + POWER(ABS(lat - "+lat+"),2)) AS distance from tb_location a, tb_user b where a.user_id = b.user_id and a.user_id <> "+userId+" ORDER BY distance LIMIT "+start+","+count);
+		List<Map<String,Object>> list = locationDao.listBySql("select a.*,b.head_img,b.birth,b.user_name,b.sex,b.country,b.nick_name,b.invisible,(POWER(MOD(ABS(lng - "+lng+"),360),2) + POWER(ABS(lat - "+lat+"),2)) AS distance from tb_location a, tb_user b where a.user_id = b.user_id and a.user_id <> "+userId+" ORDER BY distance LIMIT "+start+","+count);
 		//SELECT lng,lat, (POWER(MOD(ABS(lng - $lng),360),2) + POWER(ABS(lat - $lat),2)) AS distance FROM `user_location` ORDER BY distance LIMIT 100 
 		return list;
 	}

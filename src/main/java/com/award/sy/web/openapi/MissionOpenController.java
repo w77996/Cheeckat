@@ -118,7 +118,7 @@ public class MissionOpenController {
 		    if(user != null) {
 		    	Mission mission = missionService.getMissionById(Long.parseLong(missionId));
 		    	if(mission != null) {
-		    		if(mission.getSex() == user.getSex()) {
+		    		if(mission.getSex() == user.getSex() || mission.getSex() == 3) {
 		    			if(mission.getPublish_id() != user.getUser_id()) {
 		    			if(mission.getAccept_id() == null) {
 		    				mission.setAccept_id(user.getUser_id());
