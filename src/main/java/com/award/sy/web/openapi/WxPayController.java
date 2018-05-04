@@ -311,12 +311,12 @@ public class WxPayController {
 							    		ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission.getMission_id(),user.getUser_name());
 							    	}
 							    }else if(mission.getTo_type() == 1) {//发给个人
-							    	User toUser = userService.getUserById(mission.getTo_id());
+							    	User toUser = userService.getUserByUserName(mission.getTo_id());
 							    	if(toUser != null) {
 							    		ImUtils.sendTextMessage("users", new String[]{toUser.getUser_name()}, "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission.getMission_id(),user.getUser_name());
 							    	}		    	
 							    }else {//发群
-							    	Group group = groupService.getGroupById(mission.getTo_id());
+							    	Group group = groupService.getGroupByImId(Long.parseLong(mission.getTo_id()));
 							    	if(group != null) {
 							    		ImUtils.sendTextMessage("chatgroups", new String[]{group.getIm_group_id()}, "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission.getMission_id(),user.getUser_name());
 							    	}		    	

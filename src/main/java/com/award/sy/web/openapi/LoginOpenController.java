@@ -17,7 +17,6 @@ import com.award.sy.common.Constants;
 import com.award.sy.entity.User;
 import com.award.sy.service.UserService;
 import com.award.sy.service.WalletService;
-import com.sun.tools.classfile.Annotation.element_value;
 /**
  * 登录接口
  * @ClassName:       LoginOpenController

@@ -28,15 +28,15 @@ public class FriendOpenController {
 	 */
 	@RequestMapping(value="/open/getFriend",produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String getFriend(@RequestParam long userId){
+	public String getFriend(@RequestParam String userId){
 		String returnStr = JsonUtils.writeJson(0, 0, "参数为空");
-		if(StringUtils.isBlank(userId+"")){
+		if(StringUtils.isBlank(userId)){
 			return returnStr;
 		}
 		
-		List<Map<String,Object>> list = friendService.getUserFriends(userId);
+		List<Map<String,Object>> list = friendService.getUserFriends(Long.parseLong(userId));
 		
-		return returnStr = JsonUtils.writeJson(1, "获取成功", list, "object");
+		return  JsonUtils.writeJson(1, "获取成功", list, "object");
 	}
 	/**
 	 * 获取好友主页

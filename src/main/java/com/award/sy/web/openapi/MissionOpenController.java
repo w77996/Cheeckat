@@ -278,7 +278,7 @@ public class MissionOpenController {
 			    	mission.setStatus(5);//等待微信返回支付成功
 			    	mission.setType(Integer.parseInt(type));
 			    	mission.setTo_type(Integer.parseInt(to));
-			    	mission.setTo_id(Long.parseLong(toId));
+			    	mission.setTo_id(toId);
 			    	mission.setRecord_sn(record_sn);
 			    	mission.setAnonymous(Integer.parseInt(anonymous));
 			    	missionService.addMission(mission);
@@ -314,7 +314,7 @@ public class MissionOpenController {
 			    	mission.setStatus(0);
 			    	mission.setType(Integer.parseInt(type));
 			    	mission.setTo_type(Integer.parseInt(to));
-			    	mission.setTo_id(Long.parseLong(toId));
+			    	mission.setTo_id(toId);
 			    	mission.setRecord_sn(record_sn);
 			    	mission.setAnonymous(Integer.parseInt(anonymous));
 			    	missionService.addMission(mission);
@@ -358,12 +358,12 @@ public class MissionOpenController {
 			    		ImUtils.sendTextMessage("users", userNames.split(","), "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission2.getMission_id(),user.getUser_name());
 			    	}
 			    }else if(Integer.parseInt(to) == 1) {//发给个人
-			    	User toUser = userService.getUserById(Long.parseLong(toId));
+			    	User toUser = userService.getUserByUserName(toId);
 			    	if(toUser != null) {
 			    		ImUtils.sendTextMessage("users", new String[]{toUser.getUser_name()}, "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission2.getMission_id(),user.getUser_name());
 			    	}		    	
 			    }else {//发群
-			    	Group group = groupService.getGroupById(Long.parseLong(toId));
+			    	Group group = groupService.getGroupByImId(Long.parseLong(toId));
 			    	if(group != null) {
 			    		ImUtils.sendTextMessage("chatgroups", new String[]{group.getIm_group_id()}, "WtwdMissionTxt:好友"+user.getNick_name()+"发布了一个任务，点击查看:"+mission2.getMission_id(),user.getUser_name());
 			    	}		    	

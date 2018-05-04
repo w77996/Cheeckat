@@ -33,7 +33,6 @@ import com.award.sy.service.WalletLogService;
 import com.award.sy.service.WalletRecordService;
 import com.award.sy.service.WalletService;
 import com.google.zxing.Result;
-import com.sun.tools.javac.code.Attribute.Constant;
 
 @Controller
 public class WalletController {

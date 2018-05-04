@@ -8,9 +8,11 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 
 import com.award.core.util.PropertiesUtil;
+import com.award.sy.common.DateUtil;
 import com.award.sy.entity.Wallet;
 import com.award.sy.service.WalletService;
 import org.apache.commons.lang3.StringUtils;
+import org.omg.CORBA.UserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,8 +97,9 @@ public class UserOpenController {
         user.setUser_id(user_id);
         user.setNick_name(userName);
         int i = userService.editUser(user);
+        User userResult = userService.getUserById(Long.parseLong(userId));
         if (0 < i) {
-            return JsonUtils.writeJson("修改成功", 1);
+            return JsonUtils.writeJson(1, "请求成功", userResult, "object");
         }
         return JsonUtils.writeJson(0, 0, "修改失败");
     }
@@ -185,9 +188,13 @@ public class UserOpenController {
         user.setHeight(Integer.parseInt(height));
         user.setSex(Integer.parseInt(sex));
         user.setNick_name(userName);
+        user.setCreate_time(DateUtil.getNowTime());
+        user.setCountry("中国");
+        user.setPassword("123456");
         User userResult = null;
         if (Constants.LOGIN_TYPE_PHONE == login_type) {
             user.setUser_name(phone);
+
             userService.addNewUser(user);
             userResult = userService.getUserByUserName(phone);
         } else if (Constants.LOGIN_TYPE_WECHAT == login_type) {
