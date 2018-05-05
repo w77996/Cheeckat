@@ -1,17 +1,19 @@
 package com.award.sy.web.openapi;
 
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.crypto.Data;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.award.core.util.ImUtils;
@@ -125,7 +127,8 @@ public class MissionOpenController {
 			    			mission.setStatus(1);
 			    			mission.setAccept_time(DateUtil.getNowTime());
 			 			    missionService.editMission(mission);
-			 			    returnStr = JsonUtils.writeJson("设置成功", 1);
+			 			    Mission resultMission = missionService.getMissionById(Long.parseLong(missionId));
+			 			    returnStr = JsonUtils.writeJson(1, "领取成功", resultMission, "object");
 		    			}else {
 		    				returnStr = JsonUtils.writeJson(0, 9, "该任务已被领取");
 		    			}
@@ -377,5 +380,26 @@ public class MissionOpenController {
 		return returnStr;
 	}
 
+	@RequestMapping(value = "/open/getMission")
+	@ResponseBody
+	public String getMission(@RequestParam String missionId){
+
+		Mission m = missionService.getMissionById(Long.parseLong(missionId));
+		List<Mission> list = new ArrayList<>();
+
+		try {
+			Date date = null;
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			date = sdf.parse(m.getStart_time());
+			m.setStart_time(date.getTime()+"");
+			Date date2 = sdf.parse(m.getCreate_time());
+			m.setCreate_time(date2.getTime()+"");
+			list.add(m);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		return JsonUtils.writeJson(1, "获取成功", list, "object");
+	}
 
 }

@@ -1,8 +1,11 @@
 package com.award.core.util;
 
+import com.alibaba.fastjson.JSONObject;
 import com.award.sy.common.DateUtil;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class RegistTest {
@@ -26,8 +29,18 @@ public class RegistTest {
 		if(b> 0 & b< 200){
 			System.out.println(true);
 		}
+		Date date= new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String d = sdf.format(date);
+		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			date = sdf.parse(d);
+			System.out.println(date.getTime());
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 
-		System.out.println(DateUtil.getDayBeginTime(System.currentTimeMillis()));
+
 
 	}
 	
