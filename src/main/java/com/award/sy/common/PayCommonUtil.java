@@ -181,11 +181,11 @@ public class PayCommonUtil {
 			Map.Entry entry = (Map.Entry) it.next();
 			String k = (String) entry.getKey();
 			String v = (String) entry.getValue();
-			if ("attach".equalsIgnoreCase(k) || "body".equalsIgnoreCase(k)) {
-				sb.append("<" + k + ">" + "<![CDATA[" + v + "]]></" + k + ">");
-			} else {
+//			if ("attach".equalsIgnoreCase(k) || "body".equalsIgnoreCase(k) || "sign".equalsIgnoreCase(k)) {
+//				sb.append("<" + k + ">" + "<![CDATA[" + v + "]]></" + k + ">");
+//			} else {
 				sb.append("<" + k + ">" + v + "</" + k + ">");
-			}
+//			}
 		}
 		sb.append("</xml>");
 		return sb.toString();

@@ -135,9 +135,12 @@ public class Constants {
 	/**
      * 微信支付相关信息
      */
-     public static final  String APPID = "";//服务号的应用号
-     public static final  String MCH_ID = "";//商户号
-     public static final  String API_KEY = "";//API密钥
+     public static final  String APPID = "wx592c35b4382852c7";//服务号的应用号
+    // public static final  String MCH_ID = "1503248441";//商户号
+     public static final  String MCH_ID = "1503248441";//商户号
+    // public static final  String API_KEY = "";//API密钥
+//     public static final  String API_KEY = "966ac0178cd1dc45a8b9e597794c5ff0";//API密钥
+     public static final  String API_KEY = "emIs5XG6HlnDt6JvF7zET1PKs3NyAg03";//API密钥
      public static final  String SIGN_TYPE = "MD5";//签名加密方式
 
      //微信统一下单连接

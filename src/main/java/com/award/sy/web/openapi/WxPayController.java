@@ -110,7 +110,7 @@ public class WxPayController {
 		parameters.put("mch_id", Constants.MCH_ID);
 		parameters.put("nonce_str", PayCommonUtil.CreateNoncestr());
 		parameters.put("body", "购买测试");
-		parameters.put("out_trade_no", ""); // 订单id
+		parameters.put("out_trade_no", record_sn); // 订单id
 		parameters.put("fee_type", "CNY");
 		parameters.put("total_fee", String.valueOf(price100));
 		parameters.put("spbill_create_ip", PayCommonUtil.getIpAddress(request));

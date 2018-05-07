@@ -139,8 +139,8 @@ public class WalletController {
 					return JsonUtils.writeJson(0, 19, "订单生成失败");
 				}
 				SortedMap<Object, Object> map = WxPayUtil.getPreperIdFromWX(
-						record_sn, PayCommonUtil.getIpAddress(request),
-						Constants.APP_NAME + Constants.RECHARGE, price);
+						record_sn,Constants.APP_NAME + Constants.RECHARGE, PayCommonUtil.getIpAddress(request),
+						 price);
 				if (null == map) {
 					return JsonUtils.writeJson(0, 19, "订单生成失败");
 				}

@@ -33,9 +33,9 @@ public class TaskManager {
 	private WalletService walletService;
 
 
-	@Scheduled(cron="0 0 2 * * ? ") //间隔5秒执行
+	@Scheduled(cron="0 0 2 * * ? ")
 	public void taskCycle(){
-		final List<RedPacket> list = redPacketService.getExpiredRedPacket();
+		/*final List<RedPacket> list = redPacketService.getExpiredRedPacket();
 		if(null != list && list.size() > 0){
 			for(int i = 0;i< list.size();i++){
 				RedPacket redPacket = list.get(i);
@@ -45,12 +45,12 @@ public class TaskManager {
 				redPacketService.editRedPacketPayStatus(redPacket.getRecord_sn(),Constants.PAY_STATUS_BACK);
 				walletService.refund(redPacket.getRecord_sn(),redPacket.getPublish_id(), Constants.LOG_REFUND_READPACKET,redPacket.getMoney(),total_moeny);
 			}
-		}
+		}*/
 		System.out.println("专注于前端开发技术和研究的技术博客</span>");
 	}
 	@Scheduled(cron = "0/10 * * * * ?")
 	public void task1(){
-		System.out.println("我每10分钟都要执行一次，不管是刮风还是下雨");
+		//System.out.println("我每10分钟都要执行一次，不管是刮风还是下雨");
 	}
 	
 	@Scheduled(cron = "0 5 0 * * ?")

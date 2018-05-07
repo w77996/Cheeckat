@@ -24,9 +24,9 @@ public class WxPayUtil {
 			}
 			// 设置回调地址-获取当前的地址拼接回调地址
 			//String url = request.getRequestURL().toString();
-			String domain = ip.substring(0, ip.length() - 13);
+//			String domain = ip.substring(0, ip.length() - 13);
 			// 生产环境
-			String notify_url = domain + "wxNotify";
+		//	String notify_url = domain + "wxNotify";
 			// 测试环境
 			// String notify_url =
 			// "http://1f504p5895.51mypc.cn/cia/app/wxNotify.html";
@@ -35,18 +35,20 @@ public class WxPayUtil {
 			parameters.put("appid", Constants.APPID);
 			parameters.put("mch_id", Constants.MCH_ID);
 			parameters.put("nonce_str", PayCommonUtil.CreateNoncestr());
-			parameters.put("body", body);
+			parameters.put("body", "test");
 			parameters.put("out_trade_no", record_sn); // 订单id
 			parameters.put("fee_type", "CNY");
-			parameters.put("total_fee", String.valueOf(price100));
+			parameters.put("total_fee", "1");
 			parameters.put("spbill_create_ip", ip);
-			parameters.put("notify_url", notify_url);
+			parameters.put("notify_url", "http://121.196.232.11:9883/Award/open/wxNotify");
 			parameters.put("trade_type", "APP");
 			// 设置签名
 			String sign = PayCommonUtil.createSign("UTF-8", parameters);
+			System.out.println("sgin "+sign);
 			parameters.put("sign", sign);
 			// 封装请求参数结束
 			String requestXML = PayCommonUtil.getRequestXml(parameters);
+			System.out.println("xml"+requestXML);
 			// 调用统一下单接口
 			String result = PayCommonUtil.httpsRequest(Constants.UNIFIED_ORDER_URL,
 					"POST", requestXML);

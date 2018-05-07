@@ -86,7 +86,7 @@ public class MissionServiceImpl implements MissionService{
 
 	@Override
 	public List<Map<String,Object>> getAllMissionLimit(int start,int count) {
-		List<Map<String,Object>> list = missionDao.listBySql("select a.*,b.head_img,b.birth,b.user_name,b.sex as user_sex,b.country,b.invisible from tb_mission a,tb_user b where a.publish_id = b.user_id and a.status=0 and a.to_type = 0 order by money desc limit "+start+","+count);
+		List<Map<String,Object>> list = missionDao.listBySql("select a.*,b.head_img,b.birth,b.user_name,b.nick_name,b.sex as user_sex,b.country,b.invisible from tb_mission a,tb_user b where a.publish_id = b.user_id and a.status=0 and a.to_type = 0 order by money desc limit "+start+","+count);
 //		WherePrams where = new WherePrams();
 //		where.and("status", C.EQ, 0);
 //		where.and("to_user", C.EQ, 0);

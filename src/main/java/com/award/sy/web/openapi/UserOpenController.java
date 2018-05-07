@@ -230,23 +230,22 @@ public class UserOpenController {
         if (null == userExist) {
             return JsonUtils.writeJson(0, 4, "用户不存在");
         }
-        String path = Constants.USER_IMG_PATH;
-        //获取绝对路径
-       String uploadPath = request.getSession().getServletContext().getRealPath("/");
-       // String uploadPath = "D:\\32+4";
-        log.info("uploadPath路径：" + uploadPath);
-        File file = new File(uploadPath + Constants.USER_IMG_PATH);
+        Properties properties =  new PropertiesUtil().getProperites("config.properties");
+        String context_path = properties.getProperty("context_path", "");
+
+        String filePathName= request.getSession().getServletContext().getRealPath("/")+"/"+Constants.HEAD_IMG_PATH;;//存放路径
+        System.out.println(filePathName);
+        File file = new File(filePathName);
         if (!file.exists()) {
             file.mkdirs();
         }
-       // String newimagepath=headImg.replaceAll("data:image/jpeg;base64,", "");
+        System.out.println("filePathName"+filePathName);
         String fileName = System.currentTimeMillis() + String.valueOf((int) ((Math.random() * 9 + 1) * 100000)) + ".jpg";
-        log.info("fileName路径：" + fileName);
-        boolean isSuccess = FileUtil.CreateImgBase64(headImg, uploadPath + Constants.USER_IMG_PATH + fileName);
+        boolean isSuccess = FileUtil.CreateImgBase64(headImg, filePathName + fileName);
         if (!isSuccess) {
             return JsonUtils.writeJson(0, 24, "图片上传失败");
         }
-        int i = userIndexImgService.addUserIndexImg(user_id, Constants.CONTEXT_PATH+path + fileName);
+        int i = userIndexImgService.addUserIndexImg(user_id, context_path+Constants.HEAD_IMG_PATH + fileName);
         if (0 < i) {
             return JsonUtils.writeJson("上传成功", 1);
         } else {
