@@ -238,7 +238,7 @@ public class MissionOpenController {
 	}
 
 	
-	@RequestMapping(value = "/open/publishMission", produces="application/json;charset=UTF-8")
+	@RequestMapping(value = "/open/publishMission", produces="text/html;charset=UTF-8")
 	@ResponseBody
 	public String publishMission(HttpServletRequest request) {
 		String userId =  request.getParameter("userId");
@@ -284,6 +284,7 @@ public class MissionOpenController {
 			    	mission.setTo_id(toId);
 			    	mission.setRecord_sn(record_sn);
 			    	mission.setAnonymous(Integer.parseInt(anonymous));
+			    	System.out.println(mission.toString());
 			    	missionService.addMission(mission);
 			}else if(Constants.PAY_TYPE_BALANCE == Integer.parseInt(pay_type)){
 					Wallet wallet = walletService.findWalletByUserId(Long.parseLong(userId));
@@ -380,7 +381,7 @@ public class MissionOpenController {
 		return returnStr;
 	}
 
-	@RequestMapping(value = "/open/getMission")
+	@RequestMapping(value = "/open/getMission",produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String getMission(@RequestParam String missionId){
 
@@ -394,6 +395,8 @@ public class MissionOpenController {
 			m.setStart_time(date.getTime()+"");
 			Date date2 = sdf.parse(m.getCreate_time());
 			m.setCreate_time(date2.getTime()+"");
+			Date date3 = sdf.parse(m.getAccept_time());
+			m.setAccept_time(date3.getTime()+"");
 			list.add(m);
 		} catch (ParseException e) {
 			e.printStackTrace();

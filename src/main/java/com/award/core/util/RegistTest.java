@@ -23,8 +23,9 @@ public class RegistTest {
 				System.out.println(new Double("0.01")*100);
 		int price100 = new BigDecimal(b).multiply(new BigDecimal(100))
 				.intValue();
+		System.out.println(price100);
 				Double a = b - new Double("-0.01");
-		System.out.println(new Double("1.00").compareTo(new Double(b*100)));
+		/*System.out.println(new Double("1.00").compareTo(new Double(b*100)));
 		System.out.println(a);
 		if(b> 0 & b< 200){
 			System.out.println(true);
@@ -39,7 +40,7 @@ public class RegistTest {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-
+*/
 
 
 	}

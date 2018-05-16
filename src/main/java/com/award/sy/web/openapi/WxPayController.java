@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.award.core.util.JsonUtils;
@@ -165,7 +166,7 @@ public class WxPayController {
 	 * @return:          void   
 	 * @throws
 	 */
-	@RequestMapping("/wxNotify")
+	@RequestMapping(value = "/open/wxNotify",method = RequestMethod.POST)
 	@ResponseBody
 	public void wxNotify(HttpServletRequest request,
 			HttpServletResponse response) throws IOException, JDOMException {
@@ -181,9 +182,11 @@ public class WxPayController {
 		}
 		in.close();
 		inputStream.close();
+		System.out.println("result sb"+sb.toString());
 		// 解析xml成map
 		Map<String, String> m = new HashMap<String, String>();
 		m = XMLUtil.doXMLParse(sb.toString());
+		System.out.println("result m"+m);
 		for (Object keyValue : m.keySet()) {
 			System.out.println(keyValue + "=" + m.get(keyValue));
 		}
@@ -200,7 +203,6 @@ public class WxPayController {
 			}
 			packageParams.put(parameter, v);
 		}
-
 		// 判断签名是否正确
 		String resXml = "";
 		if (PayCommonUtil.isTenpaySign("UTF-8", packageParams)) {
@@ -222,6 +224,7 @@ public class WxPayController {
 				int type = walletRecord.getType();
 				long from_uid = walletRecord.getFrom_uid();
 
+				System.out.println("交易成功");
 				Wallet wallet = walletService.findWalletByUserId(from_uid);
 				Double fee = wallet.getMoney()+money;
 				if (!Constants.MCH_ID.equals(mch_id)
@@ -256,7 +259,6 @@ public class WxPayController {
 								if(Constants.TO_TYPE_PRIVATE == redPacket.getTo_type()){
 									User toUser = userService.getUserByUserName(redPacket.getTo_id());
 									ImUtils.sendTextMessage("users", new String[]{toUser.getUser_name()}, "WtwdRedPacketTxt:好友"+fromUser.getNick_name()+"发布了一个红包，点击查看:"+redPacket.getRedpacket_id(), fromUser.getUser_name());
-									//ImUtils.sendTextMessage("users", new String[]{fromUser.getUser_name()}, "WtwdRedPacketTxt:" + fromUser.getNick_name() + "发布了一个红包，点击查看:" + redPacket.getRedpacket_id());
 								}else if (Constants.TO_TYPE_GROUP == redPacket.getTo_type()){
 									//群发，获取群成员的名称，并发送
 									Group group = groupService.getGroupByImId(Long.parseLong(redPacket.getTo_id()));

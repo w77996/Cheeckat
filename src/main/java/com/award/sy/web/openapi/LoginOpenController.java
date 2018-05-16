@@ -66,12 +66,13 @@ public class LoginOpenController {
 				return JsonUtils.writeJson(0, 0, "参数为空");
 			}
 
-			User wechatUser = userService.getUserByOpenId(openId);
+		/*	User wechatUser = userService.getUserByOpenId(openId);
 			if(null != wechatUser){
 				return JsonUtils.writeJson(0,40,"微信已被绑定");
-			}
+			}*/
 
 			//查询user是否存在
+
 			User user = userService.getUserByUserName(openId);
 			if(null == user){
 				map.put("isFirst", true);

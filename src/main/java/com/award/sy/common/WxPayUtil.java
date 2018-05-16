@@ -17,6 +17,7 @@ public class WxPayUtil {
 		//	String price = request.getParameter("price");
 			int price100 = new BigDecimal(price).multiply(new BigDecimal(100))
 					.intValue();
+			System.out.println(price100);
 			if (price100 <= 0) {
 				//resultMap.put("msg", "付款金额错误");
 				//resultMap.put("code", "500");
@@ -35,12 +36,12 @@ public class WxPayUtil {
 			parameters.put("appid", Constants.APPID);
 			parameters.put("mch_id", Constants.MCH_ID);
 			parameters.put("nonce_str", PayCommonUtil.CreateNoncestr());
-			parameters.put("body", "test");
+			parameters.put("body", body);
 			parameters.put("out_trade_no", record_sn); // 订单id
 			parameters.put("fee_type", "CNY");
-			parameters.put("total_fee", "1");
+			parameters.put("total_fee", price100+"");
 			parameters.put("spbill_create_ip", ip);
-			parameters.put("notify_url", "http://121.196.232.11:9883/Award/open/wxNotify");
+			parameters.put("notify_url", "http://121.196.232.11:9883/Award/wxNotify");
 			parameters.put("trade_type", "APP");
 			// 设置签名
 			String sign = PayCommonUtil.createSign("UTF-8", parameters);
